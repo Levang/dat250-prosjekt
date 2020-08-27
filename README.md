@@ -1,3 +1,8 @@
 # DAT250-prosjekt
 
-Ready to go, (test)
+## Web development project for DAT250
+
+Develop a secure website...
+
+Requirements and notes coming soon!
+
