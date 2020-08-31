@@ -27,6 +27,7 @@ Oversikt
         Lenker til underliggende sider
 
 Transaksjonshistorikk
+
     Velg konto og se hele transaksjonshistorikk for den kontoen (read only, sorterbart)
 
 Overføre
