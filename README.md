@@ -12,17 +12,13 @@ Page map
 
 Frontpage
 
-    Innhold
+    Innlogging
 
-        Innlogging
-
-        Div info
+    Div info
 
 --------------------------------------- Autentisering
 
 Oversikt
-
-    Innhold
 
         Kontooversikt
 
