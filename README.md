@@ -11,16 +11,23 @@ Requirements and notes coming soon!
 Page map
 
 Frontpage
+
     Innhold
+
         Innlogging
+
         Div info
 
 --------------------------------------- Autentisering
 
 Oversikt
+
     Innhold
+
         Kontooversikt
+
         Saldo
+
         Lenker til underliggende sider
 
 Transaksjonshistorikk
@@ -30,23 +37,33 @@ Overføre
     Overføre mellom egne kontoer
 
 Betale
+
     Betale til en annen konto
+
         Fylle ut betalingsinfo
+
         Oppsumering av betalingsinfo
+
             Fortsett/Avbryt
+
 --------------------------------------- Autentisering
+
         Bekreftelse på betaling
 
 
 Sikkerhet bruker:
+
     All bruker relatert info lagres kryptert i database
+
     Nøkkelen for dekryptering/kryptering er brukerens passord + epost + salt
 
 
 Sikkerhet transaksjoner:
+
     Enkel blockchain
 
 Domene
+
     safecoin.tech
 
 
