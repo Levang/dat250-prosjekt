@@ -2,7 +2,7 @@
 
 ## Web development project for DAT250
 
-Develop an insecure website...
+Develop a secure website...
 
 Requirements and notes coming soon!
 
