@@ -1,0 +1,11 @@
+---
+title: "temporary"
+author: "dank"
+output: pdf_document
+---
+
+```{r child='Section1.Rmd'}
+```
+
+```{r child='Section2.Rmd'}
+```
