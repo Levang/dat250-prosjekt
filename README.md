@@ -11,12 +11,10 @@ Requirements and notes coming soon!
 ## Site Map
 
 Frontpage
+- Innlogging
+- Div info
 
-    Innlogging
-
-    Div info
-
---------------------------------------- Autentisering
+- Autentisering
 
 ### Oversikt
 
@@ -37,13 +35,13 @@ Frontpage
 
 ### Betale
 
-- Betale til en annen konto
-  1. Fylle ut betalingsinfo
-  2. Oppsumering av betalingsinfo
-  3. Fortsett/Avbryt
+Betale til en annen konto
+1. Fylle ut betalingsinfo
+2. Oppsumering av betalingsinfo
+3. Fortsett/Avbryt
 
-  **Autentisering**
-  - Bekreftelse på betaling
+**Autentisering**
+- Bekreftelse på betaling
 
 
 ## Sikkerhet bruker:
