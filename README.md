@@ -18,51 +18,48 @@ Frontpage
 
 --------------------------------------- Autentisering
 
-Oversikt
+### Oversikt
 
-        Kontooversikt
-
-        Saldo
-
-        Lenker til underliggende sider
-
-Transaksjonshistorikk
-
-    Velg konto og se hele transaksjonshistorikk for den kontoen (read only, sorterbart)
-
-Overføre
-
-    Overføre mellom egne kontoer
-
-Betale
-
-    Betale til en annen konto
-
-        Fylle ut betalingsinfo
-
-        Oppsumering av betalingsinfo
-
-            Fortsett/Avbryt
-
---------------------------------------- Autentisering
-
-        Bekreftelse på betaling
+- Kontooversikt
+- Saldo
+- Lenker til underliggende sider
 
 
-Sikkerhet bruker:
+### Transaksjonshistorikk
 
-    All bruker relatert info lagres kryptert i database
-
-    Nøkkelen for dekryptering/kryptering er brukerens passord + epost + salt
+- Velg konto og se hele transaksjonshistorikk for den kontoen (read only, sorterbart)
 
 
-Sikkerhet transaksjoner:
+### Overføre
 
-    Enkel blockchain
+- Overføre mellom egne kontoer
 
-Domene
 
-    safecoin.tech
+### Betale
+
+- Betale til en annen konto
+  1. Fylle ut betalingsinfo
+  2. Oppsumering av betalingsinfo
+  3. Fortsett/Avbryt
+
+  **Autentisering**
+  - Bekreftelse på betaling
+
+
+## Sikkerhet bruker:
+
+- All bruker relatert info lagres kryptert i database
+- Nøkkelen for dekryptering/kryptering er brukerens passord + epost + salt
+
+
+## Sikkerhet transaksjoner:
+
+- Enkel blockchain
+
+
+## Domene
+
+- safecoin.tech
 
 
 
