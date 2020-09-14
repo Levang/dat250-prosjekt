@@ -10,6 +10,9 @@ Requirements and notes coming soon!
 
 ## Site Map
 
+[Image](./Doc/assets/Pagemap.png)
+
+<!-- 
 Frontpage
 - Innlogging
 - Div info
@@ -41,7 +44,7 @@ Betale til en annen konto
 3. Fortsett/Avbryt
 
 **Autentisering**
-- Bekreftelse på betaling
+- Bekreftelse på betaling -->
 
 
 ## Sikkerhet bruker:
