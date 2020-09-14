@@ -10,7 +10,7 @@ Requirements and notes coming soon!
 
 ## Site Map
 
-[Image](./Doc/assets/Pagemap.png)
+![Image](./Doc/assets/Pagemap.png)
 
 <!-- 
 Frontpage
