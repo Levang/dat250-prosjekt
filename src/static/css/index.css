@@ -2,17 +2,27 @@ body {
     color: #444;
     background-color: #ffe9bf;
     font-family: Stix;
-}
-
-h1 {
-    font-size: 8em;
-    margin-top: 50px;
+    margin-top: auto;
     text-align: center;
-    font-family: Z003;
 }
 
 table {
-    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title {
+    font-family: Z003;
+}
+
+#bigTitle {
+    font-size: 8em;
+    margin-top: 200px;
+}
+
+#smallTitle {
+    font-size: 2em;
+    margin-top: 0px;
 }
 
 #loginHeader {
