@@ -1,0 +1,30 @@
+body {
+    color: #444;
+    background-color: #ffe9bf;
+    font-family: Stix;
+    margin-top: auto;
+    text-align: center;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title {
+    font-family: Z003;
+}
+
+#bigTitle {
+    font-size: 8em;
+    margin-top: 200px;
+}
+
+#smallTitle {
+    font-size: 2em;
+    margin-top: 0px;
+}
+
+#loginHeader {
+    font-size: 2em;
+}
