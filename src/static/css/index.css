@@ -1,0 +1,20 @@
+body {
+    color: #444;
+    background-color: #ffe9bf;
+    font-family: Stix;
+}
+
+h1 {
+    font-size: 8em;
+    margin-top: 50px;
+    text-align: center;
+    font-family: Z003;
+}
+
+table {
+    text-align: center;
+}
+
+#loginHeader {
+    font-size: 2em;
+}
