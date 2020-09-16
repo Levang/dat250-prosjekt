@@ -16,3 +16,7 @@ body {
     background-color: var(--lightblue2);
     color: var(--blue2);
 }
+.menuleft {
+    text-align: right;
+    color: blue;
+}
