@@ -8,25 +8,23 @@
     {% block head %}{% endblock %}
 </head>
 <body>
-<div class="menubar">
-    <div class="safecoin">
-    <button type="button">Safecoin</button>
+    <div class="menubar">
+        <div class="safecoin">
+            <button type="button">Safecoin</button>
+        </div>
+        <div class="pages">
+            <button type="button">Overview</button>
+            <button type="button">Transactions</button>
+            <button type="button">Accounts</button>
+            <button type="button">Transfer</button>
+            <button type="button">Pay</button>
+        </div>
+        <div class="profile">
+            <button type="button">Profile</button>
+        </div>
     </div>
-
-    <div class="pages">
-    <button type="button">Overview</button>
-    <button type="button">Transactions</button>
-    <button type="button">Accounts</button>
-    <button type="button">Transfer</button>
-    <button type="button">Pay</button>
-    </div>
-
-    <div class="profile">
-    <button type="button" class="pages">Profile</button>
-    </div>
-
-</div>
 </body>
+
     {% block body %}{% endblock %}
-</body>
+
 </html>
