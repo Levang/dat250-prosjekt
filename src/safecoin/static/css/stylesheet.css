@@ -20,18 +20,26 @@ body {
 
 .menubar {
     display: grid;
-    padding-left: 20px;
-    padding-right: 20px;
     grid-auto-flow: column;
     align-items: end;
+    grid-gap: 0px;
+    margin: 0px;
+    padding: none;
 }
 
 .pages{
-    gap: 20px;
+    padding: none;
+    border: none;
+    margin: none;
 }
 
 .menubar button {
     height: 60px;
+    background-color: var(--lightblue1);
+    border: 0px;
+    margin: none;
+    padding: none;
+    min-width: 100px;
 }
 
 .profile{
