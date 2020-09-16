@@ -3,7 +3,10 @@
     color2: #003853
     color3: #0478a1
     color4: #04aed9
-    color5: #c5e0f5
+    color5: #5c83a0
+    color6: #9ebfe0
+    color7: #c5e0f5
+    color8: #ddeef8
 */
 
 :root {
@@ -12,6 +15,10 @@
     --blue3: #0478a1;
     --lightblue1: #04aed9;
     --lightblue2: #c5e0f5;
+    --lightblue3: #9ebfe0;
+    --almostgrey1: #5c83a0;
+    --almostwhite1: #ddeef8;
+
 }
 body {
     background-color: var(--lightblue2);
@@ -55,7 +62,7 @@ body {
     margin: none;
     padding: 20px;
     font-size: 20px;
-    color:white;
+    color: var(--almostwhite1);
     font-weight: bold;
 }
 .menubar button:hover {
