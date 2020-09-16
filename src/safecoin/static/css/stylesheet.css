@@ -34,6 +34,10 @@ body {
     box-shadow: 0px 0px 8px 2px;
 }
 
+.shadowSides {
+    box-shadow: 0px 8px 5px 0px
+}
+
 .pages{
     padding: none;
     border: none;
@@ -57,5 +61,22 @@ body {
 
 .profile{
     text-align: right;
-    color:red;
+}
+
+.imported{
+    background-color: none;
+    min-height: 700px;
+    margin-top: -5px;
+    margin-left: 100px;
+    margin-right: 100px;
+    padding-top: 10px;
+
+}
+
+@media (min-width:850px) {
+    .imported{
+        margin-left: none;
+        margin-right: none;
+    }
+
 }
