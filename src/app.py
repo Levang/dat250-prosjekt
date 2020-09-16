@@ -1,6 +1,7 @@
 # import sys
 # sys.path.insert(0, '/pages')    #Dersom import ikke fungerer fjern kommentar
 # ─── Linjene over tillater import som vanlig fra pages mappen ────────────────────────────────────────────────────────────────────────
+<<<<<<< HEAD:src/app.py
 from flask import Flask, render_template
 from pages import overview
 
@@ -29,7 +30,10 @@ def overviewpage():
 
 
 
+=======
+>>>>>>> 1e6a36234907c2532a013be03640296f43556c96:src/app.py
 
+from safecoin import app
 
 if __name__ == '__main__':
     app.run(debug=True)
