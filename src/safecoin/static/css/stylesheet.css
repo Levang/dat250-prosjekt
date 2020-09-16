@@ -20,13 +20,14 @@ body {
 }
 
 .menubar {
+    background-color: var(--blue3);
     display: grid;
     grid-auto-flow: column;
     align-items: end;
     grid-gap: none;
     margin: none;
     padding: none;
-    border-bottom: 5px solid var(--blue3);
+    /* border-bottom: 5px solid var(--blue3); */
 }
 
 .shadowDown {
@@ -42,11 +43,12 @@ body {
 
 .menubar button {
     height: 60px;
-    background-color: var(--lightblue2);
+    background-color: var(--blue3);
     border: none;
     margin: none;
     padding: 20px;
     font-size: 20px;
+    color:white;
     font-weight: bold;
 }
 .menubar button:hover {
