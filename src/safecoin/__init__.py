@@ -6,3 +6,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db' # Path for database
 db = SQLAlchemy(app)
 
 from safecoin import pages
+from safecoin import overview
