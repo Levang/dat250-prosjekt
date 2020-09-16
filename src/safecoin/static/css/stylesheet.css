@@ -5,6 +5,7 @@
     color4: #04aed9
     color5: #c5e0f5
 */
+
 :root {
     --blue1: #041f32;
     --blue2: #003853;
@@ -41,14 +42,15 @@ body {
 
 .menubar button {
     height: 60px;
-    background-color: var(--lightblue1);
+    background-color: var(--lightblue2);
     border: none;
     margin: none;
-    padding: none;
-    min-width: 100px;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: bold;
 }
 .menubar button:hover {
-    background-color: var(--lightblue2);
+    background-color: var(--lightblue1);
 }
 
 .profile{
