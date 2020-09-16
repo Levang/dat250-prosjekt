@@ -16,7 +16,15 @@ body {
     background-color: var(--lightblue2);
     color: var(--blue2);
 }
-.menuleft {
-    text-align: right;
-    color: blue;
+
+.menubar {
+    display: grid;
+    padding-left: 20px;
+    padding-right: 20px;
+    grid-auto-flow: column;
+}
+
+.pages{
+    gap: 20px;
+
 }
