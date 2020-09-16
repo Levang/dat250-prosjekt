@@ -19,6 +19,9 @@ body {
     margin: 0px;
 }
 
+.img img{
+    width: 100%;
+}
 .menubar {
     background-color: var(--blue3);
     display: grid;
