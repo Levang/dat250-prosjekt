@@ -7,37 +7,47 @@
     <body>
         <div id="bigTitle" class="title"><strong>Safecoin.tech</strong></div>
         <h3 id="smallTitle" class="title">your preferred bank...</h3>
-        <table>
-            <tbody>
-                <tr>
-                    <th id="loginHeader">
-                        Login
-                    </th>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="email" placeholder="email@example.com" autofocus>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="password" placeholder="********">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="submit" value="Login">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="/register">Register now!</a>
-                    </td>
-                    <td>
-                        <a href="/overview">linktest</a>
-                    </td>
-                </tr>
-            </tbody>
+            <table>
+                <tbody>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                        <tr class=flashes>
+                          <td class="{{ category }}">{{ message }}</td>
+                        </tr>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+
+                    <tr>
+                        <th id="loginHeader">
+                            Login
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="email" placeholder="email@example.com" autofocus>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="password" placeholder="********">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="submit" value="Login">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/register">Register now!</a>
+                        </td>
+                        <td>
+                            <a href="/overview">linktest</a>
+                        </td>
+                    </tr>
+                </tbody>
         </table>
     </body>
 </html>
