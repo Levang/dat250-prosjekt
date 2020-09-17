@@ -1,8 +1,8 @@
 from flask import render_template, url_for, redirect, request, flash
 ###################
-from safecoin import app, db
+from safecoin import app, db, bcrypt
 from safecoin.models import User
-from safecoin.forms import RegistrationForm, LoginForm
+from safecoin.forms import RegistrationForm
 
 
 def saveInDatabase():
@@ -37,7 +37,7 @@ def registerUser(email, password, repass):
     if password != repass:
         errList.append("Passwords doesn't match")
         return errList
-    if not getPasswordViolations(errList, password):
+    if not getPasswordVioPasswordslations(errList, password):
         return errList
     return None
 
@@ -49,7 +49,7 @@ def registerUser(email, password, repass):
 
 
 @app.route("/register/", methods=["GET", "POST"])
-def process_registration():
+def register():
     # try:
     #    errs = registerUser(request.form["mail"], request.form["password"], request.form["repass"])
     # except KeyError:
@@ -61,10 +61,12 @@ def process_registration():
     ## db.add_user(request.form["email"], request.form["password"])
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(email=form.email.data, password=form.password.data)
+        hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(email=form.email.data, password=hashed_pw)
         db.session.add(user)
         db.session.commit()
-        return "OK"
+        flash('Your account has been created! You are now able to log in', 'success')
+        return redirect(url_for('home'))
     return render_template("register.html", form=form)
     #form.email()
     #user = User(email=request.form["email"], password=request.form["password"])

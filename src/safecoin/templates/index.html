@@ -9,6 +9,15 @@
         <h3 id="smallTitle" class="title">your preferred bank...</h3>
         <table>
             <tbody>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                        <tr class=flashes>
+                          <td class="{{ category }}">{{ message }}</td>
+                        </tr>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
                 <tr>
                     <th id="loginHeader">
                         Login
