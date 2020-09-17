@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/stylesheet.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='/assets/favicon.png') }}" >
     {% block head %}{% endblock %}
 </head>
 <body>
     <div class="menubar shadowDown">
         <div class="safecoin">
-            <button type="button">Safecoin</button>
+            <button type="button"><img src="{{ url_for('static', filename='/assets/logo_low.png') }}"></button>
         </div>
         <div class="pages">
             <button type="button">Overview</button>

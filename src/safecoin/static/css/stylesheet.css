@@ -60,7 +60,8 @@ body {
     background-color: var(--blue3);
     border: none;
     margin: none;
-    padding: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
     font-size: 20px;
     color: var(--almostwhite1);
     font-weight: bold;
@@ -81,6 +82,10 @@ body {
     margin-right: 100px;
     padding-top: 10px;
 
+}
+
+.safecoin img {
+    height: 100%;
 }
 
 @media (min-width:850px) {
