@@ -4,10 +4,58 @@
 <title>Overview</title>
 {% endblock%}
 
-{% block body %}
+<body>
+    <form method="post">
+            {{ form.hidden_tag() }}
+            <table>
+                <tbody>
+                    <tr>
+                        <th>
+                            <div id="bigTitle" class="title"><strong>Register</strong></div>
+                        </th>
+                    </tr>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                        <tr class=flashes>
+                          <td class="{{ category }}">{{ message }}</td>
+                        </tr>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+                    <tr>
+                        <td>
+                            {{ form.email.label() }} <br />
+                            {% if form.email.errors %}
+                                {{ form.email() }}
+                                {% for error in form.email.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            {% else %}
+                                {{ form.email() }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.password.label() }} <br />
+                            {{ form.password() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.confirm_password.label() }} <br />
+                            {{ form.confirm_password() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.submit() }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </body>
+</html>
 
-<div class="img">
-    <img src="{{ url_for('static', filename='maxresdefault.jpg') }}", alt="STONKS">
-</div>
-
-{% endblock %}
