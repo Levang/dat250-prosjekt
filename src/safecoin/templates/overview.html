@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Odasfsdfsadverview</title>
+<title>Overview</title>
 {% endblock%}
 
 {% block body %}
 
-
-<p>Dette er en tekst</p>
+<div class="img">
+    <img src="{{ url_for('static', filename='maxresdefault.jpg') }}", alt="STONKS">
+</div>
 
 {% endblock %}
