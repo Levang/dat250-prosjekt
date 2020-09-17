@@ -5,9 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/stylesheet.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='/assets/favicon.png') }}" >
     {% block head %}{% endblock %}
 </head>
 <body>
-    {% block body %}{% endblock %}
+    <div class="menubar shadowDown">
+        <div class="safecoin">
+            <button type="button"><img src="{{ url_for('static', filename='/assets/logo_low.png') }}"></button>
+        </div>
+        <div class="pages">
+            <button type="button">Overview</button>
+            <button type="button">Transactions</button>
+            <button type="button">Accounts</button>
+            <button type="button">Transfer</button>
+            <button type="button">Pay</button>
+        </div>
+        <div class="profile">
+            <!-- her fjernes teksten og bilde legges til -->
+            <button type="button">Profile</button>
+        </div>
+    </div>
 </body>
+<div class="imported shadowSides">
+    {% block body %}{% endblock %}
+</div>
 </html>
