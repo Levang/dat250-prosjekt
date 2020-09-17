@@ -2,7 +2,7 @@ from flask import render_template, url_for, redirect, request, flash
 ###################
 from safecoin import app, db
 from safecoin.models import User
-from safecoin.forms import RegistrationForm, LoginForm
+from safecoin.forms import RegistrationForm
 
 
 def saveInDatabase():
