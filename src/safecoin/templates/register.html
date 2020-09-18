@@ -1,17 +1,14 @@
-{% extends 'base.html' %}
+{% extends 'index.html' %}
 
-{% block head %}
-<title>Register</title>
-{% endblock%}
-
-<body>
+{% block reglog %}
+<body class="importedContent">
     <form method="post">
             {{ form.hidden_tag() }}
             <table>
                 <tbody>
                     <tr>
                         <th>
-                            <div id="bigTitle" class="title"><strong>Register</strong></div>
+                            <p class="title"><strong>Register</strong></p>
                         </th>
                     </tr>
                     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -25,12 +22,12 @@
                     {% endwith %}
                     <tr>
                         <td>
-                            {{ form.email.label() }} <br />
                             {% if form.email.errors %}
                                 {{ form.email() }}
                                 {% for error in form.email.errors %}
                                     <span>{{ error }}</span>
                                 {% endfor %}
+
                             {% else %}
                                 {{ form.email() }}
                             {% endif %}
@@ -38,13 +35,11 @@
                     </tr>
                     <tr>
                         <td>
-                            {{ form.password.label() }} <br />
                             {{ form.password() }}
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            {{ form.confirm_password.label() }} <br />
                             {{ form.confirm_password() }}
                         </td>
                     </tr>
@@ -57,5 +52,4 @@
             </table>
         </form>
     </body>
-</html>
-
+{% endblock %}

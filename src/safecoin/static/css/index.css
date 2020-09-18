@@ -1,30 +1,79 @@
-body {
-    color: #444;
-    background-color: #c5e0f5;
-    font-family: Stix;
-    margin-top: auto;
+:root {
+    --blue1: #041f32;
+    --blue2: #003853;
+    --blue3: #0478a1;
+    --lightblue1: #04aed9;
+    --lightblue2: #c5e0f5;
+    --lightblue3: #9ebfe0;
+    --almostgrey1: #5c83a0;
+    --almostwhite1: #ddeef8;
+
+}
+
+html {
+    background-color: var(--almostgrey1);
+}
+
+.split_page{
+    margin:auto;
+    display: grid;
+    grid-template-columns: 60% 40%;
+}
+
+.split_page div{
+    min-height: 1000px;
+}
+
+.imported table{
+    margin: auto;
+    margin-top: 30px;
+    font-family: Arial;
+}
+
+.imported table td input{
+    border-width: 2px;
+    border-color: var(--blue3);
+    border-style: solid;
+    border-radius: 50px;
+    padding: 4px;
+    font-size: 18px;
+    text-align: center;
+
+}
+
+.imported table td{
+    padding-bottom: 10px;
     text-align: center;
 }
 
-table {
-    margin-left: auto;
-    margin-right: auto;
+.imported table th {
+    font-size: 40pt;
+    color: var(--almostwhite1);
+    text-transform: uppercase;
 }
 
-.title {
-    font-family: Z003;
+.imported table td #submit{
+    width:40%;
+	background-color: var(--blue2);
+	border-radius:28px;
+	border:none;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+    font-weight: bold;
+	font-size:17px;
+	padding:16px 31px;
+	text-decoration:none;
 }
 
-#bigTitle {
-    font-size: 8em;
-    margin-top: 200px;
+.imported table td #submit:hover {
+	background-color:var(--blue3);
 }
 
-#smallTitle {
-    font-size: 2em;
-    margin-top: 0px;
+.mainContent img{
+    margin-left: 15%;
+    width: 70%;
 }
 
-#loginHeader {
-    font-size: 2em;
-}
+
+
