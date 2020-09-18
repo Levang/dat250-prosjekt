@@ -1,45 +1,41 @@
 from flask import render_template, url_for, redirect, request, flash
+from configparser import ConfigParser
 ###################
 from safecoin import app, db, bcrypt
 from safecoin.models import User
 from safecoin.forms import RegistrationForm
+from safecoin.accounts import addNewAccountToUser
+# db.create_all()
 
 
-def saveInDatabase():
-    pass
+def isCommonPassword(password):
+    with open("safecoin/commonPasswords.txt", "r") as f:
+        for weakpwd in f:
+            if password == weakpwd[:-1]:
+                return True
+    return False
 
 
 def getPasswordViolations(errList, password):
     if type(password) != str:
-        return "An error occured!"
+        errList.append("An error occured!")
+        return
+
+    if isCommonPassword(password):
+        errList.append("Password is too common")
+        return
 
     # Password params
-    want_length = 8
-    want_numbers = 3
+    cfg = ConfigParser()
+    cfg.read("safecoin/config.ini")
+    policy = cfg["passwordPolicy"]
+    try:
+        want_length = int(policy["length"])
+    except (KeyError, TypeError):
+        want_length = 10
 
     if len(password) < want_length:
         errList.append(f"Password should be at least {want_length} characters")
-
-    numbers = 0
-    for letter in password:
-        try:
-            int(letter)
-            numbers += 1
-        except ValueError:
-            pass
-
-    if numbers < want_numbers:
-        errList.append(f"Password must have at least {want_numbers} numbers from 0-9")
-
-
-def registerUser(email, password, repass):
-    errList = []
-    if password != repass:
-        errList.append("Passwords doesn't match")
-        return errList
-    if not getPasswordVioPasswordslations(errList, password):
-        return errList
-    return None
 
 
 # --- Register page --- #
@@ -50,26 +46,17 @@ def registerUser(email, password, repass):
 
 @app.route("/register/", methods=["GET", "POST"])
 def register():
-    # try:
-    #    errs = registerUser(request.form["mail"], request.form["password"], request.form["repass"])
-    # except KeyError:
-    #    errs = None
-    #if errs:
-    #    for err in errs:
-    #        flash(f"{err}", "error")
-    #    return redirect("/register/")
-    ## db.add_user(request.form["email"], request.form["password"])
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(email=form.email.data, password=hashed_pw)
-        db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created! You are now able to log in', 'success')
-        return redirect(url_for('home'))
+        errList = []
+        getPasswordViolations(errList, form.password.data)
+        if len(errList) == 0:
+            hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            user = User(email=form.email.data, password=hashed_pw)
+            db.session.add(user)
+            db.session.commit()
+            flash('Your account has been created! You are now able to log in.', 'success')
+            return redirect(url_for('home'))
+        for err in errList:
+            flash(err, "error")
     return render_template("register.html", form=form)
-    #form.email()
-    #user = User(email=request.form["email"], password=request.form["password"])
-    #db.session.add(user)
-    #db.session.commit()
-    #return "Registered!"

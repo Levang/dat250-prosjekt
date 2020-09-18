@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 
 {% block reglog %}
-<body class="importedContent"> <p>HERE COMES LOGIN FORM</p>
+<body class="importedContent">
     <form method="post">
             <!-- Jinja code hidden tag? -->
             <table>
@@ -11,20 +11,45 @@
                             <p class="title"><strong>Login</strong></p>
                         </th>
                     </tr>
-                        Jinja code for flashes
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                        <tr class=flashes>
+                          <td class="{{ category }}">{{ message }}</td>
+                        </tr>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <tr>
+                                <td>{{ error }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
                     <tr>
                         <td>
-                            Jinja code email
+                            {{ form.email() }}
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            Jinja code password
+                            {{ form.password() }}
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            Jinja code login button
+                            <strong>{{ form.remember.label() }} </strong>{{ form.remember() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.submit() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a id="submit" href="/register">Register</a>
                         </td>
                     </tr>
                 </tbody>

@@ -11,17 +11,21 @@ def overviewPage():
 def histPage():
     return render_template('hist_transfer.html')
 
+
 @app.route('/accounts')
 def accountsPage():
     return render_template('accounts.html')
+
 
 @app.route('/transfer')
 def transferPage():
     return render_template('transfer.html')
 
+
 @app.route('/pay')
 def payPage():
     return render_template('pay.html')
+
 
 @app.route('/profile')
 def profilePage():
