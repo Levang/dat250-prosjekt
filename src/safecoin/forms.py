@@ -7,8 +7,8 @@ from safecoin.models import User
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
-    password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "********"})
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')], render_kw={"placeholder": "********"})
+    password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')], render_kw={"placeholder": "password"})
     submit = SubmitField('Sign Up')
 
     def validate_email(self, email):
@@ -19,6 +19,7 @@ class RegistrationForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
-    password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "********"})
-    remember = BooleanField('Remember Me')
+    password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
+    remember = BooleanField('Remember me')
     submit = SubmitField('Login')
+    register = SubmitField('Register')

@@ -77,7 +77,7 @@ body {
 .imported{
     background-color: none;
     min-height: 700px;
-    margin-top: -5px;
+    margin-top: none;
     margin-left: 100px;
     margin-right: 100px;
     padding-top: 10px;
