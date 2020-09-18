@@ -1,14 +1,29 @@
+<<<<<<< HEAD
 {% extends 'index.html' %}
 
 {% block reglog %}
 <body class="importedContent">
     <form method="post">
+=======
+<!doctype html>
+<html>
+    <head>
+        <title>Register</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    </head>
+    <body>
+        <form method="post">
+>>>>>>> 3868993236f98a16f4156ff4d79201046a3524bc
             {{ form.hidden_tag() }}
             <table>
                 <tbody>
                     <tr>
                         <th>
+<<<<<<< HEAD
                             <p class="title"><strong>Register</strong></p>
+=======
+                            <div id="bigTitle" class="title"><strong>Register</strong></div>
+>>>>>>> 3868993236f98a16f4156ff4d79201046a3524bc
                         </th>
                     </tr>
                     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -22,12 +37,19 @@
                     {% endwith %}
                     <tr>
                         <td>
+<<<<<<< HEAD
+=======
+                            {{ form.email.label() }} <br />
+>>>>>>> 3868993236f98a16f4156ff4d79201046a3524bc
                             {% if form.email.errors %}
                                 {{ form.email() }}
                                 {% for error in form.email.errors %}
                                     <span>{{ error }}</span>
                                 {% endfor %}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3868993236f98a16f4156ff4d79201046a3524bc
                             {% else %}
                                 {{ form.email() }}
                             {% endif %}
