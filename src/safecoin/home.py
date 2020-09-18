@@ -16,7 +16,7 @@ def home():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
-            return redirect(overviewPage)
+            return redirect(url_for("overviewPage"))
         else:
             flash('Wrong username or password. Please try again.')
     return render_template("login.html", form=form)

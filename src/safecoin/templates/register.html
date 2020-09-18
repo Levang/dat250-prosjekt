@@ -20,16 +20,16 @@
                         {% endfor %}
                       {% endif %}
                     {% endwith %}
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <tr>
+                                <td>{{ error }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
                     <tr>
                         <td>
-                            {% if form.email.errors %}
-                                {{ form.email() }}
-                                {% for error in form.email.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            {% else %}
-                                {{ form.email() }}
-                            {% endif %}
+                            {{ form.email() }}
                         </td>
                     </tr>
                     <tr>
