@@ -18,7 +18,7 @@ def home():
             return redirect(url_for('Overview'))   
         else:
             flash('Wrong username or password. Please try again.')
-    return render_template("index.html")
+    return render_template("login.html")
 
 # If we need a method for a user to log out:
 @app.route("/logout")
