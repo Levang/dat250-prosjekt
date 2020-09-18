@@ -3,6 +3,7 @@ from flask import render_template, url_for, redirect, request, flash
 from safecoin import app, db, bcrypt
 from safecoin.models import User
 from safecoin.forms import RegistrationForm
+db.create_all()
 
 
 def saveInDatabase():
@@ -37,7 +38,7 @@ def registerUser(email, password, repass):
     if password != repass:
         errList.append("Passwords doesn't match")
         return errList
-    if not getPasswordVioPasswordslations(errList, password):
+    if not getPasswordViolations(errList, password):
         return errList
     return None
 
