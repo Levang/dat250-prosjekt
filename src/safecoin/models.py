@@ -3,12 +3,13 @@ from safecoin import db, login_manager
 
 
 @login_manager.user_loader
-def load_user(email):
+def load_user(id):
     # TODO Levang must verify that this works.. Removed ids from user db for simplicity (wasn't needed)
-    return User.query.get(email)
+    return User.query.get(id)
 
 
 class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, unique=True)
     email = db.Column(db.String(120), primary_key=True, unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     accounts = db.Column(db.String(120))
