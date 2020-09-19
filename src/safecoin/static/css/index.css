@@ -15,9 +15,24 @@ html {
 }
 
 .split_page{
-    margin:auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-left: auto;
+    margin-right: auto;
     display: grid;
     grid-template-columns: 60% 40%;
+    grid-template-rows: 40% 60%;
+    grid-template-areas:
+      "a1 a2"
+      "a3 a4";
+  }
+
+.mainContent{
+    grid-area: a1;
+}
+.imported{
+    grid-area: a2;
+    min-width: 200px
 }
 
 .split_page div{
@@ -25,8 +40,8 @@ html {
 }
 
 .imported table{
-    margin: auto;
     margin-top: 30px;
+    width:100%;
     font-family: Arial;
 }
 
@@ -35,8 +50,11 @@ html {
     border-color: var(--blue3);
     border-style: solid;
     border-radius: 50px;
-    padding: 4px;
-    font-size: 18px;
+    padding: 5px;
+    font-size: 100%;
+    max-width: 400px;
+    min-width: 200px;
+    width: 70%;
     text-align: center;
 
 }
@@ -47,13 +65,15 @@ html {
 }
 
 .imported table th {
-    font-size: 40pt;
+    font-size: 250%;
     color: var(--almostwhite1);
     text-transform: uppercase;
+    padding-bottom: 30px;
 }
 
 .imported table td #submit{
-    width:40%;
+    width:30%;
+    min-width: 110px;
 	background-color: var(--blue2);
 	border-radius:28px;
 	border:none;
@@ -61,8 +81,8 @@ html {
 	cursor:pointer;
 	color:#ffffff;
     font-weight: bold;
-	font-size:17px;
-	padding:16px 31px;
+	font-size: 100%;
+	padding: 3% 5% 3%;
 	text-decoration:none;
 }
 
@@ -70,10 +90,37 @@ html {
 	background-color:var(--blue3);
 }
 
+.mainContent {
+    margin-top: px;
+    text-align: center;
+}
 .mainContent img{
-    margin-left: 15%;
     width: 70%;
 }
+
+@media(max-width:550px){
+    .split_page{
+    display: grid;
+    grid-template-columns: 100% 0%;
+    grid-template-rows: 40% 60%;
+    grid-template-areas:
+      "a1 a2"
+      "a3 a4";
+    }
+    .imported{
+        grid-area: a3;
+    }
+    .split_page div{
+    min-height: 0px;
+    }
+    .mainContent img{
+    width: 30%;
+    }
+}
+
+
+
+
 
 
 
