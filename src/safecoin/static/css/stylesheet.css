@@ -30,13 +30,15 @@ body {
     width: 100%;
 }
 .menubar {
-    background-color: var(--blue3);
+    background-image: linear-gradient(to bottom, var(--blue2), var(--blue3));
     display: grid;
     grid-auto-flow: column;
     align-items: end;
     grid-gap: none;
     margin: none;
     padding: none;
+    position:fixed;
+    width: 100%;
     /* border-bottom: 5px solid var(--blue3); */
 }
 
@@ -44,9 +46,6 @@ body {
     box-shadow: 0px 0px 8px 2px;
 }
 
-.shadowSides {
-    box-shadow: 0px 8px 5px 0px
-}
 
 .pages{
     padding: none;
@@ -55,43 +54,89 @@ body {
     text-align: center;
 }
 
-.menubar button {
-    height: 60px;
-    background-color: var(--blue3);
-    border: none;
-    margin: none;
-    padding-left: 20px;
-    padding-right: 20px;
-    font-size: 20px;
-    color: var(--almostwhite1);
-    font-weight: bold;
-}
-.menubar button:hover {
-    background-color: var(--lightblue1);
-}
+
 
 .profile{
     text-align: right;
 }
 
 .imported{
-    background-color: none;
     min-height: 700px;
-    margin-top: none;
-    margin-left: 100px;
-    margin-right: 100px;
-    padding-top: 10px;
+    padding-top: 55px;
 
 }
 
 .safecoin img {
-    height: 100%;
+    margin-top: 3px;
+    height: 85%;
+}
+.menubar button {
+    height: 50px;
+    background: linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,0));
+    border: none;
+    margin: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16pt;
+    color: var(--almostwhite1);
+    font-weight: bold;
+}
+.menubar button:hover {
+    background: linear-gradient(0deg, rgba(4,174,217,0.5), rgba(0,0,0,0));
 }
 
-@media (min-width:850px) {
+@media (max-width:850px) {
+
     .imported{
-        margin-left: none;
-        margin-right: none;
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 0px;
+        padding-top: 45px;
+    }
+    .menubar button {
+    height: 40px;
+    font-size: 16pt;
+    }
+}
+
+
+@media (max-width: 730px) {
+
+    .menubar button {
+    height: 40px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12pt;
+    }
+}
+@media (max-width:590px) {
+
+    .menubar button {
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 12pt;
     }
 
+}
+
+@media (max-width:520px) {
+
+    .menubar button {
+    padding-left: 0px;
+    padding-right: 2px;
+    font-size: 12pt;
+    }
+
+}
+@media (max-width:465px) {
+    .menubar button {
+    font-size: 11pt;
+    }
+
+}
+
+@media (max-width:435px) {
+    .menubar button {
+    font-size: 9pt;
+    }
 }
