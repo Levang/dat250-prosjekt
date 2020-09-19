@@ -1,0 +1,3 @@
+# Structure
+
+Something about the structure of the project.
