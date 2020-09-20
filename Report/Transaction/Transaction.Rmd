@@ -1,3 +1,0 @@
-# Transaction
-
-Something about transactions.

@@ -1,3 +1,0 @@
-# Authentication
-
-Something about authentication

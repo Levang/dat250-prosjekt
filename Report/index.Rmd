@@ -1,0 +1,11 @@
+---
+title:  "EV3oss documentation"
+author: "Elias Nodland"
+date:   "`r Sys.Date()`"
+documentclass: book
+description: "EV3oss technical documentation"
+---
+
+# Preface {-}
+
+In this book we will introduce some cool shit.
