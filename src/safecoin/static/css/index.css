@@ -98,6 +98,18 @@ html {
     width: 70%;
 }
 
+.memberMe {
+    padding: 0px;
+}
+
+.memberMe td {
+    padding-right: 30%;
+}
+.memberMe #remember {
+        margin: 0px;
+        width: 0px;
+      }
+
 @media(max-width:550px){
     .split_page{
     display: grid;
