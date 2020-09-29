@@ -1,9 +1,11 @@
 ---
 title:  "DAT250 - Information security - Project report"
-author: "Joachim Andreassen,
-         Lars Sverre Levang,
-         Ardijan Rexhaj,
-         Vidar Andre Bø"
+author: |
+  | Joachim Andreassen
+  | Lars Sverre Levang
+  | Ardijan Rexhaj
+  | Vidar Andre Bø
+  | Elias Nodland
 date:   "`r Sys.Date()`"
 documentclass: scrbook
 description: "Project report"
@@ -13,8 +15,6 @@ lang: en
 ```{r setup, echo=F}
 ```
 
-
 # Preface {-}
 
-In this book we will introduce some cool shit. Testing some shit.
-
+This is a report/documentation for the website [safecoin.tech](https://safecoin.tech/), a banking site designed to be... well... safe!

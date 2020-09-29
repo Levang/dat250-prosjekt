@@ -1,2 +1,5 @@
 bookdown::pdf_book:
   pandoc_args: "--highlight-style=kate"
+
+bookdown::gitbook: default
+
