@@ -10,7 +10,7 @@ Some notation:
 - `((a))` means an encrypted form of `a` is stored.
 
 
-## Users
+## Users {#database-users}
 
 Users is a database of registered users, their `2fa_secret` key, and their accounts and the keys to control those accounts. None of the sensitive information in this database should ever be stored in a plaintext state. It should optimally be cryptographically hashed, but for data that is not user supplied, at least encrypted using the information supplied by the user. Doing it that way means we get to encrypt user data and not store the key anywhere.
 
@@ -33,7 +33,7 @@ Users is a database of registered users, their `2fa_secret` key, and their accou
 - `accs+priv_keys` is simply a long list containing all account numbers associated with the user and the private key associated with that account. It is encrypted using the users email and password.
 
 
-## Accounts
+## Accounts {#database-accounts}
 
 Accounts is a database containing all banking accounts registered and their balance. Accounts should be borderline "use and dispose" meaning they should be easy to create and not limited in supply.
 
@@ -48,7 +48,7 @@ Accounts is a database containing all banking accounts registered and their bala
 - `balance` is simply the balance of the account.
 
 
-## Transactions
+## Transactions {#database-transactions}
 
 Transactions is a database containing all transactions that have been performed ever. It should contain no sensitive information.
 
