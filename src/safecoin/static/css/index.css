@@ -43,6 +43,8 @@ html {
     margin-top: 30px;
     width:100%;
     font-family: Arial;
+    color: var(--almostwhite1)
+    
 }
 
 .imported table td input{
@@ -62,6 +64,7 @@ html {
 .imported table td{
     padding-bottom: 10px;
     text-align: center;
+    font-size: 130%;
 }
 
 .imported table th {
@@ -113,6 +116,9 @@ html {
         margin: 0px;
         width: 0px;
       }
+.imported table td.message {
+        color: #c70000;
+}
 
 @media(max-width:550px){
     .split_page{
