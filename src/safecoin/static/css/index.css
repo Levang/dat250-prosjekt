@@ -72,8 +72,9 @@ html {
 }
 
 .imported table td #submit{
+    
     width:30%;
-    min-width: 110px;
+    min-width: 150px;
 	background-color: var(--blue2);
 	border-radius:28px;
 	border:none;
@@ -82,7 +83,10 @@ html {
 	color:#ffffff;
     font-weight: bold;
 	font-size: 100%;
-	padding: 3% 5% 3%;
+	padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 2%;
+    padding-bottom: 2%;
 	text-decoration:none;
 }
 
