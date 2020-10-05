@@ -1,4 +1,4 @@
-#!/home/joachim/Documents/DAT250/prosjekt/venv/bin/python
+#!/root/safecoin.tech/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
