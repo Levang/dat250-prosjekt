@@ -22,3 +22,8 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
     remember = BooleanField('Remember me')
     submit = SubmitField('Login')
+
+class RemoveForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
+    password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
+    submit = SubmitField('Remove')

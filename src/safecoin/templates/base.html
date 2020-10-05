@@ -11,7 +11,9 @@
 <body>
     <div class="menubar shadowDown">
         <div class="safecoin">
-            <button type="button" onclick="window.location.href='/overview';"><img src="{{ url_for('static', filename='/assets/logo_low.png') }}"></button>
+            <button type="button" onclick="window.location.href='/overview';">
+                <img src="{{ url_for('static', filename='/assets/logo_low.png')}}">
+            </button>
         </div>
         <div class="pages">
             <button type="button" onclick="window.location.href='/overview';">Overview</button>
