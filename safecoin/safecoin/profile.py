@@ -10,6 +10,7 @@ from safecoin.overview import overviewPage
 # --- Main page --- #
 @app.route("/", methods=["GET", "POST"])
 @app.route("/profile", methods=["GET", "POST"])
+@login_required
 def home():
     form = RemoveForm()
     if form.validate_on_submit():

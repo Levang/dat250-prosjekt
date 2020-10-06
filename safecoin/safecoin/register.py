@@ -4,7 +4,7 @@ from configparser import ConfigParser
 from safecoin import app, db, bcrypt
 from safecoin.models import User
 from safecoin.forms import RegistrationForm
-from safecoin.accounts import addNewAccountToUser
+from safecoin.accounts_db import addNewAccountToUser
 db.create_all()
 
 
