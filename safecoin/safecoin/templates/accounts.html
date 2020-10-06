@@ -2,14 +2,24 @@
 
 {% block head %}
 <title>Overview</title>
-{% endblock%}
+{% endblock %}
 
 {% block body %}
 
 
 <div>
-<button type="button" >Create New Account</button>
+    <button type="button" >Create New Account</button>
 </div>
+<p class="delete_info">You can only delete empty accounts</p>
+<form action="">
+    <ul class="drop">
+        {% for account in account_list %}
+            {% if account.balance == 0 %}
+                <li><a href="{{  account.number }}">{{  account.number }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</form>
 
 <div>
 <table>
@@ -24,15 +34,24 @@
       {% endif %}
     {% endwith %}
 
+    <tr>
+        <th>
+            Account number
+        </th>
+        <th>
+            Balance
+        </th>
+    </tr>
+
 {% for account in account_list %}
-        <tr>
-            <td>
-                {{account.number}}
-            </td>
-            <td>
-                {{account.balance}} kr
-            </td>
-        </tr>
+    <tr>
+        <td>
+            {{account.number}}
+        </td>
+        <td>
+            {{account.balance}} kr
+        </td>
+    </tr>
 {%endfor%}
     </tbody>
 </table>

@@ -15,7 +15,7 @@ class TmpAcc:
         pass
 
 
-account_list = [TmpAcc(1, 2000), TmpAcc(2, 3550), TmpAcc(43, 50), TmpAcc(54, 2000), TmpAcc(7, 3450), TmpAcc(12, 50)]
+account_list = [TmpAcc(1, 2000), TmpAcc(2, 0), TmpAcc(43, 50), TmpAcc(54, 2000), TmpAcc(7, 0), TmpAcc(12, 50)]
 
 
 @login_required
