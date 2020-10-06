@@ -6,8 +6,21 @@
 
 {% block body %}
 
-<div class="img">
-    <img src="{{ url_for('static', filename='maxresdefault.jpg') }}", alt="STONKS">
-</div>
+<table>
+{% for account in showAccounts %}
+<tr>
+    <td>
+    {{account.number}}
+    </td>
+    <td>
+    {{account.type}}
+    </td>
+    <td>
+    {{account.balance}}
+    </td>
+</tr>
+{%endfor%}
+</table>
+
 
 {% endblock %}
