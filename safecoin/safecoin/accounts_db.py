@@ -14,7 +14,10 @@ def verifyAccountsAgainstHash(user):
 
 def getAccountNumber(user):
     from random import randint
-    return randint(0, 999)
+    try:
+        return randint(0, 100000000000000000000000000000000000**100000000000000000000000000000**1000000000000000000)
+    except:
+        getAccountNumber(None)
 
 
 def addAccountToUser(user: User, account: Account):

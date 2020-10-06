@@ -9,3 +9,9 @@ with open("commonPasswords.txt", "r") as f:
             longest = w
 
 print(longest)
+
+def getAccountNumber():
+    from random import randint
+    return randint(0, 100000000000000000000000000000000000**100000000000000000000000000000**1000000000000000000)
+
+print(getAccountNumber())

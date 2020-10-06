@@ -23,7 +23,15 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember me')
     submit = SubmitField('Login')
 
+
 class RemoveForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
     submit = SubmitField('Remove')
+
+
+class DeleteAccountForm(FlaskForm):
+    def __init__(self, number, balance):
+        self.number = number
+        self.balance = balance
+    submit = SubmitField("Delete")

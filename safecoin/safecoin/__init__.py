@@ -23,3 +23,4 @@ def unauthorized_callback():
 from safecoin import home
 from safecoin import overview
 from safecoin import register
+from safecoin import accounts

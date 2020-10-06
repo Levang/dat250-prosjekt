@@ -8,26 +8,33 @@
 
 
 <div>
-<button type="button" onclick="{{ addNewAccountToUser(flask.) }}">Create New Account</button>
+<button type="button" >Create New Account</button>
 </div>
 
 <div>
 <table>
-{% for account in showAccounts %}
-<tr>
-    <form>
-        <td>
-            {{account.number}}
-        </td>
-        <td>
-            {{account.balance}}
-        </td>
-        <td>
-            <button type="button" onclick="{{account.delete(var)}}">Delete</button>
-        </td>
-    </form>
-</tr>
+    <tbody>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+        <tr class=flashes>
+          <td colspan="3" class="{{ category }}">{{ message }}</td>
+        </tr>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+{% for account in account_list %}
+        <tr>
+            <td>
+                {{account.number}}
+            </td>
+            <td>
+                {{account.balance}} kr
+            </td>
+        </tr>
 {%endfor%}
+    </tbody>
 </table>
 </div>
 
