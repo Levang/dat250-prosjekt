@@ -6,17 +6,29 @@
 
 {% block body %}
 
+
+<div>
+<button type="button" onclick="{{ addNewAccountToUser(flask.) }}">Create New Account</button>
+</div>
+
+<div>
 <table>
 {% for account in showAccounts %}
 <tr>
-    <td>
-    {{account.number}}
-    </td>
-    <td>
-    {{account.balance}}
-    </td>
+    <form>
+        <td>
+            {{account.number}}
+        </td>
+        <td>
+            {{account.balance}}
+        </td>
+        <td>
+            <button type="button" onclick="{{account.delete(var)}}">Delete</button>
+        </td>
+    </form>
 </tr>
 {%endfor%}
 </table>
+</div>
 
 {% endblock %}
