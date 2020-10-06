@@ -5,8 +5,4 @@ gitbook:
 	R -e "bookdown::render_book('index.Rmd', 'bookdown::gitbook', config_file='_bookdown.yml')"
 
 serve:
-	R -e "bookdown::serve_book(dir='.', output_dir='../Documentation', T, F, T)"
-
-.PHONY: clean
-clean:
-	-rm -rf ../Documentation/*
+	R -e "bookdown::serve_book(dir='.', output_dir='../docs', T, F, T)"
