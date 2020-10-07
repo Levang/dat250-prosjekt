@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="structure.html"/>
-<link rel="next" href="registration.html"/>
+<link rel="next" href="users.html"/>
 <script src="libs/header-attrs-2.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -69,13 +69,15 @@
 <li class="chapter" data-level="1" data-path="structure.html"><a href="structure.html"><i class="fa fa-check"></i><b>1</b> Structure</a></li>
 <li class="chapter" data-level="2" data-path="databases.html"><a href="databases.html"><i class="fa fa-check"></i><b>2</b> Databases</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="databases.html"><a href="databases.html#database-users"><i class="fa fa-check"></i><b>2.1</b> Users</a></li>
-<li class="chapter" data-level="2.2" data-path="databases.html"><a href="databases.html#database-accounts"><i class="fa fa-check"></i><b>2.2</b> Accounts</a></li>
-<li class="chapter" data-level="2.3" data-path="databases.html"><a href="databases.html#database-transactions"><i class="fa fa-check"></i><b>2.3</b> Transactions</a></li>
+<li class="chapter" data-level="2.1" data-path="databases.html"><a href="databases.html#databases-users"><i class="fa fa-check"></i><b>2.1</b> Users</a></li>
+<li class="chapter" data-level="2.2" data-path="databases.html"><a href="databases.html#databases-accounts"><i class="fa fa-check"></i><b>2.2</b> Accounts</a></li>
+<li class="chapter" data-level="2.3" data-path="databases.html"><a href="databases.html#databases-transactions"><i class="fa fa-check"></i><b>2.3</b> Transactions</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="registration.html"><a href="registration.html"><i class="fa fa-check"></i><b>3</b> Registration</a></li>
-<li class="chapter" data-level="4" data-path="authentication.html"><a href="authentication.html"><i class="fa fa-check"></i><b>4</b> Authentication</a></li>
-<li class="chapter" data-level="5" data-path="transactions.html"><a href="transactions.html"><i class="fa fa-check"></i><b>5</b> Transactions</a></li>
+<li class="chapter" data-level="3" data-path="users.html"><a href="users.html"><i class="fa fa-check"></i><b>3</b> Users</a></li>
+<li class="chapter" data-level="4" data-path="registration.html"><a href="registration.html"><i class="fa fa-check"></i><b>4</b> Registration</a></li>
+<li class="chapter" data-level="5" data-path="authentication.html"><a href="authentication.html"><i class="fa fa-check"></i><b>5</b> Authentication</a></li>
+<li class="chapter" data-level="6" data-path="accounts.html"><a href="accounts.html"><i class="fa fa-check"></i><b>6</b> Accounts</a></li>
+<li class="chapter" data-level="7" data-path="transactions.html"><a href="transactions.html"><i class="fa fa-check"></i><b>7</b> Transactions</a></li>
 </ul>
 
       </nav>
@@ -102,7 +104,7 @@
 <li><code>(a)</code> means the hash of <code>a</code> is stored.</li>
 <li><code>((a))</code> means an encrypted form of <code>a</code> is stored.</li>
 </ul>
-<div id="database-users" class="section level2" number="2.1">
+<div id="databases-users" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Users</h2>
 <p>Users is a database of registered users, their <code>2fa_secret</code> key, and their accounts and the keys to control those accounts. None of the sensitive information in this database should ever be stored in a plaintext state. It should optimally be cryptographically hashed, but for data that is not user supplied, at least encrypted using the information supplied by the user. Doing it that way means we get to encrypt user data and not store the key anywhere.</p>
 <pre><code>(email)  (pw+salt)  salt  n  ((2fa_secret))  ((n_accs))  ((accs+priv_keys))</code></pre>
@@ -116,7 +118,7 @@
 <li><p><code>accs+priv_keys</code> is simply a long list containing all account numbers associated with the user and the private key associated with that account. It is encrypted using the users email and password.</p></li>
 </ul>
 </div>
-<div id="database-accounts" class="section level2" number="2.2">
+<div id="databases-accounts" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Accounts</h2>
 <p>Accounts is a database containing all banking accounts registered and their balance. Accounts should be borderline “use and dispose” meaning they should be easy to create and not limited in supply.</p>
 <pre><code>(acc)  public_key  balance</code></pre>
@@ -126,7 +128,7 @@
 <li><p><code>balance</code> is simply the balance of the account.</p></li>
 </ul>
 </div>
-<div id="database-transactions" class="section level2" number="2.3">
+<div id="databases-transactions" class="section level2" number="2.3">
 <h2><span class="header-section-number">2.3</span> Transactions</h2>
 <p>Transactions is a database containing all transactions that have been performed ever. It should contain no sensitive information.</p>
 <pre><code>uid  date  timeout  (from)  (to)  amount  sign</code></pre>
@@ -148,7 +150,7 @@
         </div>
       </div>
 <a href="structure.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="registration.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="users.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

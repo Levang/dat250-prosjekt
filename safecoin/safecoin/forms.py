@@ -1,6 +1,7 @@
 import email_validator
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
+import flask_scrypt
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from safecoin.models import User
 
@@ -12,9 +13,10 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_email(self, email):
-        email = User.query.filter_by(email=email.data).first()
+        hashed_email = flask_scrypt.generate_password_hash(email.data, "")
+        email = User.query.filter_by(email=hashed_email).first()
         if email:
-            raise ValidationError('This email address is already in use.')
+            raise ValidationError('Something went wrong')
 
 
 class LoginForm(FlaskForm):

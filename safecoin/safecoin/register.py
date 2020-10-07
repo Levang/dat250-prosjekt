@@ -2,9 +2,11 @@ from flask import render_template, url_for, redirect, request, flash
 from configparser import ConfigParser
 ###################
 from safecoin import app, db, bcrypt
+import flask_scrypt
 from safecoin.models import User
 from safecoin.forms import RegistrationForm
-from safecoin.accounts_db import addNewAccountToUser
+from safecoin.accounts import addNewAccountToUser
+# db.create_all()
 
 
 def isCommonPassword(password):
@@ -50,8 +52,21 @@ def register():
         errList = []
         getPasswordViolations(errList, form.password.data)
         if len(errList) == 0:
-            hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-            user = User(email=form.email.data, password=hashed_pw)
+            hashed_email = flask_scrypt.generate_password_hash(form.email.data, "")
+            print(hashed_email)
+
+            salt = flask_scrypt.generate_random_salt()
+            print(salt)
+
+            hashed_pw = flask_scrypt.generate_password_hash(form.password.data, salt)
+            print(hashed_pw)
+
+            if User.query.filter_by(email=hashed_email.decode("utf-8")).first():
+                flash("error")
+                return render_template("register.html", form=form)
+
+
+            user = User(email=hashed_email.decode("utf-8"), password=(hashed_pw+salt).decode("utf-8"))
             db.session.add(user)
             db.session.commit()
             flash('Your account has been created! You are now able to log in.', 'success')

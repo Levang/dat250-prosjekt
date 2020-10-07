@@ -1,21 +1,24 @@
 from flask_login import UserMixin
+from flask_scrypt import generate_password_hash
 from safecoin import db, login_manager
 
 
 @login_manager.user_loader
-def load_user(id):
-    # TODO Levang must verify that this works.. Removed ids from user db for simplicity (wasn't needed)
-    return User.query.get(id)
+def load_user(user_id):
+    return User.query.filter_by(email=user_id).first()
 
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, unique=True)
-    email = db.Column(db.String(120), primary_key=True, unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
-    accounts = db.Column(db.String(120))
-    acc_hashed = db.Column(db.String(80))
+    email = db.Column(db.String(80), primary_key=True, unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    secret = db.Column(db.String(32 + 128))
+    accounts = db.Column(db.String(10000))
+
+    def get_id(self):
+        return self.email
 
 
 class Account(db.Model, UserMixin):
-    accountNumber = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
-    balance = db.Column(db.Float, default=0.0)
+    number = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
+    pub_key = db.Column(db.String(300), unique=True, nullable=False)
+    balance = db.Column(db.Numeric(80))
