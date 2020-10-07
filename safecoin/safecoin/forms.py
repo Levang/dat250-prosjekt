@@ -1,4 +1,5 @@
 import email_validator
+from flask import flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
 import flask_scrypt
@@ -7,7 +8,13 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from safecoin.models import User
 
 # Remove when integrated with db
-from safecoin.accounts import account_list
+from safecoin.tmp import account_list
+
+
+def flash_all_but_field_required(form_field, flash_type="error"):
+    for string in form_field.errors:
+        if string != "This field is required.":
+            flash(string, flash_type)
 
 
 class RegistrationForm(FlaskForm):
@@ -50,3 +57,24 @@ class PayForm(FlaskForm):
         for account in account_list:
             choice_list.append((account.number, account.number))
         self.tfrom.choices = choice_list
+
+
+class ValidateForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
+    password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
+    proceed = SubmitField('Proceed')
+
+
+class AccountsForm(FlaskForm):
+    create_account = SubmitField('Create New Account')
+    account_select = SelectField('Select Account', validators=[DataRequired()])
+    delete_account = SubmitField('Delete')
+
+    def get_select_field(self, user):
+        choice_list = []
+        global account_list
+        for account in account_list:
+            if account.balance != 0:
+                continue
+            choice_list.append((account.number, account.number))
+        self.account_select.choices = choice_list

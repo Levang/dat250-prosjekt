@@ -19,7 +19,6 @@ def home():
 
         user = User.query.filter_by(email=hashed_email.decode("utf-8")).first()
 
-
         if not user:
             flash('Wrong username or password. Please try again.')
             return render_template("login.html", form=form)
@@ -38,6 +37,7 @@ def home():
         else:
             flash('Wrong username or password. Please try again.')
     return render_template("login.html", form=form)
+
 
 # If we need a method for a user to log out:
 @app.route("/logout")
