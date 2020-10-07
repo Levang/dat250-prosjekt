@@ -2,7 +2,8 @@ import email_validator
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
 import flask_scrypt
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
+
 from safecoin.models import User
 
 # Remove when integrated with db
@@ -36,16 +37,16 @@ class RemoveForm(FlaskForm):
 
 
 class PayForm(FlaskForm):
-    tfrom = SelectField('From*')
+    tfrom = SelectField('From*', validators=[DataRequired()])
     to = StringField('To*', validators=[DataRequired()], render_kw={"placeholder": "xxxxx.xx.xxxx"})
-    msg = StringField('KID/message', render_kw={"placeholder": "KID/message"})
+    msg = StringField('KID/message', validators=[Optional()], render_kw={"placeholder": "KID/message"})
     kr = IntegerField('Amount*', validators=[DataRequired()], render_kw={"placeholder": "0"})
-    ore = IntegerField(render_kw={"placeholder": "00"})
+    ore = IntegerField(validators=[Optional()], render_kw={"placeholder": "00"})
     pay = SubmitField('Pay')
 
     def get_select_field(self, user):
         choice_list = []
         global account_list
         for account in account_list:
-            
-        self.tfrom.choices =
+            choice_list.append((account.number, account.number))
+        self.tfrom.choices = choice_list

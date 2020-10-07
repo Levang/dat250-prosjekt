@@ -10,6 +10,15 @@
         {{ form.hidden_tag() }}
         <table>
             <tbody>
+                {% if form.errors %}
+                    {% for errors in form.errors.values() %}
+                        {% for error in errors %}
+                            <tr>
+                                <td>{{ error }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
                 <tr>
                     <td colspan="2">
                         {{ form.tfrom() }}
