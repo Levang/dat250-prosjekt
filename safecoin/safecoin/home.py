@@ -1,5 +1,5 @@
 from flask import render_template, url_for, redirect, request, flash
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 ### ------ Internal imports below ------ ###
 from safecoin import app, db, bcrypt
 import flask_scrypt
@@ -23,7 +23,7 @@ def home():
         if not user:
             flash('Wrong username or password. Please try again.')
             return render_template("login.html", form=form)
-        
+
         pw = bytes(user.password, "utf-8")
 
         pw_hash = pw[:88]
@@ -41,12 +41,11 @@ def home():
 
 # If we need a method for a user to log out:
 @app.route("/logout")
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
 
 
-#app.route('/overview')
-#ef helloOverview():
-#   return 'Hello from overview'
+
 
