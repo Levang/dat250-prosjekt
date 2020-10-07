@@ -20,7 +20,5 @@ login_manager = LoginManager(app)
 def unauthorized_callback():
     return redirect('/')
 
-from safecoin import home
-from safecoin import overview
-from safecoin import register
-from safecoin import accounts
+
+from safecoin import home, overview, register, accounts, pay

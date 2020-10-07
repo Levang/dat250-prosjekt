@@ -22,12 +22,6 @@ def transferPage():
     return render_template('transfer.html')
 
 
-@app.route('/pay')
-@login_required
-def payPage():
-    return render_template('pay.html')
-
-
 @app.route('/profile')
 @login_required
 def profilePage():

@@ -1,6 +1,6 @@
 import email_validator
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from safecoin.models import User
 
@@ -28,3 +28,12 @@ class RemoveForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
     submit = SubmitField('Remove')
+
+
+class PayForm(FlaskForm):
+    _from = StringField('From*', validators=[DataRequired()], render_kw={"placeholder": "xxxxx xx xxxx"})
+    to = IntegerField('To*', validators=[DataRequired()], render_kw={"placeholder": "xxxxx xx xxxx"})
+    msg = StringField('KID/message')
+    kr = IntegerField('Amount*', validators=[DataRequired()])
+    ore = IntegerField('Decimal', render_kw={"placeholder": "00"})
+    pay = SubmitField('Pay')
