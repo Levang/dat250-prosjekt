@@ -65,7 +65,6 @@ def register():
                 flash("error")
                 return render_template("register.html", form=form)
 
-
             user = User(email=hashed_email.decode("utf-8"), password=(hashed_pw+salt).decode("utf-8"))
             db.session.add(user)
             db.session.commit()

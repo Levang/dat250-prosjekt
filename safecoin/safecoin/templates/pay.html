@@ -5,10 +5,41 @@
 {% endblock%}
 
 {% block body %}
-
 <body>
     <form method="post">
-
+        {{ form.hidden_tag() }}
+        <table>
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        {{ form.tfrom() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {{ form.to() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {{ form.msg() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1">
+                        {{ form.kr() }}
+                    </td>
+                    <td colspan="1">
+                        , {{ form.ore() }},-
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {{ form.pay() }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </form>
 </body>
 

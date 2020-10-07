@@ -5,7 +5,6 @@ from safecoin import app
 
 @app.route('/overview')
 @login_required
-
 def overviewPage():
     return render_template('overview.html')
 
