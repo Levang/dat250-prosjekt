@@ -5,9 +5,51 @@
 {% endblock%}
 
 {% block body %}
-
-<div class="img">
-    <img src="{{ url_for('static', filename='maxresdefault.jpg') }}", alt="STONKS">
-</div>
+<body>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <table>
+            <tbody>
+                {% if form.errors %}
+                    {% for errors in form.errors.values() %}
+                        {% for error in errors %}
+                            <tr>
+                                <td>{{ error }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+                <tr>
+                    <td colspan="2">
+                        {{ form.tfrom() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {{ form.to() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {{ form.msg() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1">
+                        {{ form.kr() }}
+                    </td>
+                    <td colspan="1">
+                        , {{ form.ore() }},-
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {{ form.pay() }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</body>
 
 {% endblock %}

@@ -43,6 +43,7 @@ def home():
             flash('Wrong username or password. Please try again.')
     return render_template("login.html", form=form)
 
+
 # If we need a method for a user to log out:
 @app.route("/logout")
 @login_required

@@ -16,11 +16,7 @@ bcrypt = Bcrypt(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = '/login'
 
-activeUsers={}
 
-from safecoin import home
-from safecoin import overview
-from safecoin import register
-from safecoin import accounts
+from safecoin import home, overview, register, accounts, pay
