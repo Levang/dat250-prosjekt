@@ -5,6 +5,7 @@ from safecoin import db, login_manager
 
 @login_manager.user_loader
 def load_user(user_id):
+
     return User.query.filter_by(email=user_id).first()
 
 

@@ -61,16 +61,24 @@ def encrypt(key, theThing, password=False):
 
     return Fernet(key).encrypt(theThing)
 
-def parseAccounts(input):
-    # split input, extract accounts
-    # put into dict
-
-    return 
-
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 
 # Verifies the user and returns the User object if verified
 # If verification failes it returns None
+
+def parseAccounts(accInput):
+    if type(accInput) != str:
+        accInput=accInput.decode('utf-8')
+        print(accInput)
+
+    out={}
+    split_again=accInput.split(';')
+    for i in split_again:
+        nameAccount=i.split(',')
+        out[nameAccount[1]]=[nameAccount[0]]
+
+    return out
+
 def verifyUser(email,password,addToActive=False):
     hashed_email = flask_scrypt.generate_password_hash(email, "")
     userDB = User.query.filter_by( email=hashed_email.decode("utf-8") ).first()
@@ -82,33 +90,16 @@ def verifyUser(email,password,addToActive=False):
     pwOK=flask_scrypt.check_password_hash(password, pw[:88], pw[88:176])
 
     if addToActive and (emailOK and pwOK):
-            decryptKey=decrypt(password.encode('utf-8'),userDB.enKey,True)
+        decryptKey=decrypt(password.encode('utf-8'),userDB.enKey,True)
 
-            #email_   = decrypt(decryptKey,(userDB.enEmail))
-            accounts = decrypt(decryptKey,userDB.accounts.encode('utf-8'))
+        userInfo={}
+        userInfo['email']=email
 
-            user_accounts = parseAccounts(accounts)
+        if userDB.accounts != None:
+            accounts = decrypt(decryptKey,userDB.accounts)
+            userInfo['accounts'] = parseAccounts(accounts)
 
-            # parse accounts and add to dict
-
-
-
-            userInfo={}
-            userInfo['email']=email
-            userInfo['accounts'] = user_accounts
-
-
-            userInfo[]
-
-            if userDB.accounts!=None:
-                redis.set(hashed_email,email_)
-
-            else:
-
-
-
-            #global activeUsers[hashed_email]=userOut
-            #print(f'this is the email from encryption{activeUsers[hashed_email].email}')
+        redis.set(hashed_email,userInfo)
 
     if emailOK and pwOK:
         return True, userDB

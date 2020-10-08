@@ -70,13 +70,21 @@ def register():
                 return render_template("register.html", form=form)
 
             #print(f"encryption key: {enKey}")
+# ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
+
+            testvalue='myaccount,12321321321,secretkey;myaccount2,321321321,secretkey2;myaccount3,321321321321,secretkey3'
+# ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
+
             encryptedKey=encrypt(form.password.data,'generate',True) # generate new encrypted key with users password
             deKey=decrypt(form.password.data,encryptedKey,True)      # decrypt the key
             mailEncrypted=encrypt(deKey,form.email.data)             # encrypt the email
+            accountsEnc=encrypt(deKey,testvalue)
+
             print(f' decrytion key {deKey}')
             print(f' decryted email {decrypt(deKey,mailEncrypted)}')
 
             user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey)
+            user.accounts=accountsEnc
             db.session.add(user)
             db.session.commit()
             flash('Your account has been created! You are now able to log in.', 'success')
