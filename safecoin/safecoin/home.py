@@ -1,7 +1,9 @@
 from flask import render_template, url_for, redirect, request, flash
 from flask_login import login_user, current_user, logout_user
 ### ------ Internal imports below ------ ###
-from safecoin import app, db, bcrypt
+from safecoin import app, db, bcrypt, activeUsers
+from safecoin.encryption import encrypt, decrypt
+
 import flask_scrypt
 from safecoin.models import User
 from safecoin.forms import LoginForm
@@ -20,10 +22,6 @@ def home():
         user = User.query.filter_by(email=hashed_email.decode("utf-8")).first()
 
 
-        if not user:
-            flash('Wrong username or password. Please try again.')
-            return render_template("login.html", form=form)
-        
         pw = bytes(user.password, "utf-8")
 
         pw_hash = pw[:88]
@@ -33,6 +31,13 @@ def home():
         print(pw_salt)
 
         if user and flask_scrypt.check_password_hash(form.password.data, pw_hash, pw_salt):
+
+            print(f'this is the password {form.password.data.encode("utf-8")}')
+
+            activeUsers[hashed_email]=decrypt(form.password.data.encode('utf-8'),user.enKey,True)
+
+            print(f'DECRYPTED {decrypt(activeUsers[hashed_email],user.enEmail)}')
+
             login_user(user, remember=form.remember.data)
             return redirect(url_for("overviewPage"))
         else:

@@ -1,8 +1,10 @@
 from flask import render_template, url_for, redirect, request, flash
 from configparser import ConfigParser
+import base64
 ###################
 from safecoin import app, db, bcrypt
 import flask_scrypt
+from safecoin.encryption import encrypt, decrypt
 from safecoin.models import User
 from safecoin.forms import RegistrationForm
 from safecoin.accounts import addNewAccountToUser
@@ -39,6 +41,7 @@ def getPasswordViolations(errList, password):
         errList.append(f"Password should be at least {want_length} characters")
 
 
+
 # --- Register page --- #
 #@app.route("/register/")
 #def register():
@@ -51,6 +54,7 @@ def register():
     if form.validate_on_submit():
         errList = []
         getPasswordViolations(errList, form.password.data)
+
         if len(errList) == 0:
             hashed_email = flask_scrypt.generate_password_hash(form.email.data, "")
             print(hashed_email)
@@ -65,11 +69,16 @@ def register():
                 flash("error")
                 return render_template("register.html", form=form)
 
+            #print(f"encryption key: {enKey}")
+            encryptedKey=encrypt(form.password.data,'generate',True) # generate new encrypted key with users password
+            deKey=decrypt(form.password.data,encryptedKey,True)      # decrypt the key
+            mailEncrypted=encrypt(deKey,form.email.data)             # encrypt the email
 
-            user = User(email=hashed_email.decode("utf-8"), password=(hashed_pw+salt).decode("utf-8"))
+            user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey)
             db.session.add(user)
             db.session.commit()
             flash('Your account has been created! You are now able to log in.', 'success')
+
             return redirect(url_for('home'))
         for err in errList:
             flash(err, "error")
