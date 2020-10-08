@@ -1,7 +1,7 @@
 import hashlib, base64
 from cryptography.fernet import Fernet
 import flask_scrypt
-
+from safecoin.models import User
 
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 def generate_key(password=''):
@@ -53,3 +53,22 @@ def encrypt(key, theThing, password=False):
 
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 
+# Verifies the user and returns the User object if verified
+# If verification failes it returns None
+def verifyUser(email,password,addToActive=False):
+    hashed_email = flask_scrypt.generate_password_hash(email, "")
+    user = User.query.filter_by( email=hashed_email.decode("utf-8") ).first()
+
+    pw = user.password.encode('utf-8')
+
+    emailOK= hashed_email.decode('utf-8') == user.email  #boolean to compare with
+
+    pwOK=flask_scrypt.check_password_hash(password, pw[:88], pw[88:176])
+
+    if addToActive and (emailOK and pwOK):
+            activeUsers[hashed_email]=decrypt(password.encode('utf-8'),user.enKey,True)
+
+    if emailOK and pwOK:
+        return True, user
+
+    return False, None
