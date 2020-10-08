@@ -1,7 +1,7 @@
 from flask import render_template, url_for, redirect, request, flash
 from flask_login import login_user, current_user, logout_user, login_required
 ### ------ Internal imports below ------ ###
-from safecoin import app, db, bcrypt, activeUsers
+from safecoin import app, db, bcrypt
 from safecoin.encryption import encrypt, decrypt, verifyUser
 
 import flask_scrypt
@@ -18,10 +18,9 @@ def home():
     form = LoginForm()
     if form.validate_on_submit():
 
-        login , user = verifyUser(form.email.data,form.password.data,addToActive=True)
+        login , userDB = verifyUser(form.email.data,form.password.data,addToActive=True)
         if login:
-
-            login_user(user, remember=form.remember.data)
+            login_user(userDB, remember=form.remember.data)
             return redirect(url_for("overviewPage"))
         else:
             flash('Wrong username or password. Please try again.')

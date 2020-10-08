@@ -73,6 +73,8 @@ def register():
             encryptedKey=encrypt(form.password.data,'generate',True) # generate new encrypted key with users password
             deKey=decrypt(form.password.data,encryptedKey,True)      # decrypt the key
             mailEncrypted=encrypt(deKey,form.email.data)             # encrypt the email
+            print(f' decrytion key {deKey}')
+            print(f' decryted email {decrypt(deKey,mailEncrypted)}')
 
             user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey)
             db.session.add(user)

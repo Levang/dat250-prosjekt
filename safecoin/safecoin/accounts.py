@@ -23,9 +23,7 @@ def accounts():
 
     form_validate = ValidateForm()
 
-    # Change this when we can get list of accounts
     global account_list
-    # current_user.username
 
     if form.validate_on_submit() or form_validate.is_submitted():
         if form_validate.is_submitted():

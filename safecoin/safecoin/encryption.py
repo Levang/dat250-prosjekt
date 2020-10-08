@@ -2,6 +2,16 @@ import hashlib, base64
 from cryptography.fernet import Fernet
 import flask_scrypt
 from safecoin.models import User
+from safecoin import redis
+
+
+class UserClass:
+    email = ''
+    accounts = ''
+    secret = ''
+
+
+
 
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 def generate_key(password=''):
@@ -51,24 +61,59 @@ def encrypt(key, theThing, password=False):
 
     return Fernet(key).encrypt(theThing)
 
+def parseAccounts(input):
+    # split input, extract accounts
+    # put into dict
+
+    return 
+
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 
 # Verifies the user and returns the User object if verified
 # If verification failes it returns None
 def verifyUser(email,password,addToActive=False):
     hashed_email = flask_scrypt.generate_password_hash(email, "")
-    user = User.query.filter_by( email=hashed_email.decode("utf-8") ).first()
+    userDB = User.query.filter_by( email=hashed_email.decode("utf-8") ).first()
 
-    pw = user.password.encode('utf-8')
+    pw = userDB.password.encode('utf-8')
 
-    emailOK= hashed_email.decode('utf-8') == user.email  #boolean to compare with
+    emailOK= hashed_email.decode('utf-8') == userDB.email  #boolean to compare with
 
     pwOK=flask_scrypt.check_password_hash(password, pw[:88], pw[88:176])
 
     if addToActive and (emailOK and pwOK):
-            activeUsers[hashed_email]=decrypt(password.encode('utf-8'),user.enKey,True)
+            decryptKey=decrypt(password.encode('utf-8'),userDB.enKey,True)
+
+            #email_   = decrypt(decryptKey,(userDB.enEmail))
+            accounts = decrypt(decryptKey,userDB.accounts.encode('utf-8'))
+
+            user_accounts = parseAccounts(accounts)
+
+            # parse accounts and add to dict
+
+
+
+            userInfo={}
+            userInfo['email']=email
+            userInfo['accounts'] = user_accounts
+
+
+            userInfo[]
+
+            if userDB.accounts!=None:
+                redis.set(hashed_email,email_)
+
+            else:
+
+
+
+            #global activeUsers[hashed_email]=userOut
+            #print(f'this is the email from encryption{activeUsers[hashed_email].email}')
 
     if emailOK and pwOK:
-        return True, user
+        return True, userDB
 
     return False, None
+
+
+
