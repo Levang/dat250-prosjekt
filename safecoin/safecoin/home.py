@@ -23,20 +23,15 @@ def home():
 
 
         pw = bytes(user.password, "utf-8")
-
         pw_hash = pw[:88]
-        print(pw_hash)
-
+        #print(pw_hash)
         pw_salt = pw[88:176]
-        print(pw_salt)
+        #print(pw_salt)
 
         if user and flask_scrypt.check_password_hash(form.password.data, pw_hash, pw_salt):
-
-            print(f'this is the password {form.password.data.encode("utf-8")}')
-
+            #print(f'this is the password {form.password.data.encode("utf-8")}')
             activeUsers[hashed_email]=decrypt(form.password.data.encode('utf-8'),user.enKey,True)
-
-            print(f'DECRYPTED {decrypt(activeUsers[hashed_email],user.enEmail)}')
+            #print(f'DECRYPTED {decrypt(activeUsers[hashed_email],user.enEmail)}')
 
             login_user(user, remember=form.remember.data)
             return redirect(url_for("overviewPage"))
