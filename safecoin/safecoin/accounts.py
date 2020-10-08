@@ -1,39 +1,30 @@
-from safecoin.models import Account, User
-from safecoin import db, bcrypt
+from flask import render_template, request, flash
+from flask_login import current_user, login_required
+from flask_wtf import FlaskForm
+from safecoin.accounts_db import addNewAccountToUser
+from safecoin import app
 
 
-def verifyAccountsAgainstHash(user):
-    try:
-        if bcrypt.check_password_hash(user.acc_hashed, user.accounts):
-            return True
-        return False
-    except (TypeError, ValueError):
+# Temporary...
+class TmpAcc:
+    def __init__(self, nr, balance):
+        self.number = nr
+        self.balance = balance
+
+    def delete(self):
         pass
-    return True
 
 
-def getAccountNumber(user):
-    from random import randint
-    return randint(0, 999)
+account_list = [TmpAcc(1, 2000), TmpAcc(2, 0), TmpAcc(43, 50), TmpAcc(54, 2000), TmpAcc(7, 0), TmpAcc(12, 50)]
 
 
-def addAccountToUser(user: User, account: Account):
-    if not verifyAccountsAgainstHash(user):
-        return "Accounts has been modified externally!"
-    try:
-        tmpStr = user.accounts if type(user.accounts) is str else ""
-    except AttributeError:
-        tmpStr = ""
-    if tmpStr.count(";") > 10:
-        return "Number of accounts can't exceed 10"
-    accStr = f"{account.accountNumber}" if tmpStr == "" else f"{tmpStr};{account.accountNumber}"
-    user.accounts = accStr
-    user.acc_hashed = bcrypt.generate_password_hash(accStr)
-    db.session.add(account)
-    db.session.commit()
-    return None
-
-
-def addNewAccountToUser(user):
-    account = Account(accountNumber=getAccountNumber(user), balance=0.0)
-    return addAccountToUser(user, account)
+@login_required
+@app.route("/accounts/", methods=["GET", "POST"])
+def accounts():
+    clicked_acc = None
+    # Change this when we can get list of accounts
+    global account_list
+    # current_user.username
+    if request.method == "POST":
+        flash("Account deleted!", "success")
+    return render_template('accounts.html', account_list=account_list)
