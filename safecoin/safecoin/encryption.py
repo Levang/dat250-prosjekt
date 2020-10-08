@@ -17,7 +17,8 @@ def generate_key(password=''):
     key = base64.urlsafe_b64encode(key)
     return key
 
-
+#Used with the activeUsers dict example
+#example: decrypt(activeUsers[user.email],"Thing to decrypt")
 def decrypt(key,theThing,password=False,type_=''):
 
     if type(key)==str:
@@ -34,7 +35,8 @@ def decrypt(key,theThing,password=False,type_=''):
 
     return (Fernet(key).decrypt(theThing))
 
-
+#Used with the activeUsers dict example
+#example: encrypt(activeUsers[user.email],"Thing to encrypt")
 def encrypt(key, theThing, password=False):
     if password==True and theThing==("generate"):
         key = generate_key(key)
