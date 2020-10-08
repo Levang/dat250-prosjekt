@@ -23,7 +23,7 @@ def accounts():
 
     form_validate = ValidateForm()
 
-    # 
+    #
 
     # Change this when we can get list of accounts
     global account_list
