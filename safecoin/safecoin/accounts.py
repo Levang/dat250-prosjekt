@@ -16,12 +16,14 @@ def pressed_delete_account(nr):
 
 
 @app.route("/accounts/", methods=["GET", "POST"])
-@login_required
+# @login_required
 def accounts():
     form = AccountsForm()
     form.get_select_field(None)
 
     form_validate = ValidateForm()
+
+    # 
 
     # Change this when we can get list of accounts
     global account_list

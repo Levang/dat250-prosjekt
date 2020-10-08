@@ -55,7 +55,7 @@ class PayForm(FlaskForm):
         choice_list = []
         global account_list
         for account in account_list:
-            choice_list.append((account.number, account.number))
+            choice_list.append((account.number, f"{account.name} ({account.number})"))
         self.tfrom.choices = choice_list
 
 
@@ -66,8 +66,9 @@ class ValidateForm(FlaskForm):
 
 
 class AccountsForm(FlaskForm):
+    account_name = StringField('Account Name', validators=[Optional()])
     create_account = SubmitField('Create New Account')
-    account_select = SelectField('Select Account', validators=[DataRequired()])
+    account_select = SelectField('Select Account', validators=[Optional()])
     delete_account = SubmitField('Delete')
 
     def get_select_field(self, user):
@@ -76,5 +77,5 @@ class AccountsForm(FlaskForm):
         for account in account_list:
             if account.balance != 0:
                 continue
-            choice_list.append((account.number, account.number))
+            choice_list.append((account.number, f"{account.name} ({account.number})"))
         self.account_select.choices = choice_list
