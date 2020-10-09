@@ -1,6 +1,6 @@
 from flask import render_template, url_for, redirect
 from flask_login import login_required, current_user
-from safecoin import app, redis
+from safecoin import app, redis, json
 
 
 @app.route('/overview/')
@@ -24,9 +24,5 @@ def transferPage():
 @app.route('/profile/')
 @login_required
 def profilePage():
-    # # for i in activeUsers:
-    # #     print(i)
-    # #     print(i.email)
-    # # print(len(activeUsers))
-    # print("finished")
-    return render_template('profile.html',printmail=redis.get(current_user.email))
+
+    return render_template('profile.html')

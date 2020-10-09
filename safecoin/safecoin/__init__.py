@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from configparser import ConfigParser
 from flask_redis import FlaskRedis
+import json
 
 cfg = ConfigParser()
 cfg.read("safecoin/config.ini")

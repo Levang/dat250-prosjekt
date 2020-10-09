@@ -71,7 +71,6 @@ def register():
 
             #print(f"encryption key: {enKey}")
 # ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
-
             testvalue='myaccount,12321321321,secretkey;myaccount2,321321321,secretkey2;myaccount3,321321321321,secretkey3'
 # ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
 

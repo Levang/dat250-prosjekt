@@ -2,9 +2,9 @@ from flask import render_template, request, flash
 from flask_login import current_user, login_required
 from flask_wtf import FlaskForm
 from safecoin.accounts_db import addNewAccountToUser
-from safecoin import app
+from safecoin import app, redis, json
 from safecoin.forms import AccountsForm, ValidateForm, flash_all_but_field_required
-from safecoin.tmp import account_list
+from safecoin.tmp import TmpAcc
 
 
 def pressed_create_account():
@@ -23,7 +23,17 @@ def accounts():
 
     form_validate = ValidateForm()
 
-    global account_list
+    userDict=redis.get(current_user.email)
+    userDict=json.loads(userDict)
+    account_list=list(range(len(userDict['accounts'])))
+    i=0
+    for accountnr in userDict['accounts']: #Denne fungerer men vil ikke printe ut på siden.
+        account_list[i]=TmpAcc
+        account_list[i].number=int(accountnr)
+        account_list[i].balance=1000
+        account_list[i].name=userDict['accounts'][accountnr]
+
+        i+=1
 
     if form.validate_on_submit() or form_validate.is_submitted():
         if form_validate.is_submitted():

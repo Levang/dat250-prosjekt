@@ -1,4 +1,4 @@
-import hashlib, base64
+import hashlib, base64, json
 from cryptography.fernet import Fernet
 import flask_scrypt
 from safecoin.models import User
@@ -66,7 +66,7 @@ def encrypt(key, theThing, password=False):
 # Verifies the user and returns the User object if verified
 # If verification failes it returns None
 
-def parseAccounts(accInput):
+def DBparseAccounts(accInput):
     if type(accInput) != str:
         accInput=accInput.decode('utf-8')
         print(accInput)
@@ -76,7 +76,6 @@ def parseAccounts(accInput):
     for i in split_again:
         nameAccount=i.split(',')
         out[nameAccount[1]]=[nameAccount[0]]
-
     return out
 
 def verifyUser(email,password,addToActive=False):
@@ -97,7 +96,9 @@ def verifyUser(email,password,addToActive=False):
 
         if userDB.accounts != None:
             accounts = decrypt(decryptKey,userDB.accounts)
-            userInfo['accounts'] = parseAccounts(accounts)
+            userInfo['accounts'] = DBparseAccounts(accounts)
+            userInfo=json.dumps(userInfo)
+
 
         redis.set(hashed_email,userInfo)
 
