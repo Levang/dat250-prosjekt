@@ -1,13 +1,79 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Overview</title>
-{% endblock%}
+<title>Accounts</title>
+{% endblock %}
 
 {% block body %}
 
-<div class="img">
-    <img src="{{ url_for('static', filename='maxresdefault.jpg') }}", alt="STONKS">
-</div>
+<body>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <table>
+            <tbody>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                    <tr class=flashes>
+                      <td colspan="3" class="{{ category }}">{{ message }}</td>
+                    </tr>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+                <tr>
+                    <td>
+                        {{ form.account_name() }}
+                    </td>
+                    <td>
+                        {{ form.create_account() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="delete_info">
+                        You can only delete empty accounts
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.account_select() }}
+                    </td>
+                    <td>
+                        {{ form.delete_account() }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Account number
+                </th>
+                <th>
+                    Balance
+                </th>
+            </tr>
+
+            {% for account in account_list %}
+                <tr>
+                    <td>
+                        {{ account.name }}
+                    </td>
+                    <td>
+                        {{ account.number }}
+                    </td>
+                    <td>
+                        {{ account.balance }} kr
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
 
 {% endblock %}

@@ -1,32 +1,28 @@
 from flask import render_template, url_for, redirect
-from safecoin import app
+from flask_login import login_required, current_user
+from safecoin import app, redis, json
 
 
-@app.route('/overview')
+@app.route('/overview/')
+@login_required
 def overviewPage():
     return render_template('overview.html')
 
 
-@app.route('/transactions')
+@app.route('/transactions/')
+@login_required
 def histPage():
     return render_template('hist_transfer.html')
 
 
-@app.route('/accounts')
-def accountsPage():
-    return render_template('accounts.html')
-
-
-@app.route('/transfer')
+@app.route('/transfer/')
+@login_required
 def transferPage():
     return render_template('transfer.html')
 
 
-@app.route('/pay')
-def payPage():
-    return render_template('pay.html')
-
-
-@app.route('/profile')
+@app.route('/profile/')
+@login_required
 def profilePage():
+
     return render_template('profile.html')
