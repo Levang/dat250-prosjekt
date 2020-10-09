@@ -34,7 +34,7 @@ def home():
 
         if user and flask_scrypt.check_password_hash(form.password.data, pw[:88], pw[88:176]):
             print(f'this is the password {form.password.data.encode("utf-8")}')
-            activeUsers[hashed_email]=decrypt(form.password.data.encode('utf-8'),user.enKey,True)
+            activeUsers[hashed_email] = decrypt(form.password.data.encode('utf-8'), user.enKey, True)
             print(f'DECRYPTED {decrypt(activeUsers[hashed_email],user.enEmail)}')
 
             login_user(user, remember=form.remember.data)

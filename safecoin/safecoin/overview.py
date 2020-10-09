@@ -19,9 +19,3 @@ def histPage():
 @login_required
 def transferPage():
     return render_template('transfer.html')
-
-
-@app.route('/profile/')
-@login_required
-def profilePage():
-    return render_template('profile.html')

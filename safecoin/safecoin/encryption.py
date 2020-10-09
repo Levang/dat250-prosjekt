@@ -18,8 +18,9 @@ def generate_key(password=''):
     return key
 
 
+# Used with the activeUsers dict example
+# example: decrypt(activeUsers[user.email],"Thing to decrypt")
 def decrypt(key, theThing, password=False, type_=''):
-
     if type(key) == str:
         key = key.encode('utf-8')
 
@@ -35,6 +36,8 @@ def decrypt(key, theThing, password=False, type_=''):
     return Fernet(key).decrypt(theThing)
 
 
+# Used with the activeUsers dict example
+# example: encrypt(activeUsers[user.email],"Thing to encrypt")
 def encrypt(key, theThing, password=False):
     if password and theThing == ("generate"):
         key = generate_key(key)
@@ -50,4 +53,3 @@ def encrypt(key, theThing, password=False):
     return Fernet(key).encrypt(theThing)
 
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
-

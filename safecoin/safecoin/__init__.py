@@ -20,4 +20,4 @@ login_manager.login_view = '/login'
 
 activeUsers = {}
 
-from safecoin import home, overview, register, accounts, pay
+from safecoin import home, overview, register, accounts, pay, profile

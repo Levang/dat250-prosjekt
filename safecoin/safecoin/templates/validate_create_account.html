@@ -27,17 +27,22 @@
                 {% endwith %}
                 <tr>
                     <td>
-                        {{ form.email() }}
+                        {{ form.account_name() }}
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        {{ form.password() }}
+                        {{ form.email_create() }}
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        {{ form.proceed() }}
+                        {{ form.password_create() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.proceed_create() }}
                     </td>
                 </tr>
             </tbody>

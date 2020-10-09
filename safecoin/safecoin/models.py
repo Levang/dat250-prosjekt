@@ -16,7 +16,6 @@ class User(db.Model, UserMixin):
     accounts = db.Column(db.String(10000))
     secret = db.Column(db.String(32 + 128))
 
-
     def get_id(self):
         return self.email
 
