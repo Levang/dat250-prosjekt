@@ -46,7 +46,6 @@ body {
     box-shadow: 0px 0px 8px 2px;
 }
 
-
 .pages{
     padding: none;
     border: none;
@@ -54,11 +53,10 @@ body {
     text-align: center;
 }
 
-
-
 .profile{
     text-align: right;
 }
+
 
 .imported{
     min-height: 700px;
@@ -69,6 +67,12 @@ body {
 .safecoin img {
     margin-top: 3px;
     height: 85%;
+}
+
+.profile img {
+    padding-left: 10px;
+    padding-right: 5px;
+    height: 40%;
 }
 .menubar button {
     height: 50px;
@@ -83,6 +87,10 @@ body {
 }
 .menubar button:hover {
     background: linear-gradient(0deg, rgba(4,174,217,0.5), rgba(0,0,0,0));
+}
+
+#logout:hover {
+    background: linear-gradient(0deg, rgba(223, 12, 5, 0.9), rgba(97, 1, 1, 0.5));
 }
 
 @media (max-width:850px) {
