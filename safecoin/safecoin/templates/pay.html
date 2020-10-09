@@ -10,15 +10,15 @@
         {{ form.hidden_tag() }}
         <table>
             <tbody>
-                {% if form.errors %}
-                    {% for errors in form.errors.values() %}
-                        {% for error in errors %}
-                            <tr>
-                                <td>{{ error }}</td>
-                            </tr>
-                        {% endfor %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                    <tr class=flashes>
+                      <td class="{{ category }}">{{ message }}</td>
+                    </tr>
                     {% endfor %}
-                {% endif %}
+                  {% endif %}
+                {% endwith %}
                 <tr>
                     <td colspan="2">
                         {{ form.tfrom() }}

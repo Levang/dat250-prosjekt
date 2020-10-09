@@ -10,7 +10,6 @@ from safecoin.forms import LoginForm
 from safecoin.overview import overviewPage
 
 
-
 # --- Main page --- #
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
@@ -33,7 +32,3 @@ def home():
 def logout():
     logout_user()
     return redirect(url_for('home'))
-
-
-
-

@@ -13,53 +13,56 @@ class UserClass:
 
 
 
+
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 def generate_key(password=''):
-    if password=='':
+    if password == '':
         return Fernet.generate_key()
 
-    if type(password)==bytes:
-        password=password.decode('utf-8')
+    if type(password) == bytes:
+        password = password.decode('utf-8')
 
-    password=password.encode('utf-8')
+    password = password.encode('utf-8')
 
     key = hashlib.md5(password).hexdigest().encode('utf-8')
     key = base64.urlsafe_b64encode(key)
     return key
 
-#Used with the activeUsers dict example
-#example: decrypt(activeUsers[user.email],"Thing to decrypt")
-def decrypt(key,theThing,password=False,type_=''):
 
-    if type(key)==str:
-        key=key.encode('utf-8')
+# Used with the activeUsers dict example
+# example: decrypt(activeUsers[user.email],"Thing to decrypt")
+def decrypt(key, theThing, password=False, type_=''):
+    if type(key) == str:
+        key = key.encode('utf-8')
 
-    if type(theThing)==str:
-        theThing=theThing.encode('utf-8')
+    if type(theThing) == str:
+        theThing = theThing.encode('utf-8')
 
-    if password==True:
-        key=generate_key(key)
+    if password:
+        key = generate_key(key)
 
-    if type_=='str':
+    if type_ == 'str':
         return (Fernet(key).decrypt(theThing)).encode('utf-8')
 
-    return (Fernet(key).decrypt(theThing))
+    return Fernet(key).decrypt(theThing)
 
-#Used with the activeUsers dict example
-#example: encrypt(activeUsers[user.email],"Thing to encrypt")
+
+# Used with the activeUsers dict example
+# example: encrypt(activeUsers[user.email],"Thing to encrypt")
 def encrypt(key, theThing, password=False):
-    if password==True and theThing==("generate"):
+    if password and theThing == ("generate"):
         key = generate_key(key)
         theThing = generate_key()
         return Fernet(key).encrypt(theThing)
 
-    if type(key)==str:
-        key=key.encode('utf-8')
+    if type(key) == str:
+        key = key.encode('utf-8')
 
-    if type(theThing)==str:
-        theThing=theThing.encode('utf-8')
+    if type(theThing) == str:
+        theThing = theThing.encode('utf-8')
 
     return Fernet(key).encrypt(theThing)
+
 
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 
@@ -86,7 +89,7 @@ def verifyUser(email,password,addToActive=False):
 
     emailOK= hashed_email.decode('utf-8') == userDB.email  #boolean to compare with
 
-    pwOK=flask_scrypt.check_password_hash(password, pw[:88], pw[88:176])
+    pwOK = flask_scrypt.check_password_hash(password, pw[:88], pw[88:176])
 
     if addToActive and (emailOK and pwOK):
         decryptKey=decrypt(password.encode('utf-8'),userDB.enKey,True)

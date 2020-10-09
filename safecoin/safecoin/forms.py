@@ -45,7 +45,7 @@ class RemoveForm(FlaskForm):
 
 class PayForm(FlaskForm):
     tfrom = SelectField('From*', validators=[DataRequired()])
-    to = StringField('To*', validators=[DataRequired()], render_kw={"placeholder": "xxxxx.xx.xxxx"})
+    to = IntegerField('To*', validators=[DataRequired()], render_kw={"placeholder": "xxxxx.xx.xxxx"})
     msg = StringField('KID/message', validators=[Optional()], render_kw={"placeholder": "KID/message"})
     kr = IntegerField('Amount*', validators=[DataRequired()], render_kw={"placeholder": "0"})
     ore = IntegerField(validators=[Optional()], render_kw={"placeholder": "00"})
@@ -59,14 +59,19 @@ class PayForm(FlaskForm):
         self.tfrom.choices = choice_list
 
 
-class ValidateForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
-    password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
-    proceed = SubmitField('Proceed')
+class ValidatePaymentForm(FlaskForm):
+    tfrom = IntegerField('From', render_kw={"readonly": True})
+    to = IntegerField('To', render_kw={"readonly": True})
+    msg = IntegerField('KID/message', render_kw={"readonly": True, "placeholder": "No KID/message"})
+    kr = IntegerField('Amount', render_kw={"readonly": True})
+    ore = IntegerField('Decimal', render_kw={"readonly": True, "placeholder": "00"})
+    email_payment = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
+    password_payment = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
+    proceed_payment = SubmitField('Proceed')
 
 
 class AccountsForm(FlaskForm):
-    account_name = StringField('Account Name', validators=[Optional()])
+    account_name = StringField('Account Name', validators=[Optional()], render_kw={"placeholder": "Account Name"})
     create_account = SubmitField('Create New Account')
     account_select = SelectField('Select Account', validators=[Optional()])
     delete_account = SubmitField('Delete')
@@ -79,3 +84,17 @@ class AccountsForm(FlaskForm):
                 continue
             choice_list.append((account.number, f"{account.name} ({account.number})"))
         self.account_select.choices = choice_list
+
+
+class CreateAccountForm(FlaskForm):
+    account_name = StringField('Account Name', render_kw={"readonly": True})
+    email_create = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
+    password_create = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
+    proceed_create = SubmitField('Proceed')
+
+
+class CreateDeleteForm(FlaskForm):
+    account_select = IntegerField('Account Name', render_kw={"readonly": True})
+    email_delete = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
+    password_delete = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
+    proceed_delete = SubmitField('Proceed')
