@@ -27,7 +27,7 @@ def accounts():
     userDict=json.loads(userDict)
     account_list=list(range(len(userDict['accounts'])))
     i=0
-    for accountnr in userDict['accounts']: #Denne fungerer men vil ikke printe ut på siden.
+    for accountnr in userDict['accounts']: #Denne fungerer men må ryddes opp i, gjør det om til en funksjon elns.
         account_list[i]=TmpAcc
         account_list[i].number=int(accountnr)
         account_list[i].balance=1000
