@@ -62,13 +62,13 @@
             {% for account in account_list %}
                 <tr>
                     <td>
-                        {{ account.name }}
+                        {{ account[0] }}
                     </td>
                     <td>
-                        {{ account.number }}
+                        {{ account[1] }}
                     </td>
                     <td>
-                        {{ account.balance }} kr
+                        {{ account[2] }} kr
                     </td>
                 </tr>
             {% endfor %}
