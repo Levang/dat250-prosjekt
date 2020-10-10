@@ -120,7 +120,7 @@ body {
 
 .userAccounts th {
     background-color: var(--blue2);
-    font-size: 200%;
+    font-size: 150%;
     padding: 20px;
     color: white;
 }
@@ -130,7 +130,7 @@ body {
     padding-bottom: 20px;
     margin: 0px;
     text-transform: capitalize;
-    font-size: 160%;
+    font-size: 130%;
 
 }
 .userAccounts tr:nth-child(even){
@@ -138,6 +138,7 @@ body {
 }
 .userAccounts td:nth-child(1){
     padding-left: 10px;
+    font-weight: bold;
     width: 20%;
 }
 
@@ -153,8 +154,9 @@ body {
     text-align: right;
 }
 .createDelete{
-    width: 60%;
-    margin-left: 20%;
+    margin-top:60px;
+    width: 40%;
+    margin-left: 30%;
 
 }
 .createDelete input{
@@ -173,7 +175,6 @@ body {
 }
 
 .createDelete #create_account{
-
     background-color: var(--blue2);
     border-radius:28px;
     border:none;
@@ -193,13 +194,12 @@ body {
 }
 
 .deleteinfo td {
-    padding-top: 60px;
+    padding-top: 100px;
     font-weight: bold;
     font-size: 100%;
 }
 
 .createDelete #delete_account{
-
     background-color: var(--blue2);
     border-radius:28px;
     border:none;
