@@ -7,7 +7,39 @@
 {% block body %}
 
 <body>
-    <form method="post">
+    <div class='userAccounts'>
+        <table>
+            <tbody>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Account number
+                    </th>
+                    <th style>
+                        Balance
+                    </th>
+                </tr>
+
+                {% for account in account_list %}
+                    <tr class="account">
+                        <td #accountName>
+                            {{ account[0] }}
+                        </td>
+                        <td #accountNumber>
+                            {{ account[1] }}
+                        </td>
+                        <td #accountBalance>
+                            {{ account[2] }} kr
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+        <form method="post">
         {{ form.hidden_tag() }}
         <table>
             <tbody>
@@ -45,35 +77,6 @@
         </table>
     </form>
 
-    <table>
-        <tbody>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Account number
-                </th>
-                <th>
-                    Balance
-                </th>
-            </tr>
-
-            {% for account in account_list %}
-                <tr>
-                    <td>
-                        {{ account[0] }}
-                    </td>
-                    <td>
-                        {{ account[1] }}
-                    </td>
-                    <td>
-                        {{ account[2] }} kr
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 </body>
 
 {% endblock %}
