@@ -1,3 +1,4 @@
+
 /* Color pallete:
     color1: #041f32
     color2: #003853
@@ -92,6 +93,69 @@ body {
 #logout:hover {
     background: linear-gradient(0deg, rgba(223, 12, 5, 0.9), rgba(97, 1, 1, 0.5));
 }
+/*
+ * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
+ */
+
+.userAccounts {
+    margin-top: 50px;
+    margin-bottom: 100px;
+}
+
+.userAccounts table {
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    border-collapse: collapse;
+
+}
+
+.account td{
+    grid-template-columns: 30% 30% 40%;
+    grid-area: auto;
+    padding: 0px;
+    margin: 0px;
+
+}
+
+.userAccounts th {
+    background-color: var(--blue2);
+    font-size: 200%;
+    padding: 20px;
+    color: white;
+}
+.userAccounts td{
+    padding: 0px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin: 0px;
+    text-transform: capitalize;
+    font-size: 160%;
+
+}
+.userAccounts tr:nth-child(even){
+    background-color: var(--lightblue3)
+}
+.userAccounts td:nth-child(1){
+    padding-left: 10px;
+    width: 20%;
+}
+
+.userAccounts td:nth-child(2){
+    text-align: center;
+    width: 20%;
+}
+
+.userAccounts td:nth-child(3){
+    width: 60%;
+    padding-right: 30px;
+    font-weight: bold;
+    text-align: right;
+}
+/*
+ * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
+ */
+
 
 @media (max-width:850px) {
 
