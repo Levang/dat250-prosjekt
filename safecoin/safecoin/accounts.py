@@ -45,7 +45,6 @@ def getAccountsList():
     userDict=redis.get(current_user.email)
     userDict=json.loads(userDict)
 
-
     i=0
     account_list=[]
     for accountnr in userDict['accounts']: #Denne fungerer men må ryddes opp i, gjør det om til en funksjon elns.
@@ -55,7 +54,7 @@ def getAccountsList():
         accountDB=Account.query.filter_by(number=numberUsr).first()
         if accountDB:
             balance=round(accountDB.balance,2)
-            print(name)
+            #print(name)
             account_list.append([name,numberUsr,balance])
         else:
             return None

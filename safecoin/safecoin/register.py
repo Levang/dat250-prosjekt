@@ -70,7 +70,8 @@ def register():
                 return render_template("register.html", form=form)
 
             #print(f"encryption key: {enKey}")
-# ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
+# ─── TESTACCOUNTS ─────────────────────────────────────────────────────────────── 
+# ─── ADDS ACCOUNTS TO NEW USER REPLACED WHEN CREATE ACCOUT IS WORKING ───────────
             accountlist=[11112248371,11112239950,11112235147,11112205956,11112262143,11112270258,11112294379,11112250314,11112293269,11112278435,11112208700]
             accountName=['bob','Alot','savings','expences','toiletMoney','company1','company2','wifey','daughter','son','grandchild','brother','theTeapot','Games','gambling']
 # ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
@@ -78,7 +79,9 @@ def register():
             encryptedKey=encrypt(form.password.data,'generate',True) # generate new encrypted key with users password
             deKey=decrypt(form.password.data,encryptedKey,True)      # decrypt the key
             mailEncrypted=encrypt(deKey,form.email.data)             # encrypt the email
+
 # ─── TESTING ACCOUNTS ───────────────────────────────────────────────────────────
+# ─── ADDS ACCOUNTS TO NEW USER REPLACED WHEN CREATE ACCOUT IS WORKING ───────────
             accountsString=''
             for i in range(len(accountlist)):
                 accountsString=accountsString + (f'{accountName[i]},{accountlist[i]},privatekey{i};')

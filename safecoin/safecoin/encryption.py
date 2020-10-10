@@ -72,12 +72,12 @@ def encrypt(key, theThing, password=False):
 def DBparseAccounts(accInput):
     if type(accInput) != str:
         accInput=accInput.decode('utf-8')
-        print(accInput)
+        #print(accInput)
 
     out={}
     split_again=accInput.split(';')
     for i in split_again:
-        if len(i) >11 :
+        if len(i) > 11:
             nameAccount=i.split(',')
             out[nameAccount[1]]=[nameAccount[0]]
     return out
