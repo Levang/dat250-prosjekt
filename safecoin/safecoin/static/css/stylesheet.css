@@ -98,8 +98,8 @@ body {
  */
 
 .userAccounts {
-        margin-top: 50px;
-        margin-bottom: 100px;
+    margin-top: 50px;
+    margin-bottom: 100px;
 }
 
 .userAccounts table {
@@ -107,16 +107,15 @@ body {
     margin-right: 5%;
     width: 90%;
     border-collapse: collapse;
-    
-}
 
+}
 
 .account td{
     grid-template-columns: 30% 30% 40%;
     grid-area: auto;
     padding: 0px;
     margin: 0px;
-    
+
 }
 
 .userAccounts th {
@@ -143,8 +142,8 @@ body {
 }
 
 .userAccounts td:nth-child(2){
-     text-align: center;
-     width: 20%;
+    text-align: center;
+    width: 20%;
 }
 
 .userAccounts td:nth-child(3){
