@@ -44,7 +44,7 @@ html {
     width:100%;
     font-family: Arial;
     color: var(--almostwhite1)
-    
+
 }
 
 .imported table td input{
@@ -75,7 +75,7 @@ html {
 }
 
 .imported table td #submit{
-    
+
     width:30%;
     min-width: 150px;
 	background-color: var(--blue2);

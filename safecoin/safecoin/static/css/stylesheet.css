@@ -152,6 +152,113 @@ body {
     font-weight: bold;
     text-align: right;
 }
+.createDelete{
+    width: 60%;
+    margin-left: 20%;
+
+}
+.createDelete input{
+    border-width: 2px;
+    border-color: var(--blue3);
+    border-style: solid;
+    border-radius: 50px;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    font-size: 100%;
+    max-width: 400px;
+    min-width: 200px;
+    width: 30%;
+    text-align: center;
+
+}
+
+.createDelete #create_account{
+    width:20%;
+    min-width: 200px;
+    background-color: var(--blue2);
+    border-radius:28px;
+    border:none;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 4%;
+    padding-bottom: 4%;
+    text-decoration:none;
+}
+
+.deleteinfo td {
+    padding-top: 60px;
+    font-weight: bold;
+    font-size: 100%;
+}
+
+.createDelete #delete_account{
+    width:30%;
+    min-width: 200px;
+    background-color: var(--blue2);
+    border-radius:28px;
+    border:none;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 4%;
+    padding-bottom: 4%;
+    text-decoration:none;
+}
+
+.deleteAccount td {
+    align-items: center;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.selectdiv {
+    position: relative;
+    margin-top: 0px;
+    padding-top: 0px;
+    bottom:
+}
+
+.selectdiv:after {
+    color: white;
+    font-weight: bold;
+    content: '>';
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+    left: 175px;
+    top: 16px;
+    position: absolute;
+    pointer-events: none;
+}
+
+.createDelete select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    color: white;
+    border-width: 2px;
+    border-color: var(--blue3);
+    background-color: var(--blue2);
+    border-style: solid;
+    border-radius: 50px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 50px;
+    text-align: center;
+
+}
 /*
  * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
  */
