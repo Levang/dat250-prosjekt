@@ -2,6 +2,14 @@ from safecoin.models import Account, User
 from safecoin import db, bcrypt
 
 
+def format_account_number(number: int):
+    try:
+        acc_str = str(number)
+        return f"{acc_str[:4]}.{acc_str[4:6]}.{acc_str[6:]}"
+    except TypeError:
+        return number
+
+
 def verifyAccountsAgainstHash(user):
     try:
         if bcrypt.check_password_hash(user.acc_hashed, user.accounts):
