@@ -7,9 +7,9 @@
 {% block body %}
 
 <body>
-    <form method="post">
+        <form method="post" class="actions">
         {{ form.hidden_tag() }}
-        <table>
+        <table class="createDelete">
             <tbody>
                 {% with messages = get_flashed_messages(with_categories=true) %}
                   {% if messages %}
@@ -28,14 +28,16 @@
                         {{ form.create_account() }}
                     </td>
                 </tr>
-                <tr>
-                    <td class="delete_info">
+                <tr class="deleteinfo">
+                    <td>
                         You can only delete empty accounts
                     </td>
                 </tr>
-                <tr>
+                <tr class="deleteAccount">
                     <td>
+                    <div class="selectdiv">
                         {{ form.account_select() }}
+                    </div>
                     </td>
                     <td>
                         {{ form.delete_account() }}
@@ -44,36 +46,39 @@
             </tbody>
         </table>
     </form>
-
-    <table>
-        <tbody>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Account number
-                </th>
-                <th>
-                    Balance
-                </th>
-            </tr>
-
-            {% for account in account_list %}
+    <div class='userAccounts'>
+        <table>
+            <tbody>
                 <tr>
-                    <td>
-                        {{ account.name }}
-                    </td>
-                    <td>
-                        {{ account.number }}
-                    </td>
-                    <td>
-                        {{ account.balance }} kr
-                    </td>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Account number
+                    </th>
+                    <th style>
+                        Balance
+                    </th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+                {% for account in account_list %}
+                    <tr class="account">
+                        <td #accountName>
+                            {{ account[0] }}
+                        </td>
+                        <td #accountNumber>
+                            {{ account[1] }}
+                        </td>
+                        <td #accountBalance>
+                            {{ account[2] }} kr
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
 </body>
 
 {% endblock %}

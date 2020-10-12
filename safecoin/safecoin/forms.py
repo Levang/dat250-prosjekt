@@ -6,6 +6,7 @@ import flask_scrypt
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
 
 from safecoin.models import User
+from safecoin.accounts_db import format_account_number
 
 # Remove when integrated with db
 from safecoin.tmp import account_list
@@ -51,11 +52,18 @@ class PayForm(FlaskForm):
     ore = IntegerField(validators=[Optional()], render_kw={"placeholder": "00"})
     pay = SubmitField('Pay')
 
-    def get_select_field(self, user):
-        choice_list = []
-        global account_list
+    def get_select_field(self, account_list):
+        if account_list is None:
+            self.tfrom.choices = [('x', 'No accounts')]
+            return
+        choice_list = [('x', 'Choose an account')]
         for account in account_list:
-            choice_list.append((account.number, f"{account.name} ({account.number})"))
+            if type(account[1]) != int:
+                raise TypeError("Account number has to be an int (for correct value storing)")
+            choice_list.append((account[1], f"{account[0]} ({account[2]} kr)"))
+        if len(choice_list) == 1:
+            self.account_select.choices = [('x', 'No accounts')]
+            return
         self.tfrom.choices = choice_list
 
 
@@ -76,13 +84,20 @@ class AccountsForm(FlaskForm):
     account_select = SelectField('Select Account', validators=[Optional()])
     delete_account = SubmitField('Delete')
 
-    def get_select_field(self, user):
-        choice_list = []
-        global account_list
+    def get_select_field(self, account_list):
+        if account_list is None:
+            self.account_select.choices = [('x', 'No accounts')]
+            return
+        choice_list = [('x', 'Choose an empty account')]
         for account in account_list:
-            if account.balance != 0:
+            if account[2] != 0:
                 continue
-            choice_list.append((account.number, f"{account.name} ({account.number})"))
+            if type(account[1]) != int:
+                raise TypeError("Account number has to be an int (for correct value storing)")
+            choice_list.append((account[1], f"{account[0]} ({format_account_number(account[1])})"))
+        if len(choice_list) == 1:
+            self.account_select.choices = [('x', 'No empty accounts')]
+            return
         self.account_select.choices = choice_list
 
 

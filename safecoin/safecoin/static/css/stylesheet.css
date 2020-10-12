@@ -1,3 +1,4 @@
+
 /* Color pallete:
     color1: #041f32
     color2: #003853
@@ -46,7 +47,6 @@ body {
     box-shadow: 0px 0px 8px 2px;
 }
 
-
 .pages{
     padding: none;
     border: none;
@@ -54,11 +54,10 @@ body {
     text-align: center;
 }
 
-
-
 .profile{
     text-align: right;
 }
+
 
 .imported{
     min-height: 700px;
@@ -69,6 +68,12 @@ body {
 .safecoin img {
     margin-top: 3px;
     height: 85%;
+}
+
+.profile img {
+    padding-left: 10px;
+    padding-right: 5px;
+    height: 40%;
 }
 .menubar button {
     height: 50px;
@@ -84,6 +89,183 @@ body {
 .menubar button:hover {
     background: linear-gradient(0deg, rgba(4,174,217,0.5), rgba(0,0,0,0));
 }
+
+#logout:hover {
+    background: linear-gradient(0deg, rgba(223, 12, 5, 0.9), rgba(97, 1, 1, 0.5));
+}
+/*
+ * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
+ */
+
+.userAccounts {
+    margin-top: 50px;
+    margin-bottom: 100px;
+}
+
+.userAccounts table {
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    border-collapse: collapse;
+
+}
+
+.account td{
+    grid-template-columns: 30% 30% 40%;
+    grid-area: auto;
+    padding: 0px;
+    margin: 0px;
+
+}
+
+.userAccounts th {
+    background-color: var(--blue2);
+    font-size: 150%;
+    padding: 20px;
+    color: white;
+}
+.userAccounts td{
+    padding: 0px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin: 0px;
+    text-transform: capitalize;
+    font-size: 130%;
+
+}
+.userAccounts tr:nth-child(even){
+    background-color: var(--lightblue3)
+}
+.userAccounts td:nth-child(1){
+    padding-left: 10px;
+    font-weight: bold;
+    width: 20%;
+}
+
+.userAccounts td:nth-child(2){
+    text-align: center;
+    width: 20%;
+}
+
+.userAccounts td:nth-child(3){
+    width: 60%;
+    padding-right: 30px;
+    font-weight: bold;
+    text-align: right;
+}
+.createDelete{
+    margin-top:60px;
+    width: 40%;
+    margin-left: 30%;
+
+}
+.createDelete input{
+    border-width: 2px;
+    border-color: var(--blue3);
+    border-style: solid;
+    border-radius: 50px;
+    font-size: 100%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 20px;
+    text-align: center;
+
+}
+
+.createDelete #create_account{
+    background-color: var(--blue2);
+    border-radius:28px;
+    border:none;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 50px;
+    text-decoration:none;
+}
+
+.deleteinfo td {
+    padding-top: 100px;
+    font-weight: bold;
+    font-size: 100%;
+}
+
+.createDelete #delete_account{
+    background-color: var(--blue2);
+    border-radius:28px;
+    border:none;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 50px;
+    text-decoration:none;
+}
+
+.deleteAccount td {
+    align-items: center;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.selectdiv {
+    position: relative;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+.selectdiv:after {
+    color: white;
+    font-weight: bold;
+    content: '>';
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+    left: 175px;
+    top: 16px;
+    position: absolute;
+    pointer-events: none;
+}
+
+.createDelete select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    color: white;
+    border-width: 2px;
+    border-color: var(--blue3);
+    background-color: var(--blue2);
+    border-style: solid;
+    border-radius: 50px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 50px;
+    text-align: center;
+}
+/*
+ * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
+ */
+
 
 @media (max-width:850px) {
 
