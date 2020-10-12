@@ -1,35 +1,55 @@
-from flask import render_template, url_for, redirect
-from flask_login import login_required, current_user
-from safecoin import app, redis, json, db
-from safecoin.models import Account, User
+
+from safecoin.accounts import format_account_list, format_account_number
 
 import random
 
-@app.route('/overview/')
+from flask import render_template, request, flash, redirect
+from flask_login import current_user, login_required
+from flask_wtf import FlaskForm
+from safecoin.accounts_db import addNewAccountToUser
+
+from safecoin import app, redis, json, db
+from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAccountForm, CreateDeleteForm
+from safecoin.tmp import TmpAcc
+from safecoin.models import Account, User
+from safecoin.accounts_db import format_account_number
+
+
+@app.route("/overview/", methods=["GET", "POST"])
 @login_required
 def overviewPage():
-    return render_template('overview.html')
+    account_list = getAccountsList()
+
+    form = AccountsForm()
+    form.get_select_field(account_list)
+    format_account_list(account_list)
+
+    return render_template('overview.html', account_list=account_list, form=form)
 
 
-@app.route('/transactions/')
-@login_required
-def histPage():
-    return render_template('hist_transfer.html')
+def getAccountsList():
+    userDict = redis.get(current_user.email)
+    userDict = json.loads(userDict)
+
+    i = 0
+    account_list = []
+    for accountnr in userDict['accounts']:  # Denne fungerer men må ryddes opp i, gjør det om til en funksjon elns.
+        numberUsr = int(accountnr)
+        name = userDict['accounts'][accountnr][0]  # noe galt her no time to fix atm. Fikser senere
+
+        accountDB = Account.query.filter_by(number=numberUsr).first()
+        if accountDB:
+            balance = round(accountDB.balance, 2)
+            # print(name)
+            account_list.append([name, numberUsr, balance])
+        else:
+            return None
+
+        i += 1
+    return account_list
 
 
-@app.route('/transfer/')
-@login_required
-def transferPage():
-    return render_template('transfer.html')
 
-
-@app.route('/profile/')
-@login_required
-def profilePage():
-
-    #createTestingAcc() #creates testing accounts that are added to accounts database
-
-    return render_template('profile.html')
 
 
 # ─── CREATES AND ADDS TO ACCOUNTS DATABASE ──────────────────────────────────────

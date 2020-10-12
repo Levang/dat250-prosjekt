@@ -22,4 +22,4 @@ login_manager.init_app(app)
 login_manager.login_view = '/login'
 
 
-from safecoin import home, overview, register, accounts, pay, profile
+from safecoin import home, overview, register, accounts, pay, profile, hist_transfer, transfer
