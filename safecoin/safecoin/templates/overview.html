@@ -5,21 +5,32 @@
 {% endblock%}
 
 {% block body %}
+<body>
+<div class='userAccounts'>
+    <table>
+        <tbody>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Account number
+                </th>
+            </tr>
 
-<table>
-{% for account in showAccounts %}
-<tr>
-    <td>
-    {{account.number}}
-    </td>
-    <td>
-    {{account.type}}
-    </td>
-    <td>
-    {{account.balance}}
-    </td>
-</tr>
-{%endfor%}
-</table>
+            {% for i in range(5) %}
+                <tr class="account">
+                    <td #accountName>
+                        {{ account_list[i][0] }}
+                    </td>
+                    <td #accountBalance>
+                        {{ account_list[i][2] }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
 {% endblock %}
 
