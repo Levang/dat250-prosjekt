@@ -1,5 +1,4 @@
 from flask_login import UserMixin
-from flask_scrypt import generate_password_hash
 from safecoin import db, login_manager
 
 

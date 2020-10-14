@@ -17,8 +17,12 @@
                     Balance
                 </th>
             </tr>
-
-            {% for i in range(5) %}
+            {% if account_list|length < 5 %}
+                {% set accshow = account_list|length %}
+            {% else %}
+                {% set accshow = 5 %}
+            {% endif %}
+            {% for i in range(accshow) %}
                 <tr class="account">
                     <td #accountName>
                         {{ account_list[i][0] }}
