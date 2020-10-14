@@ -12,8 +12,6 @@ class UserClass:
 
 
 
-
-
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 def generate_key(password=''):
     if password == '':
@@ -24,6 +22,7 @@ def generate_key(password=''):
 
     password = password.encode('utf-8')
 
+    # TODO fuck off, MD5 is broken
     key = hashlib.md5(password).hexdigest().encode('utf-8')
     key = base64.urlsafe_b64encode(key)
     return key
