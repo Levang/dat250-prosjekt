@@ -11,9 +11,6 @@ class UserClass:
     secret = ''
 
 
-
-
-
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 def generate_key(password=''):
     if password == '':
@@ -71,45 +68,42 @@ def encrypt(key, theThing, password=False):
 
 def DBparseAccounts(accInput):
     if type(accInput) != str:
-        accInput=accInput.decode('utf-8')
-        #print(accInput)
+        accInput = accInput.decode('utf-8')
+        # print(accInput)
 
-    out={}
-    split_again=accInput.split(';')
+    out = {}
+    split_again = accInput.split(';')
     for i in split_again:
         if len(i) > 11:
-            nameAccount=i.split(',')
-            out[nameAccount[1]]=[nameAccount[0]]
+            nameAccount = i.split(',')
+            out[nameAccount[1]] = [nameAccount[0]]
     return out
 
-def verifyUser(email,password,addToActive=False):
+
+def verifyUser(email, password, addToActive=False):
     hashed_email = flask_scrypt.generate_password_hash(email, "")
-    userDB = User.query.filter_by( email=hashed_email.decode("utf-8") ).first()
+    userDB = User.query.filter_by(email=hashed_email.decode("utf-8")).first()
 
     pw = userDB.password.encode('utf-8')
 
-    emailOK= hashed_email.decode('utf-8') == userDB.email  #boolean to compare with
+    emailOK = hashed_email.decode('utf-8') == userDB.email  # boolean to compare with
 
     pwOK = flask_scrypt.check_password_hash(password, pw[:88], pw[88:176])
 
     if addToActive and (emailOK and pwOK):
-        decryptKey=decrypt(password.encode('utf-8'),userDB.enKey,True)
+        decryptKey = decrypt(password.encode('utf-8'), userDB.enKey, True)
 
-        userInfo={}
-        userInfo['email']=email
+        userInfo = {}
+        userInfo['email'] = email
 
         if userDB.accounts != None:
-            accounts = decrypt(decryptKey,userDB.accounts)
+            accounts = decrypt(decryptKey, userDB.accounts)
             userInfo['accounts'] = DBparseAccounts(accounts)
-            userInfo=json.dumps(userInfo)
+            userInfo = json.dumps(userInfo)
 
-
-        redis.set(hashed_email,userInfo)
+        redis.set(hashed_email, userInfo)
 
     if emailOK and pwOK:
         return True, userDB
 
     return False, None
-
-
-

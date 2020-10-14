@@ -11,10 +11,6 @@ from safecoin.accounts_db import format_account_number
 
 
 def format_account_list(acc_list: list):
-    print(type(acc_list))
-    print(len(acc_list))
-    print(len(acc_list[0]))
-    print(type(acc_list[0][1]))
     if type(acc_list) != list or len(acc_list) < 1 or len(acc_list[0]) < 3 or type(acc_list[0][1]) != int:
         return
     try:
