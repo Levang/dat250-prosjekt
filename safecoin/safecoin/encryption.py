@@ -59,6 +59,8 @@ def encrypt(key, theThing, password=False):
     if type(theThing) == str:
         theThing = theThing.encode('utf-8')
 
+    print(key)
+    print(theThing)
     return Fernet(key).encrypt(theThing)
 
 
@@ -108,3 +110,9 @@ def verifyUser(email, password, addToActive=False):
         return True, userDB
 
     return False, None
+
+
+# Todo Ardijan fix!
+def sync_redis():
+    pass
+

@@ -6,10 +6,6 @@ import flask_scrypt
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
 
 from safecoin.models import User
-from safecoin.accounts_db import format_account_number
-
-# Remove when integrated with db
-from safecoin.tmp import account_list
 
 
 def flash_all_but_field_required(form_field, flash_type="error"):
@@ -88,13 +84,13 @@ class AccountsForm(FlaskForm):
         if account_list is None:
             self.account_select.choices = [('x', 'No accounts')]
             return
-        choice_list = [('x', 'Choose an empty account')]
+        choice_list = [('x', 'Empty accounts')]
         for account in account_list:
             if account[2] != 0:
                 continue
             if type(account[1]) != int:
                 raise TypeError("Account number has to be an int (for correct value storing)")
-            choice_list.append((account[1], f"{account[0]} ({format_account_number(account[1])})"))
+            choice_list.append((account[1], f"{account[0]}"))
         if len(choice_list) == 1:
             self.account_select.choices = [('x', 'No empty accounts')]
             return

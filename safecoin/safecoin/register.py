@@ -7,7 +7,9 @@ import flask_scrypt
 from safecoin.encryption import encrypt, decrypt
 from safecoin.models import User
 from safecoin.forms import RegistrationForm
-from safecoin.accounts import addNewAccountToUser
+from safecoin.accounts import addNewAccountToCurUser
+
+
 # db.create_all()
 
 
@@ -41,10 +43,9 @@ def getPasswordViolations(errList, password):
         errList.append(f"Password should be at least {want_length} characters")
 
 
-
 # --- Register page --- #
-#@app.route("/register/")
-#def register():
+# @app.route("/register/")
+# def register():
 #    return render_template("register.html")
 
 
@@ -69,31 +70,35 @@ def register():
                 flash("error")
                 return render_template("register.html", form=form)
 
-            #print(f"encryption key: {enKey}")
-# ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
-# ─── ADDS ACCOUNTS TO NEW USER REPLACED WHEN CREATE ACCOUT IS WORKING ───────────
-            accountlist=[11112248371,11112239950,11112235147,11112205956,11112262143,11112270258,11112294379,11112250314,11112293269,11112278435,11112208700]
-            accountName=['bob','Alot','savings','expences','toiletMoney','company1','company2','wifey','daughter','son','grandchild','brother','theTeapot','Games','gambling']
-# ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
+            # print(f"encryption key: {enKey}")
+            # ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
+            # ─── ADDS ACCOUNTS TO NEW USER REPLACED WHEN CREATE ACCOUT IS WORKING ───────────
+            accountlist = [11112248371, 11112239950, 11112235147, 11112205956, 11112262143, 11112270258, 11112294379,
+                           11112250314, 11112293269, 11112278435, 11112208700]
+            accountName = ['bob', 'Alot', 'savings', 'expences', 'toiletMoney', 'company1', 'company2', 'wifey',
+                           'daughter', 'son', 'grandchild', 'brother', 'theTeapot', 'Games', 'gambling']
+            # ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
 
-            encryptedKey=encrypt(form.password.data,'generate',True) # generate new encrypted key with users password
-            deKey=decrypt(form.password.data,encryptedKey,True)      # decrypt the key
-            mailEncrypted=encrypt(deKey,form.email.data)             # encrypt the email
+            encryptedKey = encrypt(form.password.data, 'generate',
+                                   True)  # generate new encrypted key with users password
+            deKey = decrypt(form.password.data, encryptedKey, True)  # decrypt the key
+            mailEncrypted = encrypt(deKey, form.email.data)  # encrypt the email
 
-# ─── TESTING ACCOUNTS ───────────────────────────────────────────────────────────
-# ─── ADDS ACCOUNTS TO NEW USER REPLACED WHEN CREATE ACCOUT IS WORKING ───────────
-            accountsString=''
+            # ─── TESTING ACCOUNTS ───────────────────────────────────────────────────────────
+            # ─── ADDS ACCOUNTS TO NEW USER REPLACED WHEN CREATE ACCOUNT IS WORKING ───────────
+            accountsString = ''
             for i in range(len(accountlist)):
-                accountsString=accountsString + (f'{accountName[i]},{accountlist[i]},privatekey{i};')
-# ─── TESTING ACCOUNTS ───────────────────────────────────────────────────────────
+                accountsString += f'{accountName[i]},{accountlist[i]},privatekey{i};'
+            # ─── TESTING ACCOUNTS ───────────────────────────────────────────────────────────
 
-            accountsEnc=encrypt(deKey,accountsString)
+            accountsEnc = encrypt(deKey, accountsString)
 
             print(f' decrytion key {deKey}')
-            print(f' decryted email {decrypt(deKey,mailEncrypted)}')
+            print(f' decryted email {decrypt(deKey, mailEncrypted)}')
 
-            user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey)
-            user.accounts=accountsEnc
+            user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted,
+                        password=(hashed_pw + salt).decode("utf-8"), enKey=encryptedKey)
+            user.accounts = accountsEnc
             db.session.add(user)
             db.session.commit()
             flash('Your account has been created! You are now able to log in.', 'success')
