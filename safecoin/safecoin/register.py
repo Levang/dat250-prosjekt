@@ -1,12 +1,14 @@
 from flask import render_template, url_for, redirect, request, flash
 from configparser import ConfigParser
 import base64
+import pyotp
+import flask_qrcode
 ###################
 from safecoin import app, db, bcrypt
 import flask_scrypt
 from safecoin.encryption import encrypt, decrypt
 from safecoin.models import User
-from safecoin.forms import RegistrationForm
+from safecoin.forms import RegistrationForm, TwoFactorAuthRegForm
 from safecoin.accounts import addNewAccountToUser
 # db.create_all()
 
@@ -51,6 +53,7 @@ def getPasswordViolations(errList, password):
 @app.route("/register/", methods=["GET", "POST"])
 def register():
     form = RegistrationForm()
+    form2 = TwoFactorAuthRegForm()
     if form.validate_on_submit():
         errList = []
         getPasswordViolations(errList, form.password.data)
@@ -70,35 +73,51 @@ def register():
                 return render_template("register.html", form=form)
 
             #print(f"encryption key: {enKey}")
-# ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
-# ─── ADDS ACCOUNTS TO NEW USER REPLACED WHEN CREATE ACCOUT IS WORKING ───────────
+            # ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
+            # ─── ADDS ACCOUNTS TO NEW USER REPLACED WHEN CREATE ACCOUT IS WORKING ───────────
             accountlist=[11112248371,11112239950,11112235147,11112205956,11112262143,11112270258,11112294379,11112250314,11112293269,11112278435,11112208700]
             accountName=['bob','Alot','savings','expences','toiletMoney','company1','company2','wifey','daughter','son','grandchild','brother','theTeapot','Games','gambling']
-# ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
+            # ─── TESTACCOUNTS ───────────────────────────────────────────────────────────────
 
             encryptedKey=encrypt(form.password.data,'generate',True) # generate new encrypted key with users password
             deKey=decrypt(form.password.data,encryptedKey,True)      # decrypt the key
             mailEncrypted=encrypt(deKey,form.email.data)             # encrypt the email
 
-# ─── TESTING ACCOUNTS ───────────────────────────────────────────────────────────
-# ─── ADDS ACCOUNTS TO NEW USER REPLACED WHEN CREATE ACCOUT IS WORKING ───────────
+            # ─── TESTING ACCOUNTS ───────────────────────────────────────────────────────────
+            # ─── ADDS ACCOUNTS TO NEW USER REPLACED WHEN CREATE ACCOUT IS WORKING ───────────
             accountsString=''
             for i in range(len(accountlist)):
                 accountsString=accountsString + (f'{accountName[i]},{accountlist[i]},privatekey{i};')
-# ─── TESTING ACCOUNTS ───────────────────────────────────────────────────────────
+            # ─── TESTING ACCOUNTS ───────────────────────────────────────────────────────────
 
             accountsEnc=encrypt(deKey,accountsString)
 
             print(f' decrytion key {deKey}')
             print(f' decryted email {decrypt(deKey,mailEncrypted)}')
 
-            user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey)
-            user.accounts=accountsEnc
-            db.session.add(user)
-            db.session.commit()
-            flash('Your account has been created! You are now able to log in.', 'success')
+            # ─── TESTING 2-FACTOR AUTHENTICATION ───────────────────────────────────────────────────#
 
-            return redirect(url_for('home'))
+
+            secret_key = pyotp.random_base32()  #Lager en relativt simpel secret_key, men det virker.
+            qr_link = pyotp.totp.TOTP("A6OHFL6WPYGBARUV").provisioning_uri(name=form.email.data, issuer_name="Safecoin.tech") #Lager en OTP link som kan brukes til å generere QR-kode
+            return render_template('2fak.html', form2 = form2, qr_link = qr_link) # Vi må dra med inn qr_linken for å generere qr_koden korrekt
+        
         for err in errList:
             flash(err, "error")
+
+            
+    if form2.validate_on_submit():
+            print("test")
+            ## Må kanskje trekke med informasjon via redis inn her? email, enEmail, password of enKey potensielt?
+            totp = pyotp.totp.TOTP("A6OHFL6WPYGBARUV")
+            if totp.verify(form2.otp.data): # Hvis brukeren scanner qrkoden (som genereres i html) vil koden som vises i appen deres matche koden til totp.now()
+                print("Iffen validerte!!")
+                print(f"  -  {form2.email.data} _ {form.password.data}")
+                user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey, secret=secret_key)             #------------ Legger til secret key i database-brukeren -----------------#
+                user.accounts=accountsEnc
+                db.session.add(user)
+                db.session.commit()
+                flash('Your account has been created! You are now able to log in.', 'success')
+
+                return redirect(url_for('home'))
     return render_template("register.html", form=form)
