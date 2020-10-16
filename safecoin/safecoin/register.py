@@ -52,8 +52,17 @@ def getPasswordViolations(errList, password):
 
 @app.route("/register/", methods=["GET", "POST"])
 def register():
+    if RegistrationForm().email:
+        clearTextEmail = RegistrationForm().email.data
     form = RegistrationForm()
     form2 = TwoFactorAuthRegForm()
+
+    # form er den første formen som er på /register, som per nå bare inneholder email, passord og en submit-knapp
+
+    # form2 er den andre formen du kommer til etter du submitter "form". Denne nye siden vil da inneholde QR-koden 
+    # for å legge 2fa-nøkkelen inn i din valgte 2fa app. Denne siden har også et passord felt, 2fa felt (for koden du nå kan generere i appen), 
+    # og et "read-only" som inneholder eposten du skrev inn på forrige side.
+
     if form.validate_on_submit():
         errList = []
         getPasswordViolations(errList, form.password.data)
@@ -95,22 +104,36 @@ def register():
             print(f' decrytion key {deKey}')
             print(f' decryted email {decrypt(deKey,mailEncrypted)}')
 
+
+
             # ─── TESTING 2-FACTOR AUTHENTICATION ───────────────────────────────────────────────────#
 
-
-            secret_key = pyotp.random_base32()  #Lager en relativt simpel secret_key, men det virker.
-            qr_link = pyotp.totp.TOTP("A6OHFL6WPYGBARUV").provisioning_uri(name=form.email.data, issuer_name="Safecoin.tech") #Lager en OTP link som kan brukes til å generere QR-kode
+            secret_key = pyotp.random_base32()  #Lager en relativt simpel secret_key, men det virker. Har kompatibilitet med Google Authenticator.
+            qr_link = pyotp.totp.TOTP(secret_key).provisioning_uri(name=form.email.data, issuer_name="Safecoin.tech") #Denne genererer QR-koden
             return render_template('2fak.html', form2 = form2, qr_link = qr_link) # Vi må dra med inn qr_linken for å generere qr_koden korrekt
         
         for err in errList:
             flash(err, "error")
 
-            
+
+            # TODO: Legg inn en måte for å ta med infoen om brukeren (AKA alle tingene som vi må legge inn med brukeren i databasen
+            # som vil si: hashed_email, enEmail, password, enKey og secretkey). Vi kan potensielt kryptere emailen med passordet, som key
+            # for redis, i den første formen. På det viset så kan alt verifiseres ettersom emailen blir dratt med automatisk over, og hvis vi bruker 
+            # email kryptert med passordet (som de er nødt til å oppgi på ny uansett), så kan vi sjekke om denne stemmer med den som er som key i redis.
+
     if form2.validate_on_submit():
             print("test")
-            ## Må kanskje trekke med informasjon via redis inn her? email, enEmail, password of enKey potensielt?
-            totp = pyotp.totp.TOTP("A6OHFL6WPYGBARUV")
+            print("---------------------")
+            print(clearTextEmail)
+            print("---------------------")
+            # Må kanskje trekke med informasjon via redis inn her? email, enEmail, password of enKey potensielt?
+
+            totp = pyotp.totp.TOTP(secret_key) #secret_key må være den ukrypterte secret_key-en
+
             if totp.verify(form2.otp.data): # Hvis brukeren scanner qrkoden (som genereres i html) vil koden som vises i appen deres matche koden til totp.now()
+            
+            # TODO: problem her: serveren som verifiserer totp koden er ca 10 sekunder foran den koden som genereres i google authenticator. Dette gjør slik at hvis vi legger inn totp-koden rett før den resettes, så vil det ikke virke.    
+                
                 print("Iffen validerte!!")
                 print(f"  -  {form2.email.data} _ {form.password.data}")
                 user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey, secret=secret_key)             #------------ Legger til secret key i database-brukeren -----------------#
