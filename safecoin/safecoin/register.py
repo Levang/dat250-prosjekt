@@ -110,7 +110,7 @@ def register():
 
             secret_key = pyotp.random_base32()  #Lager en relativt simpel secret_key, men det virker. Har kompatibilitet med Google Authenticator.
             qr_link = pyotp.totp.TOTP(secret_key).provisioning_uri(name=form.email.data, issuer_name="Safecoin.tech") #Denne genererer QR-koden
-            return render_template('2fak.html', form2 = form2, qr_link = qr_link) # Vi må dra med inn qr_linken for å generere qr_koden korrekt
+            return render_template('TwoFactor.html', form2 = form2, qr_link = qr_link) # Vi må dra med inn qr_linken for å generere qr_koden korrekt
         
         for err in errList:
             flash(err, "error")
