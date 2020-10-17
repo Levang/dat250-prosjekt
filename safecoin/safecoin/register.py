@@ -103,7 +103,7 @@ def register():
             # decrypt the key again, serves as a double check
             deKey=decrypt(form.password.data,encryptedKey,True)
 
-            # No if deKey, explicitly show what you are testing this against.
+            # If deKey, explicitly show what you are testing this against none.
             if deKey!=None:
                 userDict['enKey'] = encryptedKey
 
@@ -157,8 +157,10 @@ def register():
             #Check password correctness
             pwOK = flask_scrypt.check_password_hash(form2.password_2fa.data.encode('utf-8'), userDict['password'][:88].encode('utf-8'), userDict['password'][88:176].encode('utf-8'))
             if pwOK:
-                #Decrypt 2FA key with user password
+                #Decrypt the users decryption key
                 decryptionKey=decrypt(form2.password_2fa.data.encode('utf-8'),userDict['enKey'].encode('utf-8'),True)
+
+                #Decrypt 2FA key with user decryption key
                 twoFAkey= decrypt(decryptionKey,userDict['secret'])
 
                 #add key to the Timed One Timed Passwords class so it can verify
