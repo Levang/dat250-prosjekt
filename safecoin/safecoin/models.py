@@ -32,7 +32,7 @@ class User(db.Model, UserMixin):
 
 # ─── LOGGED IN INFORMATION ──────────────────────────────────────────────────────
 # Due to how the sessions are set up, being logged in
-# does not mean you have access to change data
+# does not mean you have access to change anything in the database
 # It only means having access to read data that is
 # currently in that users redis dictionairy
 # The password is the only thing that allows a user to change data.
