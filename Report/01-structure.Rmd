@@ -7,9 +7,27 @@ For hashing, we elected to use Scrypt over alternatives such as bcrypt and argon
 
 ## Site structure
 
-![Sitemap](../assets/pagemap_safecoin.png)
+Our sitemap looks like this. The only websites available without any form of authentication is the front page and register pages. From the register page we also render another html within the same route in register to verify the users 2FA-token, as they need to get their 2FA token set up to even log in at all.
 
-## Tools
+As illustrated below, there are two authentication walls, one for login, and one for completing transactions. Both these require 2 factors to complete, those being by password, and by TOTP (timed one-time passwords).
 
+![This is an illutstration of the site layout of Safecoin.tech](pagemap_safecoin.png) 
 
+\newpage
+
+## Tools & Packages
+
+The tools and packages that are used to make Safecoin.tech:
+
+### Two-Factor Authentication
+For 2FA we use TOTP codes generated for the user in their authentication app of choice. To generate these codes we make use of the packages pyotp and flask-qrcode. The QR-code is there as a user-friendly way to add the 2fa code to their app. We have not yet added a way to display the secret-key directly to the user on the site however, as we don't want to compromise security. We also never save the QR-code image, as this would be a breach of security as the QR-code is generated with the data for the users email, the issuer, and the secret key. If any malicious party got their hands on this QR-code they would know anyones email, secret key and which site to use these on.
+
+#### Google Authenticator
+
+##### Or Authy..
+
+###### Or whatever you want....
+
+### Redis
+We use redis to manage session timeouts, and as a volatile data management system.
 
