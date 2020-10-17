@@ -22,7 +22,9 @@ def getCurrentUser():
 # ---------------------------- #
 
 
-# "name1,num1,key1;name2,num2,key2;" -> [[name1, num1, key1], [name2, num2, key2]]
+# "name,accountnumber,secretKey;name2,accountnumber2,secretKey2;"
+# Converts into list of lists:
+# [[name, accountnumber, secretKey], [name2, accountnumber2, secretKey2]]
 def accStr_to_accList(accStr: str):
     accList = accStr.split(";")
     while accList and accList[-1] == "":

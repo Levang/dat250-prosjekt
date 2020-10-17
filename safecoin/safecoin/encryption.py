@@ -136,14 +136,15 @@ def verifyUser(email, password, addToActive=False):
         #900 seconds= 15 minutes
         redis.expire(hashed_email,900)
 
+    #In case any errors occur above we do not add.
     if emailOK and pwOK:
         return True, userDB, secret_key
 
     return False, None, None
 
 
-
-
+#This just encodes everything in a dict into a string
+#Used in register to convert information for redis server
 def dictToStr(dictionairy):
     for i in dictionairy:
         if type(dictionairy[i])!=str:
