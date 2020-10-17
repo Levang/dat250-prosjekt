@@ -123,8 +123,12 @@ def register():
             #json generate string from dict overwrite the dict from before
             userDict = dictToStr(userDict)
 
+
+            #Key MUST have register keyword appended so as not to mix user keys in redis server
+            registerRedisKey=hashed_email+"register".encode('utf-8')
+
             #Add it to the redis server
-            redis.set(hashed_email,userDict)
+            redis.set(registerRedisKey,userDict)
             #Set session timeout of user at 600 secons, 10 minutes
             redis.expire(hashed_email,600)
             return render_template('TwoFactor.html', form2 = form2, qr_link = qr_link) # Vi må dra med inn qr_linken for å generere qr_koden korrekt
@@ -140,8 +144,11 @@ def register():
             #Regenerate hashed email from last page
             hashed_email = flask_scrypt.generate_password_hash(carryOverEmail, "")
 
+            #Key MUST have register keyword appended so as not to mix user keys in redis server
+            registerRedisKey=hashed_email+"register".encode('utf-8')
+
             #retrive information from redis
-            userDict=redis.get(hashed_email)
+            userDict=redis.get(registerRedisKey)
 
             #delete user from redis
             redis.delete(hashed_email)
@@ -171,7 +178,7 @@ def register():
                     user.enEmail=userDict['enEmail']
                     user.password=userDict['password']
                     user.enKey=userDict['enKey']
-                    user.accounts=""
+                    user.accounts=None
                     user.secret=userDict['secret']
 
                     db.session.add(user)
