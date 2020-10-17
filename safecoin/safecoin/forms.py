@@ -16,8 +16,9 @@ def flash_all_but_field_required(form_field, flash_type="error"):
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
-    password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')], render_kw={"placeholder": "password"})
+    password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')], render_kw={"placeholder": "Confirm Password"})
+
     submit = SubmitField('Sign Up')
 
     def validate_email(self, email):
@@ -26,10 +27,17 @@ class RegistrationForm(FlaskForm):
         if email:
             raise ValidationError('Something went wrong')
 
+class TwoFactorAuthRegForm(FlaskForm):
+    otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    submit = SubmitField('Complete Sign Up')
+    email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com", "readonly": True})
+    password_2fa = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
+
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
+    otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
     remember = BooleanField('Remember me')
     submit = SubmitField('Login')
 

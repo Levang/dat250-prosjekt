@@ -21,7 +21,9 @@ def generate_key(password=''):
 
     password = password.encode('utf-8')
 
-    # TODO fuck off, MD5 is broken
+    # NOTTODO fuck off, MD5 is broken
+    # NO you fuck off, please take some time to understand what this function is doing.
+    # Not a security feature.
     key = hashlib.md5(password).hexdigest().encode('utf-8')
     key = base64.urlsafe_b64encode(key)
     return key
@@ -49,7 +51,7 @@ def decrypt(key, theThing, password=False, type_=''):
 # example: encrypt(activeUsers[user.email],"Thing to encrypt")
 def encrypt(key, theThing, password=False):
     if password and theThing == ("generate"):
-        key = generate_key(key)
+        key = generate_key(key) #DETTE ER PASSORD
         theThing = generate_key()
         return Fernet(key).encrypt(theThing)
 
@@ -85,34 +87,51 @@ def DBparseAccounts(accInput):
 
 def verifyUser(email, password, addToActive=False):
     hashed_email = flask_scrypt.generate_password_hash(email, "")
-    userDB = User.query.filter_by(email=hashed_email.decode("utf-8")).first()
+    userDB = User.query.filter_by(email=hashed_email).first()
+    print('CHECK DATABASE')
+    print(userDB)
+
 
     pw = userDB.password.encode('utf-8')
 
-    emailOK = hashed_email.decode('utf-8') == userDB.email  # boolean to compare with
+    emailOK = hashed_email.decode('utf-8') == userDB.email.decode('utf-8')  # boolean to compare with
 
-    pwOK = flask_scrypt.check_password_hash(password, pw[:88], pw[88:176])
+    pwOK = flask_scrypt.check_password_hash(password.encode('utf-8'), pw[:88], pw[88:176])
+    print('CHECK PASSWORD')
+    print(pwOK)
+    print('CHECK EMAIL OK')
+    print(emailOK)
+
 
     if addToActive and (emailOK and pwOK):
-        decryptKey = decrypt(password.encode('utf-8'), userDB.enKey, True)
+        decryptKey = decrypt(password, userDB.enKey.encode('utf-8'), True)
 
         userInfo = {}
         userInfo['email'] = email
+        secret_key = decrypt(decryptKey, userDB.secret.encode('utf-8'))
 
         if userDB.accounts != None:
-            accounts = decrypt(decryptKey, userDB.accounts)
+            accounts = decrypt(decryptKey, userDB.accounts.encode('utf-8'))
+
             userInfo['accounts'] = DBparseAccounts(accounts)
-            userInfo = json.dumps(userInfo)
+
+
+        userInfo = json.dumps(userInfo)
 
         redis.set(hashed_email, userInfo)
+        redis.expire(hashed_email,900)
 
     if emailOK and pwOK:
-        return True, userDB
+        return True, userDB, secret_key
 
-    return False, None
+    return False, None, None
 
 
-# Todo Ardijan fix!
-def sync_redis():
-    pass
 
+
+def dictToStr(dictionairy):
+    for i in dictionairy:
+        if type(dictionairy[i])!=str:
+            dictionairy[i]=dictionairy[i].decode('utf-8')
+
+    return json.dumps(dictionairy)

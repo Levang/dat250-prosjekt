@@ -1,0 +1,37 @@
+<body class="importedContent">
+    <form method="post">
+            {{ form2.hidden_tag() }}
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Confirm Two-factor authenication</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="{{ qrcode(qr_link) }}" alt="qr-kode">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form2.otp() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form2.email() }} <!-- For some reason, this needs to be here for us to be able to retrieve the clearTextEmail. If possible we should look into hiding this field for the user. The user can technically edit this field in the in-browser editor, but as this needs to match what they wrote in /register, it won't matter as the only repercussion is that they won't be able to make their user.-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form2.password_2fa() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form2.submit() }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </body>

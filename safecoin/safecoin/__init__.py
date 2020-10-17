@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from configparser import ConfigParser
 from flask_redis import FlaskRedis
+from flask_qrcode import QRcode
 import json
 
 cfg = ConfigParser()
@@ -16,6 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = cfg["sqlDb"]["path"]  # Path for databas
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 redis = FlaskRedis(app)
+QRcode(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)

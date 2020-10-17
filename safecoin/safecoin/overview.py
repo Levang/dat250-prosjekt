@@ -28,11 +28,21 @@ def overviewPage():
 
 
 def getAccountsList():
+    if current_user.accounts==None:
+        return [["","","",""],["","","",""],["","","",""]]
+
+    print("ACCOUNTS LIST PRINTING")
+    print(current_user.accounts)
+    print("ACCOUNTS LIST PRINTING")
+
     userDict = redis.get(current_user.email)
     userDict = json.loads(userDict)
 
     i = 0
     account_list = []
+
+    #SJEKK OM ME FUCKER UP!
+
     for accountnr in userDict['accounts']:  # Denne fungerer men må ryddes opp i, gjør det om til en funksjon elns.
         numberUsr = int(accountnr)
         name = userDict['accounts'][accountnr][0]  # noe galt her no time to fix atm. Fikser senere

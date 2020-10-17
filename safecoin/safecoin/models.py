@@ -1,5 +1,6 @@
 from flask_login import UserMixin
-from safecoin import db, login_manager
+from flask_scrypt import generate_password_hash
+from safecoin import db, login_manager, redis
 
 
 @login_manager.user_loader
@@ -15,8 +16,32 @@ class User(db.Model, UserMixin):
     accounts = db.Column(db.String(10000))
     secret = db.Column(db.String(32 + 128))
 
+    @property
+    def is_authenticated(self):
+        print("CHECKING IF USER IN REDIS")
+        if redis.get(self.email):
+            print("USER WAS IN REDIS")
+            redis.expire(self.email,600)
+            return True
+
+        return False
+
+    @property
+    def is_active(self):
+        print("CHECKING IF USER IN REDIS")
+        print(redis.get(self.email))
+        print(redis.get("tull"))
+        if redis.get(self.email):
+            redis.expire(self.email,600)
+            return True
+        return False
+
     def get_id(self):
         return self.email
+
+
+
+
 
 
 class Account(db.Model):
