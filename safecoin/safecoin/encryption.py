@@ -99,12 +99,27 @@ def verifyUser(email, password, addToActive=False):
 
         if userDB.accounts != None:
             accounts = decrypt(decryptKey, userDB.accounts)
+
+            secret_key = decrypt(decryptKey, userDB.secret)
+
+
             userInfo['accounts'] = DBparseAccounts(accounts)
+
             userInfo = json.dumps(userInfo)
 
         redis.set(hashed_email, userInfo)
 
     if emailOK and pwOK:
-        return True, userDB
+        return True, userDB, secret_key
 
-    return False, None
+    return False, None, None
+
+
+
+
+def dictToStr(dictionairy):
+    for i in dictionairy:
+        if type(dictionairy[i])!=str:
+            dictionairy[i]=dictionairy[i].decode('utf-8')
+
+    return json.dumps(dictionairy)
