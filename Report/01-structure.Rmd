@@ -1,1 +1,13 @@
 # Structure
+
+To structure our website we make use of a number of various frameworks and tools to make everything work securely. Our website is built upon the popular python web-framework Flask. The main reason as to why we make use of an external framework such as Flask, is to maintain security by using a much used, respected and documented framework that has already been tried and tested by many industry professionals. It also has packages for all the functionality that is needed to make a functional website for many different types of applications, providing tools such as session-handling, easy database management and more.
+
+## Encryption and hashing
+Scrypt
+
+## Site structure
+
+## Tools
+
+
+
