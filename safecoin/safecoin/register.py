@@ -9,7 +9,7 @@ import flask_scrypt
 from safecoin.encryption import encrypt, decrypt, dictToStr
 from safecoin.models import User
 from safecoin.forms import RegistrationForm, TwoFactorAuthRegForm
-from safecoin.accounts import addNewAccountToUser
+#from safecoin.accounts import addNewAccountToUser
 # db.create_all()
 
 
