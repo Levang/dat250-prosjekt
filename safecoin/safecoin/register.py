@@ -45,7 +45,6 @@ def getPasswordViolations(errList, password):
 
 
 
-
 @app.route("/register/", methods=["GET", "POST"])
 def register():
     if RegistrationForm().email:

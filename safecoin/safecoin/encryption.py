@@ -61,6 +61,8 @@ def encrypt(key, theThing, password=False):
     if type(theThing) == str:
         theThing = theThing.encode('utf-8')
 
+    print(key)
+    print(theThing)
     return Fernet(key).encrypt(theThing)
 
 

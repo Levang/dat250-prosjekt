@@ -40,9 +40,6 @@ def get_form_errors(from_, to, msg, kr, ore):
         if from_ == to:
             errlist.append("Can't transfer to the same account you transfer from")
 
-        print(type(to))
-        print(len(str(to)))
-
         # Verify account number in to
         if type(to) != int or len(str(to)) != 11:
             # TODO Verify that the account number in "to" is a valid account number

@@ -6,7 +6,7 @@ import random
 from flask import render_template, request, flash, redirect
 from flask_login import current_user, login_required
 from flask_wtf import FlaskForm
-from safecoin.accounts_db import addNewAccountToUser
+from safecoin.accounts_db import addNewAccountToCurUser
 
 from safecoin import app, redis, json, db
 from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAccountForm, CreateDeleteForm
@@ -19,7 +19,7 @@ from safecoin.accounts_db import format_account_number
 @login_required
 def overviewPage():
     account_list = getAccountsList()
-
+    print(account_list)
     form = AccountsForm()
     form.get_select_field(account_list)
     format_account_list(account_list)
