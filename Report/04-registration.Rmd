@@ -1,1 +1,11 @@
 # Registration
+On the registration page, the user will have to input the following
+
+## Username
+At Safecoin, the users email will be used as the username. During the resistration process, the email will be checked in the database, and the page will return an error if it is already in use.
+
+## Password
+The users password must be at least 12 characters long, and can not contain only numbers. The password will also be looked up in a list off the most common passwords. If the entered password is among those, it will not be accepted. Due to the fact that scrypt is being used for the password hashing, the password can, within reason, be as long as the user want
+
+## Two-Factor-Authentication
+If the user passes both the username and password-checks, the user will be sent over to a page where two-factor-authentication will be activated. The user will be presented a QR-code that can be scanned in ones authenticator app of choice. In the app the user user will have a code that will renewed after a certain amount of time. The user will enter the code, the code will be verified, and if it is correct, the user will be registered in the database.
