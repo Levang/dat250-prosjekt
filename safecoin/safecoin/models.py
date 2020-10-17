@@ -18,24 +18,46 @@ class User(db.Model, UserMixin):
 
     @property
     def is_authenticated(self):
-        print("CHECKING IF USER IN REDIS")
+        #Check if the current_user is logged in
         if redis.get(self.email):
-            print("USER WAS IN REDIS")
-            redis.expire(self.email,600)
-            return True
 
+            #If so set data to expire 10 minutes from now
+            redis.expire(self.email,600)
+
+            #return true to the flask login manager
+            return True
+        #If the user is not found in redis,
+        #the user is effectivly not logged in
         return False
 
+# ─── LOGGED IN INFORMATION ──────────────────────────────────────────────────────
+# Due to how the sessions are set up, being logged in
+# does not mean you have access to change data
+# It only means having access to read data that is
+# currently in that users redis dictionairy
+# The password is the only thing that allows a user to change data.
+# ─── LOGGED IN INFORMATION ──────────────────────────────────────────────────────
+
+    #is active is for setting user status
+    #For our use its technically not needed
+    #can be set to true permanently
+    #but possibly dangerous, so we will set it anyway
     @property
     def is_active(self):
-        print("CHECKING IF USER IN REDIS")
-        print(redis.get(self.email))
-        print(redis.get("tull"))
+        #Check if the current_user is logged in
         if redis.get(self.email):
+
+            #If so set data to expire 10 minutes from now
             redis.expire(self.email,600)
+
+            #return true
             return True
+        #If the user is not found in redis,
+        #the user is effectivly not logged in
         return False
 
+
+    #login manager, defines user id must be unique
     def get_id(self):
         return self.email
 
