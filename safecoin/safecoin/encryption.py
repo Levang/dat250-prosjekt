@@ -23,9 +23,20 @@ def generate_key(password=''):
 
     # NOTTODO fuck off, MD5 is broken
     # NO you fuck off, please take some time to understand what this function is doing.
-    # Not a security feature.
-    key = hashlib.md5(password).hexdigest().encode('utf-8')
-    key = base64.urlsafe_b64encode(key)
+    # HASHING HE PASSWORD HERE IS NOT A security feature.
+    # ITS ONLY PURPOSE IS TO CREATE A KEY DERIVED FROM THE PASSWORD
+    # THAT IS LONG ENOUGH TO USE FERNET FOR ENCRYPTION
+
+    # ─── OLD VERSION ────────────────────────────────────────────────────────────────
+    #key = hashlib.md5(password).hexdigest().encode('utf-8')
+    #key = base64.urlsafe_b64encode(key)
+    # ─── OLD VERSION ────────────────────────────────────────────────────────────────
+
+    #Alternative hashing method, but it needs to be sliced to be used with fernet.
+    #Hopefully doesnt defeat any safety
+    #No changes needed to any other functions works just like before
+    key = flask_scrypt.generate_password_hash(password, "")
+    key = base64.urlsafe_b64encode(key[:32])
     return key
 
 
@@ -74,7 +85,6 @@ def encrypt(key, theThing, password=False):
 def DBparseAccounts(accInput):
     if type(accInput) != str:
         accInput = accInput.decode('utf-8')
-        # print(accInput)
 
     out = {}
     split_again = accInput.split(';')
