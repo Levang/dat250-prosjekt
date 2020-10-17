@@ -10,6 +10,7 @@ date:   "`r Sys.Date()`"
 documentclass: scrbook
 description: "Project report"
 lang: en
+bibliography: bibliography.bib
 ---
 
 ```{r setup, echo=F}
