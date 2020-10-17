@@ -17,7 +17,7 @@ def flash_all_but_field_required(form_field, flash_type="error"):
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
-    # confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')], render_kw={"placeholder": "Confirm Password"})
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')], render_kw={"placeholder": "Confirm Password"})
 
     submit = SubmitField('Sign Up')
 
