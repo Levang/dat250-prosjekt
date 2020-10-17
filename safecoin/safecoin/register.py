@@ -59,6 +59,8 @@ def register():
     # for å legge 2fa-nøkkelen inn i din valgte 2fa app. Denne siden har også et passord felt, 2fa felt (for koden du nå kan generere i appen),
     # og et "read-only" som inneholder eposten du skrev inn på forrige side.
     if form.validate_on_submit():
+        print("THIS RAN")
+
         errList = []
         getPasswordViolations(errList, form.password.data)
 
