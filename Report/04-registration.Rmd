@@ -2,10 +2,10 @@
 On the registration page, the user will have to input the following
 
 ## Username
-At Safecoin, the users email will be used as the username. During the resistration process, the email will be checked in the database, and the page will return an error if it is already in use.
+At Safecoin, the users email will be used as the username. During the registration process, the email will be hashed with scrypts hash-function without a salt, and compared with the other hashed emails in the database. The page will return a generic error if it is already in use.
 
 ## Password
-The users password must be at least 12 characters long, and can not contain only numbers. The password will also be looked up in a list off the most common passwords. If the entered password is among those, it will not be accepted. Due to the fact that scrypt is being used for the password hashing, the password can, within reason, be as long as the user want
+The users password must be at least 12 characters long, and can not contain only numbers. The password will also be looked up in a list off the most common passwords. If the entered password is among those, it will not be accepted. Due to the fact that scrypt is being used for the password hashing, the password can, within reason, be as long as the user wants. When the user inputs a valid password, the password gets hashed together with a randomly generated salt. The hashed password is stored alongside its salt in a dictionary until the registration process is complete. Generating the hashes this way will make it very unlikely that two users will end up with the same hashed passwords, even tough they are using the same password.
 
 ## Two-Factor-Authentication
 If the user passes both the username and password-checks, the user will be sent over to a page where two-factor-authentication will be activated. The user will be presented a QR-code that can be scanned in ones authenticator app of choice. In the app the user user will have a code that will renewed after a certain amount of time. The user will enter the code, the code will be verified, and if it is correct, the user will be registered in the database.
