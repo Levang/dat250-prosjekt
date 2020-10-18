@@ -156,6 +156,8 @@ def register():
 
             #Check password correctness
             pwOK = flask_scrypt.check_password_hash(form2.password_2fa.data.encode('utf-8'), userDict['password'][:88].encode('utf-8'), userDict['password'][88:176].encode('utf-8'))
+            print("ER PASSORD OK?")
+            print(pwOK)
             if pwOK:
                 #Decrypt the users decryption key
                 decryptionKey=decrypt(form2.password_2fa.data.encode('utf-8'),userDict['enKey'].encode('utf-8'),True)
@@ -169,7 +171,7 @@ def register():
                 # Hvis brukeren scanner qrkoden (som genereres i html) vil koden som vises i appen deres matche koden til totp.now()
                 if totp.verify(form2.otp.data):
 
-                    print("Iffen validerte!!")
+                    print("LAGRER BRUKER I DATABASE")
                     #user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey, secret=secret_key)
 
                     #Create user class

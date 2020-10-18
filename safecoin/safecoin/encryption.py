@@ -62,6 +62,9 @@ def encrypt(key, theThing, password=False):
 # If verification failes it returns None
 
 def DBparseAccounts(accInput):
+    if accInput==None:
+        return None
+
     if type(accInput) != str:
         accInput = accInput.decode('utf-8')
 
@@ -81,16 +84,19 @@ def verifyUser(email, password, addToActive=False):
     #create user class with information from database
     userDB = User.query.filter_by(email=hashed_email).first()
 
+    #if the user doesnt exist in database
+    if userDB==None:
+        return False, None, None
 
-    #format password
-    pw = userDB.password.encode('utf-8')
+    #format password from database
+    DBpw = userDB.password.encode('utf-8')
 
     #check if the hashed email is the same ass the one in the database, just a double check.
     #Strictly not nececairy, but just seems logical to do.
     emailOK = hashed_email.decode('utf-8') == userDB.email.decode('utf-8')  # boolean to compare with
 
     #Verify that the password is correct
-    pwOK = flask_scrypt.check_password_hash(password.encode('utf-8'), pw[:88], pw[88:176])
+    pwOK = flask_scrypt.check_password_hash(password.encode('utf-8'), DBpw[:88], DBpw[88:176])
 
     #Check if the password is correct and email exists in the database
     if addToActive and (emailOK and pwOK):

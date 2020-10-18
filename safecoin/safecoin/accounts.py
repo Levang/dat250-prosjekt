@@ -1,5 +1,5 @@
 from flask import render_template, request, flash, redirect
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, logout_user
 from flask_wtf import FlaskForm
 from safecoin.accounts_db import addNewAccountToCurUser, deleteCurUsersAccountNumber
 
@@ -12,6 +12,8 @@ from safecoin.accounts_db import format_account_number
 
 #Formaterer
 def format_account_list(acc_list: list):
+    if acc_list==None:
+        return None
     if type(acc_list) != list or len(acc_list) < 1 or len(acc_list[0]) < 3 or type(acc_list[0][1]) != int:
         return None
     try:
@@ -31,28 +33,52 @@ def accounts():
     form = AccountsForm()
 
     #Definer hva som skal ligge i dropdown liste
+    #Denne bør være navn og kontonummer
     form.get_select_field(account_list)
 
-    #
+    #Formater accounts om til list of lists
     format_account_list(account_list)
 
+    #Create Account Form
     create_form = CreateAccountForm()
+
+    #Delete Account Form
     delete_form = CreateDeleteForm()
 
+    if account_list==None:
+        account_list=[['','Please open an account','']]
 
-    do_action = form.create_account.data or form.delete_account.data
-    create_form_start = form.create_account.data and form.account_name.data
-    delete_form_start = form.delete_account.data and form.account_select.data
+    #TODO hva er denne for?
+    do_action = False
+    if form.create_account.data!=None or form.delete_account.data!=None:
+        do_action= True
 
+    #TODO hva er denne for?
+    create_form_start =False
+    if form.create_account.data!=None and form.account_name.data!=None:
+        create_form_start = True
+
+    #TODO hva er denne for?
+    delete_form_start = False
+    if form.delete_account.data!=None and form.account_select.data!=None:
+        delete_form_start = True
+
+    #If the create form is submitted
     if create_form.validate_on_submit():
+        #ADDS A new account to the user
         err = addNewAccountToCurUser(create_form.account_name.data, create_form.password_create.data)
+
+        #If an error occurs when creating an account flash it and re render the page
         if err:
             flash(err, "error")
             return render_template('accounts.html', account_list=account_list, form=form)
         flash(f"Successfully Created Account {create_form.account_name.data}!", "success")
 
+    #If delete form is submitted
     if delete_form.validate_on_submit():
-        err = deleteCurUsersAccountNumber(str(delete_form.account_select.data), delete_form.password_delete.data)
+        #Call delete account function
+        #If an error occurs when deleting an account flash it and re render the page
+        err = deleteCurUsersAccountNumber(delete_form.account_select.data, delete_form.password_delete.data)
         if err:
             flash(err, "error")
             return render_template('accounts.html', account_list=account_list, form=form)
@@ -61,11 +87,11 @@ def accounts():
     if do_action:
 
         # If user pressed create account
-        if form.create_account.data:
-            if create_form_start:
+        if create_form_start:
+            if form.create_account.data:
                 flash(f"Validate to create a new account with the name {form.account_name.data}")
                 return render_template('validate_create_account.html', form=create_form)
-            flash("Please enter a nickname for your account", "error")
+            flash("Please enter a name for your account", "error")
             return render_template('accounts.html', account_list=account_list, form=form)
 
         # If user pressed delete account
@@ -73,7 +99,7 @@ def accounts():
             if form.account_select.data == 'x':
                 flash("Please select an account", "error")
                 return render_template('accounts.html', account_list=account_list, form=form)
-            flash(f"Validate to delete your account with the name {form.account_select.data}")
+            flash(f"Validate to delete your account with the name {form.account_select.data} ")
             return render_template('validate_delete_account.html', form=delete_form)
 
     return render_template('accounts.html', account_list=account_list, form=form)
@@ -82,8 +108,16 @@ def accounts():
 def getAccountsList():
     #Hent account info fra redis
     userDict = redis.get(current_user.email)
+
     #Konverter til dictionairy
     userDict = json.loads(userDict)
+
+    try:
+        #Checking if user has any accounts
+        userDict['accounts']
+    except:
+        # #if the user does not have any accounts
+        return None
 
     i = 0
     account_list = []
@@ -92,7 +126,7 @@ def getAccountsList():
         numberUsr = int(accountnr)
 
         #Henter første verdi fra accounts listen til accountnummer
-        name = userDict['accounts'][accountnr][0]  # noe galt her no time to fix atm. Fikser senere
+        name = userDict['accounts'][accountnr][0]
 
         #Hent kontobalansen fra accounts database
         accountDB = Account.query.filter_by(number=numberUsr).first()
