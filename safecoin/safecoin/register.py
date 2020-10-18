@@ -68,8 +68,11 @@ def register():
             # ─── HASHED EMAIL IS USER ID ─────────────────────────────────────
             hashed_email = flask_scrypt.generate_password_hash(form.email.data, "")
 
-            # ─── CHECK IF THE EMAIL EXISTS IN DATABASE ───────────────────────
-            if User.query.filter_by(email=hashed_email.decode("utf-8")).first():
+            #Key MUST have register keyword appended so as not to mix user keys in redis server
+            registerRedisKey=hashed_email+"register".encode('utf-8')
+
+            # ─── CHECK IF THE EMAIL EXISTS IN DATABASE OR REDIS ───────────────────────
+            if User.query.filter_by(email=hashed_email.decode("utf-8")).first() or redis.get(registerRedisKey):
                 flash("error")
                 return render_template("register.html", form=form)
 
@@ -100,7 +103,7 @@ def register():
             # decrypt the key again, serves as a double check
             deKey=decrypt(form.password.data,encryptedKey,True)
 
-            # No if deKey, explicitly show what you are testing this against.
+            # If deKey, explicitly show what you are testing this against none.
             if deKey!=None:
                 userDict['enKey'] = encryptedKey
 
@@ -121,10 +124,6 @@ def register():
 
             #json generate string from dict overwrite the dict from before
             userDict = dictToStr(userDict)
-
-
-            #Key MUST have register keyword appended so as not to mix user keys in redis server
-            registerRedisKey=hashed_email+"register".encode('utf-8')
 
             #Add it to the redis server
             redis.set(registerRedisKey,userDict)
@@ -158,8 +157,10 @@ def register():
             #Check password correctness
             pwOK = flask_scrypt.check_password_hash(form2.password_2fa.data.encode('utf-8'), userDict['password'][:88].encode('utf-8'), userDict['password'][88:176].encode('utf-8'))
             if pwOK:
-                #Decrypt 2FA key with user password
+                #Decrypt the users decryption key
                 decryptionKey=decrypt(form2.password_2fa.data.encode('utf-8'),userDict['enKey'].encode('utf-8'),True)
+
+                #Decrypt 2FA key with user decryption key
                 twoFAkey= decrypt(decryptionKey,userDict['secret'])
 
                 #add key to the Timed One Timed Passwords class so it can verify
