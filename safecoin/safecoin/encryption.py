@@ -1,6 +1,6 @@
-import hashlib, base64, json
+import base64, json
 from cryptography.fernet import Fernet
-import flask_scrypt
+import flask_scrypt, scrypt
 from safecoin.models import User
 from safecoin import redis
 
@@ -21,22 +21,8 @@ def generate_key(password=''):
 
     password = password.encode('utf-8')
 
-    # NOTTODO fuck off, MD5 is broken
-    # NO you fuck off, please take some time to understand what this function is doing.
-    # HASHING HE PASSWORD HERE IS NOT A security feature.
-    # ITS ONLY PURPOSE IS TO CREATE A KEY DERIVED FROM THE PASSWORD
-    # THAT IS LONG ENOUGH TO USE FERNET FOR ENCRYPTION
-
-    # ─── OLD VERSION ────────────────────────────────────────────────────────────────
-    #key = hashlib.md5(password).hexdigest().encode('utf-8')
-    #key = base64.urlsafe_b64encode(key)
-    # ─── OLD VERSION ────────────────────────────────────────────────────────────────
-
-    #Alternative hashing method, but it needs to be sliced to be used with fernet.
-    #Hopefully doesnt defeat any safety
-    #No changes needed to any other functions works just like before
-    key = flask_scrypt.generate_password_hash(password, "")
-    key = base64.urlsafe_b64encode(key[:32])
+    key = scrypt.hash(password, salt='', N=2**16, r=8, p=1, buflen=32)
+    key = base64.urlsafe_b64encode(key)
     return key
 
 
