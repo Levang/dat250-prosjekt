@@ -10,31 +10,39 @@ from safecoin.models import Account
 from safecoin.accounts_db import format_account_number
 
 
+#Formaterer
 def format_account_list(acc_list: list):
     if type(acc_list) != list or len(acc_list) < 1 or len(acc_list[0]) < 3 or type(acc_list[0][1]) != int:
-        return
+        return None
     try:
         for account in acc_list:
             account[1] = format_account_number(account[1])
     except ValueError:
-        return
+        return None
 
 
 @app.route("/accounts/", methods=["GET", "POST"])
 @login_required
 def accounts():
+    #Retrive the accounts list
     account_list = getAccountsList()
 
+    #Declare form class
     form = AccountsForm()
+
+    #Definer hva som skal ligge i dropdown liste
     form.get_select_field(account_list)
+
+    #
     format_account_list(account_list)
 
     create_form = CreateAccountForm()
     delete_form = CreateDeleteForm()
 
-    do_action = True if form.create_account.data or form.delete_account.data else False
-    create_form_start = True if form.create_account.data and form.account_name.data else False
-    delete_form_start = True if form.delete_account.data and form.account_select.data else False
+
+    do_action = form.create_account.data or form.delete_account.data
+    create_form_start = form.create_account.data and form.account_name.data
+    delete_form_start = form.delete_account.data and form.account_select.data
 
     if create_form.validate_on_submit():
         err = addNewAccountToCurUser(create_form.account_name.data, create_form.password_create.data)
@@ -72,21 +80,34 @@ def accounts():
 
 
 def getAccountsList():
+    #Hent account info fra redis
     userDict = redis.get(current_user.email)
+    #Konverter til dictionairy
     userDict = json.loads(userDict)
 
     i = 0
     account_list = []
     for accountnr in userDict['accounts']:  # Denne fungerer men må ryddes opp i, gjør det om til en funksjon elns.
+        #accountnuber is a string so convert back to an int
         numberUsr = int(accountnr)
+
+        #Henter første verdi fra accounts listen til accountnummer
         name = userDict['accounts'][accountnr][0]  # noe galt her no time to fix atm. Fikser senere
 
+        #Hent kontobalansen fra accounts database
         accountDB = Account.query.filter_by(number=numberUsr).first()
+
+        #dersom verdien eksisterer  
         if accountDB:
-            balance = round(accountDB.balance, 2)
-            # print(name)
+            balance = accountDB.balance
+
+            # Formater info og legg dette i en liste
             account_list.append([name, numberUsr, balance])
         else:
+            #Dersom vi søker på en konto som ikke ligger i databasen skal vi returnere umiddelbart
+            #Hvordan fikk brukeren denne i listen sin
+            #TODO Vurder om det skal logges
+            #Kontoen ligger ikke i kontodatabasen
             return None
 
         i += 1
