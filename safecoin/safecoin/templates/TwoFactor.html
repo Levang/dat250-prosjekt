@@ -1,9 +1,19 @@
-<body class="importedContent">
-    <form method="post">
-            {{ form2.hidden_tag() }}
-            <table>
-                <tbody>
-                    <tr class="twofaInfo">
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="{{ url_for('static', filename='/css/index.css') }}">
+        <link rel="icon" href="{{ url_for('static', filename='/assets/favicon.png') }}" >
+        <title>Two Factor Authentication</title>
+    </head>
+    <body>
+        <div class="twofa">
+            <form method="post">
+                {{ form2.hidden_tag() }}
+                <table>
+                    <tr >
                         <th>Confirm Two-factor authenication</th>
                     </tr>
                     <tr>
@@ -39,7 +49,8 @@
                             {{ form2.submit() }}
                         </td>
                     </tr>
-                </tbody>
-            </table>
-        </form>
+                </table>
+            </form>
+        </div>
     </body>
+</html>
