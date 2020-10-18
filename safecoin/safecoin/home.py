@@ -21,11 +21,16 @@ def home():
         #userDB = Database class
         #Secret = 2fa Secret
         #returns true and other values only if user is registered in database.
-        try:
-            login, userDB, secret = verifyUser(form.email.data,form.password.data,addToActive=True)
-        except:
-            login=False
-            flash('Something went wrong. Please try again.')
+
+        login, userDB, secret = verifyUser(form.email.data,form.password.data,addToActive=True)
+
+        # ─── KOMMENTERES TILBAKE VED PRODUKSJON ──────────────────────────
+        # try:
+        #     login, userDB, secret = verifyUser(form.email.data,form.password.data,addToActive=True)
+        # except:
+        #     login=False
+        #     flash('Something went wrong. Please try again.')
+        # ─── KOMMENTERES TILBAKE VED PRODUKSJON ──────────────────────────
 
         if login:
 
