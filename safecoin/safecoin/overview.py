@@ -1,3 +1,10 @@
+# ─── NOTATER ARDIJAN ────────────────────────────────────────────────────────────
+# ─── FIKS ───────────────────────────────────────────────────────────────────────
+# Overview
+# Ny account
+# Pay funksjon
+# Slett account
+# ─── NOTATER ARDIJAN ────────────────────────────────────────────────────────────
 
 from safecoin.accounts import format_account_list, format_account_number
 
@@ -24,12 +31,18 @@ def overviewPage():
     form.get_select_field(account_list)
     format_account_list(account_list)
 
+    if account_list==None:
+        account_list=[['','Please open an account','']]
+
+    elif len(account_list)>5:
+        account_list=account_list[:5]
+
     return render_template('overview.html', account_list=account_list, form=form)
 
 
 def getAccountsList():
     if current_user.accounts==None:
-        return [["","","",""],["","","",""],["","","",""]]
+        return [['','Please open an account','']]
 
     print("ACCOUNTS LIST PRINTING")
     print(current_user.accounts)
