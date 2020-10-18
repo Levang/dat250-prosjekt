@@ -5,12 +5,6 @@ from safecoin.models import User
 from safecoin import redis
 
 
-class UserClass:
-    email = ''
-    accounts = ''
-    secret = ''
-
-
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 def generate_key(password=''):
     if password == '':
@@ -64,7 +58,6 @@ def encrypt(key, theThing, password=False):
 
 
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
-
 # Verifies the user and returns the User object if verified
 # If verification failes it returns None
 
