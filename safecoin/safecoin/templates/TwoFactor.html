@@ -3,7 +3,7 @@
             {{ form2.hidden_tag() }}
             <table>
                 <tbody>
-                    <tr>
+                    <tr class="twofaInfo">
                         <th>Confirm Two-factor authenication</th>
                     </tr>
                     <tr>
@@ -13,17 +13,25 @@
                     </tr>
                     <tr>
                         <td>
-                            {{ form2.otp() }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            {{ form2.email() }} <!-- For some reason, this needs to be here for us to be able to retrieve the clearTextEmail. If possible we should look into hiding this field for the user. The user can technically edit this field in the in-browser editor, but as this needs to match what they wrote in /register, it won't matter as the only repercussion is that they won't be able to make their user.-->
+                        <!--
+                        This is safe because of the fact that
+                        changing the email field
+                        changes your email hash
+                        wich just means you need a matching password to be able to create
+                        this account and this can never conflict with
+                        normal registered users in the redis database
+                        -->
+                            {{ form2.email() }}
                         </td>
                     </tr>
                     <tr>
                         <td>
                             {{ form2.password_2fa() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form2.otp() }}
                         </td>
                     </tr>
                     <tr>

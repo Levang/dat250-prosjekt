@@ -22,7 +22,9 @@ def getCurrentUser():
 # ---------------------------- #
 
 
-# "name1,num1,key1;name2,num2,key2;" -> [[name1, num1, key1], [name2, num2, key2]]
+# "name,accountnumber,secretKey;name2,accountnumber2,secretKey2;"
+# Converts into list of lists:
+# [[name, accountnumber, secretKey], [name2, accountnumber2, secretKey2]]
 def accStr_to_accList(accStr: str):
     accList = accStr.split(";")
     while accList and accList[-1] == "":
@@ -89,7 +91,7 @@ def addAccountToUser(user: User, account: Account, password, name="My account"):
     user.accounts = encrypt(enKey, f"{tmpStr}{name},{account.number},privatekey{randint(0, 1000000)};")
     db.session.add(account)
     db.session.commit()
-    sync_redis()
+#    sync_redis()
 
 
 def addNewAccountToCurUser(account_name, password):
@@ -113,6 +115,6 @@ def deleteCurUsersAccountNumber(account_number: str, password):
             user.accounts = encrypt(enKey, newAccStr)
             db.session.delete(account)
             db.session.commit()
-            sync_redis()
+            #sync_redis()
             return
     return "Couldn't delete the given account"
