@@ -13,25 +13,25 @@
                     </tr>
                     <tr>
                         <td>
-                            {{ form2.otp() }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                        {% comment %}
+                        <!--
                         This is safe because of the fact that
                         changing the email field
                         changes your email hash
                         wich just means you need a matching password to be able to create
                         this account and this can never conflict with
                         normal registered users in the redis database
-                        {% endcomment %}
+                        -->
                             {{ form2.email() }}
                         </td>
                     </tr>
                     <tr>
                         <td>
                             {{ form2.password_2fa() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form2.otp() }}
                         </td>
                     </tr>
                     <tr>
