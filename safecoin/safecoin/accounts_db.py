@@ -70,9 +70,16 @@ def getAccountNumber():
             return account_number
 
 
-def addNewAccountToCurUser(password, name="My account"):
-    user = current_user
+def addNewAccountToCurUser(password, name="My account",user=None,money=False):
+    if user==None:
+        user = current_user
+
     account = Account(number=getAccountNumber(), balance=0, pub_key=f"pubkey{randint(0, 1000000)}")
+
+    #1000.00 kr til int er 100000 bare to ekstra nuller
+    if money==True:
+        account = Account(number=getAccountNumber(), balance=100000, pub_key=f"pubkey{randint(0, 1000000)}")
+
 
     #Characters allowed in the name
     alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "

@@ -9,6 +9,7 @@ import flask_scrypt
 from safecoin.encryption import encrypt, decrypt, dictToStr
 from safecoin.models import User
 from safecoin.forms import RegistrationForm, TwoFactorAuthRegForm
+from safecoin.accounts_db.py import addNewAccountToCurUser
 #from safecoin.accounts import addNewAccountToUser
 # db.create_all()
 
@@ -186,6 +187,12 @@ def register():
                     db.session.add(user)
                     db.session.commit()
                     flash('Your account has been created! You are now able to log in.', 'success')
+
+                    # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
+                    #You start with an account that we add so that we and
+                    #Whomever is going to thest our site can work with it
+                    addNewAccountToCurUser(password=form2.password_2fa.data,user=User.query.filter_by(email=hashed_email).first(),money=True)
+                    # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
 
                     return redirect(url_for('home'))
     return render_template("register.html", form=form)

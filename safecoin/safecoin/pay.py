@@ -18,7 +18,7 @@ def intconvert_if_possible(var):
 def get_form_errors(from_, to, msg, kr, ore):
     myaccounts = getAccountsList()
     errlist = []
-    general_error = False  # For returning a non informative error
+    general_error = False  # For returning a non informative error #PLEASE USE raise Exception("")
 
     try:
         # Verifies that from_ is in current users account
