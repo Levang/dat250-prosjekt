@@ -4,7 +4,7 @@ import flask_scrypt, scrypt
 from flask_login import current_user
 from safecoin.models import User
 from safecoin import redis
-
+from flask_login import current_user
 
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 def generate_key(password=''):
@@ -85,8 +85,9 @@ def verifyUser(email, password, addToActive=False):
     # create user class with information from database
     userDB = User.query.filter_by(email=hashed_email).first()
 
-    # if the user doesnt exist in database
-    if userDB == None:
+    #if the user doesnt exist in database
+    if userDB==None:
+
         return False, None, None
 
     # format password from database
@@ -166,3 +167,40 @@ def verify_pwd_2FA(password, otp, email=None):
         if totp.verify(otp):
             return True, user
     return False, None
+
+#Sync redis with database
+def redis_sync(deKey,hashed_mail):
+    if type(deKey)==str:
+        deKey=deKey.encode('utf-8')
+    #Get user from database
+    userDB = User.query.filter_by(email=hashed_mail).first()
+
+    #create user dict for json dump
+    userInfo = {}
+
+    #Add plaintext email as a key
+    #Check if its a string
+    if type(userDB.enEmail)==str:
+        userInfo['email'] = decrypt(deKey, userDB.enEmail.encode('utf-8')).decode('utf-8')
+    else:
+         userInfo['email'] = decrypt(deKey, userDB.email).decode('utf-8')
+
+    #If the user has any accounts
+    if userDB.accounts != None:
+        #decrypt them
+        if type(userDB.accounts)==str:
+            accounts = decrypt(deKey, userDB.accounts.encode('utf-8'))
+        else:
+            accounts = decrypt(deKey, userDB.accounts)
+
+        #add them to the dictionairy of the user
+        userInfo['accounts'] = DBparseAccounts(accounts)
+
+    userInfo = json.dumps(userInfo)
+    #add it to the redis database
+
+    redis.set(userDB.email, userInfo)
+    #set the expiration time of the data added
+    #900 seconds= 15 minutes
+    redis.expire(userDB.email,900)
+

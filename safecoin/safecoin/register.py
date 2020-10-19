@@ -136,54 +136,54 @@ def register():
 
     if form2.validate_on_submit():
 
-        # Regenerate hashed email from last page
-        hashed_email = flask_scrypt.generate_password_hash(carryOverEmail, "")
+            #Regenerate hashed email from last page
+            hashed_email = flask_scrypt.generate_password_hash(carryOverEmail, "")
 
-        # Key MUST have register keyword appended so as not to mix user keys in redis server
-        registerRedisKey = hashed_email + "register".encode('utf-8')
+            #Key MUST have register keyword appended so as not to mix user keys in redis server
+            registerRedisKey=hashed_email+"register".encode('utf-8')
 
-        # retrive information from redis
-        userDict = redis.get(registerRedisKey)
+            #retrive information from redis
+            userDict=redis.get(registerRedisKey)
 
-        # delete user from redis
-        redis.delete(hashed_email)
+            #delete user from redis
+            redis.delete(registerRedisKey)
 
-        # Format back to dictionairy
-        userDict = json.loads(userDict)
+            #Format back to dictionairy
+            userDict = json.loads(userDict)
 
-        # Check password correctness
-        pwOK = flask_scrypt.check_password_hash(form2.password_2fa.data.encode('utf-8'),
-                                                userDict['password'][:88].encode('utf-8'),
-                                                userDict['password'][88:176].encode('utf-8'))
-        print("ER PASSORD OK?")
-        print(pwOK)
-        if pwOK:
-            # Decrypt the users decryption key
-            decryptionKey = decrypt(form2.password_2fa.data.encode('utf-8'), userDict['enKey'].encode('utf-8'), True)
+            #Check password correctness
+            pwOK = flask_scrypt.check_password_hash(form2.password_2fa.data.encode('utf-8'), userDict['password'][:88].encode('utf-8'), userDict['password'][88:176].encode('utf-8'))
+            print("ER PASSORD OK?")
+            print(pwOK)
+            if pwOK:
+                #Decrypt the users decryption key
+                decryptionKey=decrypt(form2.password_2fa.data.encode('utf-8'),userDict['enKey'].encode('utf-8'),True)
 
-            # Decrypt 2FA key with user decryption key
-            twoFAkey = decrypt(decryptionKey, userDict['secret'])
+                #Decrypt 2FA key with user decryption key
+                twoFAkey= decrypt(decryptionKey,userDict['secret'])
 
-            # add key to the Timed One Timed Passwords class so it can verify
-            totp = pyotp.totp.TOTP(twoFAkey)
+                #add key to the Timed One Timed Passwords class so it can verify
+                totp = pyotp.totp.TOTP(twoFAkey)
 
-            # Hvis brukeren scanner qrkoden (som genereres i html) vil koden som vises i appen deres matche koden til totp.now()
-            if totp.verify(form2.otp.data):
-                print("LAGRER BRUKER I DATABASE")
-                # user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey, secret=secret_key)
+                # Hvis brukeren scanner qrkoden (som genereres i html) vil koden som vises i appen deres matche koden til totp.now()
+                if totp.verify(form2.otp.data):
 
-                # Create user class
-                user = User()
-                user.email = hashed_email
-                user.enEmail = userDict['enEmail']
-                user.password = userDict['password']
-                user.enKey = userDict['enKey']
-                user.accounts = None
-                user.secret = userDict['secret']
+                    print("LAGRER BRUKER I DATABASE")
+                    #user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey, secret=secret_key)
 
-                db.session.add(user)
-                db.session.commit()
-                flash('Your account has been created! You are now able to log in.', 'success')
+                    #Create user class
+                    user = User()
+                    user.email=hashed_email
+                    user.enEmail=userDict['enEmail']
+                    user.password=userDict['password']
+                    user.enKey=userDict['enKey']
+                    user.accounts=None
+                    user.secret=userDict['secret']
 
-                return redirect(url_for('home'))
+                    db.session.add(user)
+                    db.session.commit()
+                    flash('Your account has been created! You are now able to log in.', 'success')
+
+                    return redirect(url_for('home'))
     return render_template("register.html", form=form)
+

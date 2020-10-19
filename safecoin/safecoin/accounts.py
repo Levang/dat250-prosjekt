@@ -14,12 +14,15 @@ from safecoin.accounts_db import format_account_number
 def format_account_list(acc_list: list):
     if acc_list == None:
         return None
+
+    #Check the formatting
     if type(acc_list) != list or len(acc_list) < 1 or len(acc_list[0]) < 3 or type(acc_list[0][1]) != int:
         return None
     try:
         for account in acc_list:
             account[1] = format_account_number(account[1])
     except ValueError:
+        print("ACC list formatting fucked itself!!!!!!!!!!!!!!!!!!!!!!!")
         return None
 
 
@@ -51,10 +54,12 @@ def accounts():
     # True if a button on accounts page is pressed
     do_action = False
     if form.create_account.data or form.delete_account.data:
+
         do_action = True
 
     # True if create account form on accounts page is correctly filled
     create_form_start = False
+
     if form.create_account.data and form.account_name.data:
         create_form_start = True
 
@@ -65,8 +70,10 @@ def accounts():
 
     # If the create form is submitted
     if create_form.validate_on_submit():
-        # ADDS A new account to the user
-        err = addNewAccountToCurUser(create_form.account_name.data, create_form.password_create.data)
+
+        #ADDS A new account to the user
+        err = addNewAccountToCurUser(create_form.password_create.data,create_form.account_name.data)
+
 
         # If an error occurs when creating an account flash it and re render the page
         if err:

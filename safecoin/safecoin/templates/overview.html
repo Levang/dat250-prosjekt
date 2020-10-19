@@ -6,32 +6,33 @@
 
 {% block body %}
 <body>
-<div class='userAccounts'>
-    <table>
-        <tbody>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Balance
-                </th>
-            </tr>
-            {% if account_list|length < 5 %}
-                {% set accshow = account_list|length %}
-            {% else %}
-                {% set accshow = 5 %}
-            {% endif %}
-            {% for i in range(accshow) %}
-                <tr class="account">
-                    <td #accountName>
-                        {{ account_list[i][0] }}
-                    </td>
-                    <td #accountBalance>
-                        {{ account_list[i][2] }}
-                    </td>
+    <div class='userAccounts'>
+        <table>
+            <tbody>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Account number
+                    </th>
+                    <th style>
+                        Balance
+                    </th>
                 </tr>
-            {% endfor %}
+                {% for account in account_list %}
+                    <tr class="account">
+                        <td #accountName>
+                            {{ account[0] }}
+                        </td>
+                        <td #accountNumber>
+                            {{ account[1] }}
+                        </td>
+                        <td #accountBalance>
+                            {{ account[2] }} kr
+                        </td>
+                    </tr>
+                {% endfor %}
         </tbody>
     </table>
 </div>
