@@ -128,7 +128,7 @@ def register():
             #Add it to the redis server
             redis.set(registerRedisKey,userDict)
             #Set session timeout of user at 600 secons, 10 minutes
-            redis.expire(hashed_email,600)
+            redis.expire(registerRedisKey,600)
             return render_template('TwoFactor.html', form2 = form2, qr_link = qr_link) # Vi må dra med inn qr_linken for å generere qr_koden korrekt
 
 
@@ -149,7 +149,7 @@ def register():
             userDict=redis.get(registerRedisKey)
 
             #delete user from redis
-            redis.delete(hashed_email)
+            redis.delete(registerRedisKey)
 
             #Format back to dictionairy
             userDict = json.loads(userDict)

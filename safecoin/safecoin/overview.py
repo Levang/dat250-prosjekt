@@ -1,9 +1,10 @@
 # ─── NOTATER ARDIJAN ────────────────────────────────────────────────────────────
 # ─── FIKS ───────────────────────────────────────────────────────────────────────
-# Overview
-# Ny account
-# Pay funksjon
-# Slett account
+# Overview          --DONE
+# Ny account        --Doing
+# Pay funksjon      --
+# Slett account     --
+# Trans historikk   --
 # ─── NOTATER ARDIJAN ────────────────────────────────────────────────────────────
 
 from safecoin.accounts import format_account_list, format_account_number
@@ -28,7 +29,7 @@ def overviewPage():
     account_list = getAccountsList()
     print(account_list)
     form = AccountsForm()
-    form.get_select_field(account_list)
+    #form.get_select_field(account_list)
     format_account_list(account_list)
 
     if account_list==None:
@@ -56,11 +57,16 @@ def getAccountsList():
 
     #SJEKK OM ME FUCKER UP!
 
-    for accountnr in userDict['accounts']:  # Denne fungerer men må ryddes opp i, gjør det om til en funksjon elns.
+    # Denne fungerer men må ryddes opp i, gjør det om til en funksjon elns.
+    for accountnr in userDict['accounts']:
         numberUsr = int(accountnr)
-        name = userDict['accounts'][accountnr][0]  # noe galt her no time to fix atm. Fikser senere
 
+        #Navnet ligger i 0te index [navn,kontonr,secret]
+        name = userDict['accounts'][accountnr][0]
+
+        #Hent kontobalanse fra accounts database
         accountDB = Account.query.filter_by(number=numberUsr).first()
+
         if accountDB:
             balance = round(accountDB.balance, 2)
             # print(name)
