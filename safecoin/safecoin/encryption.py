@@ -3,7 +3,7 @@ from cryptography.fernet import Fernet
 import flask_scrypt, scrypt
 from safecoin.models import User
 from safecoin import redis
-
+from flask_login import current_user
 
 # ─── ENCRYPTION ─────────────────────────────────────────────────────────────────
 def generate_key(password=''):
@@ -84,6 +84,8 @@ def verifyUser(email, password, addToActive=False):
     #create user class with information from database
     userDB = User.query.filter_by(email=hashed_email).first()
 
+
+
     #if the user doesnt exist in database
     if userDB==None:
         return False, None, None
@@ -104,34 +106,14 @@ def verifyUser(email, password, addToActive=False):
         #decrypte the users encryption key
         decryptKey = decrypt(password, userDB.enKey.encode('utf-8'), True)
 
-        #create usser dict for json dump
-        userInfo = {}
-        #Add plaintext email as a key
-        userInfo['email'] = email
-
         #Decrypt the secret key
         secret_key = decrypt(decryptKey, userDB.secret.encode('utf-8'))
 
-        #Check if user has any accounts
-        if userDB.accounts != None:
-
-            #if so decrypt them
-            accounts = decrypt(decryptKey, userDB.accounts.encode('utf-8'))
-
-            #add them to the dictionairy of the user
-            userInfo['accounts'] = DBparseAccounts(accounts)
+        #sync with redis!
+        redis_sync(decryptKey,hashed_email)
 
 
-        #convert the dictionairy into a string
-        userInfo = json.dumps(userInfo)
-
-        #add it to the redis database
-        redis.set(hashed_email, userInfo)
-        #set the expiration time of the data added 
-        #900 seconds= 15 minutes
-        redis.expire(hashed_email,900)
-
-    #In case any errors occur above we do not add.
+    #In case any errors occur above we do not add it.
     if emailOK and pwOK:
         return True, userDB, secret_key
 
@@ -146,3 +128,39 @@ def dictToStr(dictionairy):
             dictionairy[i]=dictionairy[i].decode('utf-8')
 
     return json.dumps(dictionairy)
+
+#Sync redis with database
+def redis_sync(deKey,hashed_mail):
+    if type(deKey)==str:
+        deKey=deKey.encode('utf-8')
+    #Get user from database
+    userDB = User.query.filter_by(email=hashed_mail).first()
+
+    #create user dict for json dump
+    userInfo = {}
+
+    #Add plaintext email as a key
+    #Check if its a string
+    if type(userDB.enEmail)==str:
+        userInfo['email'] = decrypt(deKey, userDB.enEmail.encode('utf-8')).decode('utf-8')
+    else:
+         userInfo['email'] = decrypt(deKey, userDB.email).decode('utf-8')
+
+    #If the user has any accounts
+    if userDB.accounts != None:
+        #decrypt them
+        if type(userDB.accounts)==str:
+            accounts = decrypt(deKey, userDB.accounts.encode('utf-8'))
+        else:
+            accounts = decrypt(deKey, userDB.accounts)
+
+        #add them to the dictionairy of the user
+        userInfo['accounts'] = DBparseAccounts(accounts)
+
+    userInfo = json.dumps(userInfo)
+    #add it to the redis database
+
+    redis.set(userDB.email, userInfo)
+    #set the expiration time of the data added
+    #900 seconds= 15 minutes
+    redis.expire(userDB.email,900)
