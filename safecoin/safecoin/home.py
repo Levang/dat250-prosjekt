@@ -58,6 +58,9 @@ def home():
 @app.route("/logout")
 @login_required
 def logout():
-    logout_user()
+    #slett ifra redis først ellers er current_user ikke definert.
     redis.delete(current_user.email)
+
+    #Logg så ut fra login manager
+    logout_user()
     return redirect(url_for('home'))
