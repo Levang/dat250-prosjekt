@@ -69,7 +69,7 @@ These three relatively simple functions made it very simple for us to create and
 
 The above table shows a very approximate cost of brute-forcing a password of a specified length in 2002. While technology has advanced far beyond 2002, the table still functions as an approximate estimation on how scrypt compares to many other hashing algortithms.
 
-The hashing algortithms `bcrypt` and `argon2` were also considered as alternatives to `scrypt`. After some research we relatively quickly decided that `scrypt` would be the best fit for our usecase, as it not only is secure, but also is very easy to use. `Bcrypt` lost out as it had known security flaws compared to the other alternatives, aswell as can be seen in the table above, it is far less secure. `Argon2` on the other hand was a real consideration, however `scrypt` was chosen instead of it.
+The hashing algortithms `bcrypt` and `argon2` were also considered as alternatives to `scrypt`. After some research we relatively quickly decided that `scrypt` would be the best fit for our usecase, as it not only is secure, but also is very easy to use. `Bcrypt` lost out as it had known security flaws compared to the other alternatives, aswell as can be seen in the table above, it is far less secure. `Argon2` on the other hand was a real consideration, however `scrypt` was chosen instead of it. Scrypt was chosen becuase of its' better resistance to large scale brute force attacks. It manages this by not only scaling the cpu-usage, but the memory-usage as well. This approach makes it very expensive to excecute a parallelized attack.
 
 (source: http://www.tarsnap.com/scrypt/scrypt.pdf)
  
