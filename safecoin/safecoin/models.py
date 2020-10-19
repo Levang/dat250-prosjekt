@@ -59,7 +59,7 @@ class User(db.Model, UserMixin):
         return self.email
 
 class Account(db.Model):
-    number = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
+    number = db.Column(db.String(11), unique=True, nullable=False, primary_key=True)
     balanceField = db.Column(db.String(256))  # tallet viser til maks lengde av et siffer
     pub_key = db.Column(db.String(300), unique=True, nullable=False)
 
