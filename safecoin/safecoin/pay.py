@@ -94,9 +94,26 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
 
 
 #This only accepts current user. 
-def submitTransaction(password,accountTo,accountFrom,amount,message):
+def submitTransaction(password,accountFrom,accountTo,amount,message):
+    print("INNE I SUBMIT TRANSACTIONS")
 
+    #Check user password
 
+    #Decrypt and check user account with user database
+
+    #If internal transfer check that user balance remains unchanged
+
+    #If external transfer
+
+    #Check that total sum of both accounts balance remains unchanged.
+
+    #update database
+
+    #sync redis
+
+    #add the transaction to the transaction history
+
+    #Make transactions page lookup function.
 
     return False
 
@@ -116,15 +133,13 @@ def payPage():
             flash("An error occurred during validation. Didn't transfer anything.")
             return render_template('pay.html', form=form)
 
-
-        # TODO Check if form_validate form contains the right email and password
-
-
-
-        # TODO If authenticated: Proceed transaction and return to overview page with a confirmation message
-
-        # TODO Else: return pay.html with error (see if errlist below)
-
+        submitTransaction(
+            password = form_validate.password_payment.data,
+            accountFrom = form_validate.tfrom.data,
+            accountTo = form_validate.to.data,
+            amount = krToInt( kr=form_validate.kr.data , ore = form_validate.ore.data ),
+            message =form_validate.msg.data
+            )
 
         flash(
             f"Successfully transferred {form_validate.kr.data},{form_validate.ore.data if form_validate.ore.data else '00'} kr from account {format_account_number(form.tfrom.data)} to {format_account_number(form.to.data)}!",
@@ -143,9 +158,8 @@ def payPage():
                 flash(err, "error")
             return render_template('pay.html', form=form)
 
-        submitTransaction(password,accountTo,accountFrom,amount,message)
+        print("-----------------------------THIS SHOULD NOT SHOW UP UNLESS IN VALIDATE")
 
         return render_template("validate_payment.html", form=form_validate)
-
     # Regular pay page
     return render_template('pay.html', form=form)
