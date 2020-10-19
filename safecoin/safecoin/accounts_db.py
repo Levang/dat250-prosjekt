@@ -9,15 +9,18 @@ from safecoin.encryption import decrypt, encrypt
 # --- Gets account objects --- #
 
 def getAccount(account_number):
-    return Account.query.filter_by(number=account_number).first()
+    account: Account = Account.query.filter_by(number=account_number).first()
+    return account
 
 
 def getUser(email):
-    return User.query.filter_by(email=email).first()
+    user: User = User.query.filter_by(email=email).first()
+    return user
 
 
 def getCurrentUser():
-    return getUser(current_user.email)
+    user: User = getUser(current_user.email)
+    return user
 
 # ---------------------------- #
 

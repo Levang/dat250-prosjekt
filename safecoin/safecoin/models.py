@@ -48,7 +48,7 @@ class User(db.Model, UserMixin):
         if redis.get(self.email):
 
             #If so set data to expire 10 minutes from now
-            redis.expire(self.email,3600)
+            redis.expire(self.email, 3600)
 
             #return true
             return True
@@ -60,10 +60,6 @@ class User(db.Model, UserMixin):
     #login manager, defines user id must be unique
     def get_id(self):
         return self.email
-
-
-
-
 
 
 class Account(db.Model):

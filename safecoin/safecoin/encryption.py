@@ -1,6 +1,7 @@
-import base64, json
+import base64, json, pyotp
 from cryptography.fernet import Fernet
 import flask_scrypt, scrypt
+from flask_login import current_user
 from safecoin.models import User
 from safecoin import redis
 
@@ -15,7 +16,7 @@ def generate_key(password=''):
 
     password = password.encode('utf-8')
 
-    key = scrypt.hash(password, salt='', N=2**16, r=8, p=1, buflen=32)
+    key = scrypt.hash(password, salt='', N=2 ** 16, r=8, p=1, buflen=32)
     key = base64.urlsafe_b64encode(key)
     return key
 
@@ -42,7 +43,7 @@ def decrypt(key, theThing, password=False, type_=''):
 # example: encrypt(activeUsers[user.email],"Thing to encrypt")
 def encrypt(key, theThing, password=False):
     if password and theThing == ("generate"):
-        key = generate_key(key) #DETTE ER PASSORD
+        key = generate_key(key)  # DETTE ER PASSORD
         theThing = generate_key()
         return Fernet(key).encrypt(theThing)
 
@@ -62,7 +63,7 @@ def encrypt(key, theThing, password=False):
 # If verification failes it returns None
 
 def DBparseAccounts(accInput):
-    if accInput==None:
+    if accInput == None:
         return None
 
     if type(accInput) != str:
@@ -78,71 +79,90 @@ def DBparseAccounts(accInput):
 
 
 def verifyUser(email, password, addToActive=False):
-    #hash the email
+    # hash the email
     hashed_email = flask_scrypt.generate_password_hash(email, "")
 
-    #create user class with information from database
+    # create user class with information from database
     userDB = User.query.filter_by(email=hashed_email).first()
 
-    #if the user doesnt exist in database
-    if userDB==None:
+    # if the user doesnt exist in database
+    if userDB == None:
         return False, None, None
 
-    #format password from database
+    # format password from database
     DBpw = userDB.password.encode('utf-8')
 
-    #check if the hashed email is the same ass the one in the database, just a double check.
-    #Strictly not nececairy, but just seems logical to do.
+    # check if the hashed email is the same ass the one in the database, just a double check.
+    # Strictly not nececairy, but just seems logical to do.
     emailOK = hashed_email.decode('utf-8') == userDB.email.decode('utf-8')  # boolean to compare with
 
-    #Verify that the password is correct
+    # Verify that the password is correct
     pwOK = flask_scrypt.check_password_hash(password.encode('utf-8'), DBpw[:88], DBpw[88:176])
 
-    #Check if the password is correct and email exists in the database
-    if addToActive and (emailOK and pwOK):
-
-        #decrypte the users encryption key
+    if emailOK and pwOK:
+        # decrypte the users encryption key
         decryptKey = decrypt(password, userDB.enKey.encode('utf-8'), True)
 
-        #create usser dict for json dump
-        userInfo = {}
-        #Add plaintext email as a key
-        userInfo['email'] = email
-
-        #Decrypt the secret key
+        # Decrypt the secret key
         secret_key = decrypt(decryptKey, userDB.secret.encode('utf-8'))
 
-        #Check if user has any accounts
-        if userDB.accounts != None:
+        # Check if the password is correct and email exists in the database
+        if addToActive:
+            # create user dict for json dump
+            userInfo = {}
+            # Add plaintext email as a key
+            userInfo['email'] = email
 
-            #if so decrypt them
-            accounts = decrypt(decryptKey, userDB.accounts.encode('utf-8'))
+            # Check if user has any accounts
+            if userDB.accounts != None:
+                # if so decrypt them
+                accounts = decrypt(decryptKey, userDB.accounts.encode('utf-8'))
 
-            #add them to the dictionairy of the user
-            userInfo['accounts'] = DBparseAccounts(accounts)
+                # add them to the dictionary of the user
+                userInfo['accounts'] = DBparseAccounts(accounts)
 
+            # convert the dictionary into a string
+            userInfo = json.dumps(userInfo)
 
-        #convert the dictionairy into a string
-        userInfo = json.dumps(userInfo)
+            # add it to the redis database
+            redis.set(hashed_email, userInfo)
+            # set the expiration time of the data added
+            # 900 seconds= 15 minutes
+            redis.expire(hashed_email, 900)
 
-        #add it to the redis database
-        redis.set(hashed_email, userInfo)
-        #set the expiration time of the data added 
-        #900 seconds= 15 minutes
-        redis.expire(hashed_email,900)
-
-    #In case any errors occur above we do not add.
-    if emailOK and pwOK:
-        return True, userDB, secret_key
+        # In case any errors occur above we do not add.
+        if emailOK and pwOK:
+            return True, userDB, secret_key
 
     return False, None, None
 
 
-#This just encodes everything in a dict into a string
-#Used in register to convert information for redis server
-def dictToStr(dictionairy):
-    for i in dictionairy:
-        if type(dictionairy[i])!=str:
-            dictionairy[i]=dictionairy[i].decode('utf-8')
+# This just encodes everything in a dict into a string
+# Used in register to convert information for redis server
+def dictToStr(dictionary):
+    for i in dictionary:
+        if type(dictionary[i]) != str:
+            dictionary[i] = dictionary[i].decode('utf-8')
 
-    return json.dumps(dictionairy)
+    return json.dumps(dictionary)
+
+
+# Return current users email in clear text
+def getCurUsersEmail():
+    user_dict = json.loads(redis.get(current_user.email))
+    return user_dict['email']
+
+
+# Verify password, 2fa(otp) against email. Defaults to current email
+def verify_pwd_2FA(password, otp, email=None):
+    # Set email to current if email isn't set
+    if not email:
+        email = getCurUsersEmail()
+    # Verifies password
+    is_authenticated, user, secret = verifyUser(email, password)
+    if is_authenticated:
+        # Verifies 2fa
+        totp = pyotp.TOTP(secret)
+        if totp.verify(otp):
+            return True, user
+    return False, None
