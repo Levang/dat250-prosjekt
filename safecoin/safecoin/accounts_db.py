@@ -142,7 +142,7 @@ def addNewAccountToCurUser(password, name="My account",user=None,money=False):
     db.session.add(account)
     db.session.add(user)
     db.session.commit()
-    redis_sync(enKey,current_user.email)
+    redis_sync(enKey,user.email)
 
 
 def deleteCurUsersAccountNumber(account_number: str, password):

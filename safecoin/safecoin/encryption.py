@@ -2,7 +2,7 @@ import base64, json, pyotp
 from cryptography.fernet import Fernet
 import flask_scrypt, scrypt
 from flask_login import current_user
-from safecoin.models import User
+from safecoin.models import User, Account
 from safecoin import redis
 from flask_login import current_user
 
@@ -143,8 +143,8 @@ def redis_sync(deKey,hashed_mail):
 
 
 # ─── GET ACCOUNT LIST ───────────────────────────────────────────────────────────
-def getAccountsList(userDict):
-    if current_user.accounts==None:
+def getAccountsList(userDict=None):
+    if current_user.accounts==None and userDict==None:
         return [['','Please open an account','']]
 
     if userDict==None:
@@ -182,7 +182,7 @@ def getAccountsList(userDict):
 # ─── VERIFY USER ────────────────────────────────────────────────────────────────
 def verifyUser(email, password, addToActive=False):
     #hash the email
-    if email==None:
+    if email!=None:
         hashed_email = flask_scrypt.generate_password_hash(email, "")
     else:
         hashed_email = current_user.email
