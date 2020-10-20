@@ -1,6 +1,7 @@
-import base64, json
+import base64, json, pyotp
 from cryptography.fernet import Fernet
 import flask_scrypt, scrypt
+from flask_login import current_user
 from safecoin.models import User
 from safecoin import redis
 from flask_login import current_user
@@ -15,7 +16,7 @@ def generate_key(password=''):
 
     password = password.encode('utf-8')
 
-    key = scrypt.hash(password, salt='', N=2**16, r=8, p=1, buflen=32)
+    key = scrypt.hash(password, salt='', N=2 ** 16, r=8, p=1, buflen=32)
     key = base64.urlsafe_b64encode(key)
     return key
 
@@ -44,7 +45,7 @@ def decrypt(key, theThing, password=False, type_=''):
 # example: encrypt(activeUsers[user.email],"Thing to encrypt")
 def encrypt(key, theThing, password=False):
     if password and theThing == ("generate"):
-        key = generate_key(key) #DETTE ER PASSORD
+        key = generate_key(key)  # DETTE ER PASSORD
         theThing = generate_key()
         return Fernet(key).encrypt(theThing)
 
@@ -61,7 +62,7 @@ def encrypt(key, theThing, password=False):
 
 # ─── PARSE THE DATABASE ACCOUNTS AND SPLIT THEM ─────────────────────────────────
 def DBparseAccounts(accInput):
-    if accInput==None:
+    if accInput == None:
         return None
 
     if type(accInput) != str:
@@ -76,14 +77,32 @@ def DBparseAccounts(accInput):
     return out
 
 # ─── DICTIONAIRY TO STRING ──────────────────────────────────────────────────────
-#This just encodes everything in a dict into a string
-#Used in register to convert information for redis server
-def dictToStr(dictionairy):
-    for i in dictionairy:
-        if type(dictionairy[i])!=str:
-            dictionairy[i]=dictionairy[i].decode('utf-8')
+# This just encodes everything in a dict into a string
+# Used in register to convert information for redis server
+def dictToStr(dictionary):
+    for i in dictionary:
+        if type(dictionary[i]) != str:
+            dictionary[i] = dictionary[i].decode('utf-8')
 
-    return json.dumps(dictionairy)
+    return json.dumps(dictionary)
+# Return current users email in clear text
+def getCurUsersEmail():
+    user_dict = json.loads(redis.get(current_user.email))
+    return user_dict['email']
+
+# Verify password, 2fa(otp) against email. Defaults to current email
+def verify_pwd_2FA(password, otp, email=None):
+    # Set email to current if email isn't set
+    if not email:
+        email = getCurUsersEmail()
+    # Verifies password
+    is_authenticated, user, secret = verifyUser(email, password)
+    if is_authenticated:
+        # Verifies 2fa
+        totp = pyotp.TOTP(secret)
+        if totp.verify(otp):
+            return True, user
+    return False, None
 
 
 # ─── REDIS SYNC ─────────────────────────────────────────────────────────────────

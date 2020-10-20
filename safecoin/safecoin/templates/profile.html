@@ -5,20 +5,40 @@
 {% endblock%}
 
 {% block body %}
+<body>
+    <form method="post">
+        <h1>{{ email }}</h1>
 
-<table>
-    <tbody>
-        <tr>
-            <td>
-                <button type="button">DELETE USER</button>
-            </td>
-           <td>
-                <button type="button">THANOS SNAP</button>
-            </td>
-            <td>
-                <button type="button" onclick="window.location.href='/logout';">Logout</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+        {{ form.hidden_tag() }}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+            <div class=flashes>
+              <p class="{{ category }}">{{ message }}</p>
+            </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        {{ form.password_deleteuser() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.otp_deleteuser() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.delete_deleteuser() }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</body>
 {% endblock %}
