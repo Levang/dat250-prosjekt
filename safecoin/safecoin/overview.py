@@ -32,17 +32,10 @@ def overviewPage():
     form = AccountsForm()
     format_account_list(account_list)
 
-    if account_list==None:
-        account_list=[['','Please open an account','']]
+    if account_list is None:
+        account_list = [['', 'Please open an account', '']]
 
-    elif len(account_list)>5:
-        account_list=account_list[:5]
+    elif len(account_list) > 5:
+        account_list = account_list[:5]
 
     return render_template('overview.html', account_list=account_list, form=form), disable_caching
-
-
-
-
-
-
-
