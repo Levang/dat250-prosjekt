@@ -1,9 +1,9 @@
-import email_validator
+
 from flask import flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
 import flask_scrypt
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Optional
 
 from safecoin.models import User
 

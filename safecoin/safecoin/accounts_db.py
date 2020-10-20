@@ -3,8 +3,8 @@ from random import randint
 
 from safecoin import db
 from safecoin.models import Account, User
-from safecoin.encryption import decrypt, encrypt, redis_sync, verify_pwd_2FA
 
+from safecoin.encryption import decrypt, encrypt, redis_sync, illegalChar, verify_pwd_2FA
 
 # --- Gets account objects --- #
 
@@ -16,7 +16,6 @@ def getAccount(account_number):
 def getUser(email):
     user: User = User.query.filter_by(email=email).first()
     return user
-
 
 def getCurrentUser():
     user: User = getUser(current_user.email)
@@ -74,7 +73,6 @@ def getAccountNumber():
                 raise Exception(f"{account_number}'s length isn't 11!")
             return account_number
 
-
 def illegalChar(text, maxlength):
     if text is None:
         return False
@@ -102,14 +100,15 @@ def addNewAccountToCurUser(password, otp, name="My account", user=None, money=Fa
     if user is None:
         user = current_user
 
-    # Decrypt the encryption key
+
     enKey = decrypt(password, user.enKey.encode('utf-8'), True)
 
-    account = Account(number=getAccountNumber(), balance=0, pub_key=f"pubkey{randint(0, 1000000)}")
+    account = Account(number=getAccountNumber(), balance=0)
 
     # 100000 er 1000.00 kr int er altsaa bare to ekstra nuller
-    if money is True:
-        account = Account(number=getAccountNumber(), balance=100000, pub_key=f"pubkey{randint(0, 1000000)}")
+    if money==True:
+        account = Account(number=getAccountNumber(), balance=100000)
+
 
     # Max length of your account name
     # 24 is plenty
@@ -170,7 +169,6 @@ def deleteCurUsersAccountNumber(account_number: str, password, otp):
         print(f'accnr {type(acc[1])} {type(account_number)}')
 
         if int(acc[1]) == account_number:
-            print("JEG ER HER")
             accList.remove(acc)
             newAccStr = accList_to_accStr(accList)
             print(newAccStr)

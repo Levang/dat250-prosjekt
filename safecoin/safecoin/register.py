@@ -1,10 +1,8 @@
-from flask import render_template, url_for, redirect, request, flash
+from flask import render_template, url_for, redirect, flash
 from configparser import ConfigParser
-import base64
 import pyotp
-import flask_qrcode
 ###################
-from safecoin import app, db, bcrypt, redis, json, disable_caching
+from safecoin import app, db, redis, json, disable_caching
 import flask_scrypt
 from safecoin.encryption import encrypt, decrypt, dictToStr
 from safecoin.models import User
@@ -139,6 +137,7 @@ def register():
 
     if form2.validate_on_submit():
 
+
         # Regenerate hashed email from last page
         hashed_email = flask_scrypt.generate_password_hash(carryOverEmail, "")
 
@@ -196,4 +195,5 @@ def register():
                 # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
 
                 return redirect(url_for('home'))
+
     return render_template("register.html", form=form), disable_caching

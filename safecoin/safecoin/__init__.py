@@ -27,4 +27,4 @@ disable_caching = {'Cache-Control': 'no-cache, no-store, must-revalidate',
                    'Expres': '0'}
 
 
-from safecoin import home, overview, register, accounts, pay, profile, hist_transfer, transfer
+from safecoin import home, overview, register, accounts, pay, profile, hist_transfer, transfer, accounts_db, encryption
