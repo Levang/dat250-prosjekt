@@ -17,12 +17,12 @@ from safecoin.overview import overviewPage
 def home():
     form = LoginForm()
     if form.validate_on_submit():
-        #login=bool
-        #userDB = Database class
-        #Secret = 2fa Secret
-        #returns true and other values only if user is registered in database.
+        # login=bool
+        # userDB = Database class
+        # Secret = 2fa Secret
+        # returns true and other values only if user is registered in database.
 
-        login, userDB, secret = verifyUser(form.email.data,form.password.data,addToActive=True)
+        login, userDB, secret = verifyUser(form.email.data, form.password.data, addToActive=True)
 
         # ─── KOMMENTERES TILBAKE VED PRODUKSJON ──────────────────────────
         # try:
@@ -34,23 +34,22 @@ def home():
 
         if login:
 
-            #sender secret key til 2FA klasse
+            # sender secret key til 2FA klasse
             totp = pyotp.TOTP(secret)
 
-            #Denne returnerer True hvis koden fra brukeren er overens med serveren. MERK: serveren sin
+            # Denne returnerer True hvis koden fra brukeren er overens med serveren. MERK: serveren sin
             if totp.verify(form.otp.data):
-
-                #genererte totp er tilsynelatende omtrent 10 sekunder foran koden som brukeren genererer..
+                # genererte totp er tilsynelatende omtrent 10 sekunder foran koden som brukeren genererer..
                 login_user(userDB, remember=form.remember.data)
 
-                #Redirect til overview dersom alt er ok
+                # Redirect til overview dersom alt er ok
                 return redirect(url_for("overviewPage"))
 
         else:
-            #Generisk feilmelding dersom noe går galt
+            # Generisk feilmelding dersom noe går galt
             flash('Something went wrong. Please try again.')
 
-    #dersom noe gaar galt rendre samme side
+    # dersom noe gaar galt rendre samme side
     return render_template("login.html", form=form)
 
 
