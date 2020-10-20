@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import redirect
+from flask import Flask, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
@@ -23,5 +22,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/login'
 
+disable_caching = {'Cache-Control': 'no-cache, no-store, must-revalidate',
+                   'Pragma': 'no-cache',
+                   'Expres': '0'}
 
-from safecoin import home, overview, register, accounts, pay, profile, hist_transfer, transfer
+
+from safecoin import home, overview, register, accounts, pay, profile, hist_transfer, transfer, accounts_db, encryption

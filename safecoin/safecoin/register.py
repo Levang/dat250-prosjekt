@@ -1,16 +1,16 @@
-from flask import render_template, url_for, redirect, request, flash
+from flask import render_template, url_for, redirect, flash
 from configparser import ConfigParser
-import base64
 import pyotp
-import flask_qrcode
 ###################
-from safecoin import app, db, bcrypt, redis, json
+from safecoin import app, db, redis, json, disable_caching
 import flask_scrypt
 from safecoin.encryption import encrypt, decrypt, dictToStr
 from safecoin.models import User
 from safecoin.forms import RegistrationForm, TwoFactorAuthRegForm
 from safecoin.accounts_db import addNewAccountToCurUser
-#from safecoin.accounts import addNewAccountToUser
+
+
+# from safecoin.accounts import addNewAccountToUser
 # db.create_all()
 
 
@@ -74,7 +74,7 @@ def register():
             # ─── CHECK IF THE EMAIL EXISTS IN DATABASE OR REDIS ───────────────────────
             if User.query.filter_by(email=hashed_email.decode("utf-8")).first() or redis.get(registerRedisKey):
                 flash("error")
-                return render_template("register.html", form=form)
+                return render_template("register.html", form=form), disable_caching
 
             # ─── IF THE USER DOES NOT EXIST IN THE DATABASE ──────────────────
             # Create a user dictionairy for redis.
@@ -104,7 +104,7 @@ def register():
             deKey = decrypt(form.password.data, encryptedKey, True)
 
             # If deKey, explicitly show what you are testing this against none.
-            if deKey != None:
+            if deKey is not None:
                 userDict['enKey'] = encryptedKey
 
             # encrypt the email and add it to userDict
@@ -124,12 +124,12 @@ def register():
             # json generate string from dict overwrite the dict from before
             userDict = dictToStr(userDict)
 
-            #Add it to the redis server
-            redis.set(registerRedisKey,userDict)
-            #Set session timeout of user at 600 secons, 10 minutes
-            redis.expire(registerRedisKey,600)
-            return render_template('TwoFactor.html', form2 = form2, qr_link = qr_link) # Vi må dra med inn qr_linken for å generere qr_koden korrekt
-
+            # Add it to the redis server
+            redis.set(registerRedisKey, userDict)
+            # Set session timeout of user at 600 secons, 10 minutes
+            redis.expire(registerRedisKey, 600)
+            return render_template('TwoFactor.html', form2=form2,
+                                   qr_link=qr_link), disable_caching  # Vi må dra med inn qr_linken for å generere qr_koden korrekt
 
         # ─── DERSOM FEIL VED REGISTEREING ───────────────────────────────────────────────
         for err in errList:
@@ -137,59 +137,63 @@ def register():
 
     if form2.validate_on_submit():
 
-            #Regenerate hashed email from last page
-            hashed_email = flask_scrypt.generate_password_hash(carryOverEmail, "")
 
-            #Key MUST have register keyword appended so as not to mix user keys in redis server
-            registerRedisKey=hashed_email+"register".encode('utf-8')
+        # Regenerate hashed email from last page
+        hashed_email = flask_scrypt.generate_password_hash(carryOverEmail, "")
 
-            #retrive information from redis
-            userDict=redis.get(registerRedisKey)
+        # Key MUST have register keyword appended so as not to mix user keys in redis server
+        registerRedisKey = hashed_email + "register".encode('utf-8')
 
-            #delete user from redis
-            redis.delete(registerRedisKey)
+        # retrive information from redis
+        userDict = redis.get(registerRedisKey)
 
-            #Format back to dictionairy
-            userDict = json.loads(userDict)
+        # delete user from redis
+        redis.delete(registerRedisKey)
 
-            #Check password correctness
-            pwOK = flask_scrypt.check_password_hash(form2.password_2fa.data.encode('utf-8'), userDict['password'][:88].encode('utf-8'), userDict['password'][88:176].encode('utf-8'))
-            print("ER PASSORD OK?")
-            print(pwOK)
-            if pwOK:
-                #Decrypt the users decryption key
-                decryptionKey=decrypt(form2.password_2fa.data.encode('utf-8'),userDict['enKey'].encode('utf-8'),True)
+        # Format back to dictionairy
+        userDict = json.loads(userDict)
 
-                #Decrypt 2FA key with user decryption key
-                twoFAkey= decrypt(decryptionKey,userDict['secret'])
+        # Check password correctness
+        pwOK = flask_scrypt.check_password_hash(form2.password_2fa.data.encode('utf-8'),
+                                                userDict['password'][:88].encode('utf-8'),
+                                                userDict['password'][88:176].encode('utf-8'))
+        print("ER PASSORD OK?")
+        print(pwOK)
+        if pwOK:
+            # Decrypt the users decryption key
+            decryptionKey = decrypt(form2.password_2fa.data.encode('utf-8'), userDict['enKey'].encode('utf-8'), True)
 
-                #add key to the Timed One Timed Passwords class so it can verify
-                totp = pyotp.totp.TOTP(twoFAkey)
+            # Decrypt 2FA key with user decryption key
+            twoFAkey = decrypt(decryptionKey, userDict['secret'])
 
-                # Hvis brukeren scanner qrkoden (som genereres i html) vil koden som vises i appen deres matche koden til totp.now()
-                if totp.verify(form2.otp.data):
+            # add key to the Timed One Timed Passwords class so it can verify
+            totp = pyotp.totp.TOTP(twoFAkey)
 
-                    print("LAGRER BRUKER I DATABASE")
-                    #user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey, secret=secret_key)
+            # Hvis brukeren scanner qrkoden (som genereres i html) vil koden som vises i appen deres matche koden til totp.now()
+            if totp.verify(form2.otp.data):
+                print("LAGRER BRUKER I DATABASE")
+                # user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey, secret=secret_key)
 
-                    #Create user class
-                    user = User()
-                    user.email=hashed_email
-                    user.enEmail=userDict['enEmail']
-                    user.password=userDict['password']
-                    user.enKey=userDict['enKey']
-                    user.accounts=None
-                    user.secret=userDict['secret']
+                # Create user class
+                user = User()
+                user.email = hashed_email
+                user.enEmail = userDict['enEmail']
+                user.password = userDict['password']
+                user.enKey = userDict['enKey']
+                user.accounts = None
+                user.secret = userDict['secret']
 
-                    db.session.add(user)
-                    db.session.commit()
-                    flash('Your account has been created! You are now able to log in.', 'success')
+                db.session.add(user)
+                db.session.commit()
+                flash('Your account has been created! You are now able to log in.', 'success')
 
-                    # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
-                    #You start with an account that we add so that we and
-                    #Whomever is going to thest our site can work with it
-                    addNewAccountToCurUser(password=form2.password_2fa.data,user=User.query.filter_by(email=hashed_email).first(),money=True)
-                    # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
+                # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
+                # You start with an account that we add so that we and
+                # Whomever is going to thest our site can work with it
+                addNewAccountToCurUser(password=form2.password_2fa.data, otp=form2.otp.data,
+                                       user=User.query.filter_by(email=hashed_email).first(), money=True)
+                # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
 
-                    return redirect(url_for('home'))
-    return render_template("register.html", form=form)
+                return redirect(url_for('home'))
+
+    return render_template("register.html", form=form), disable_caching
