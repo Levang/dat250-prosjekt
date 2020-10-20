@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user, logout_user
 import json, pyotp
-from safecoin import app, db, redis
+from safecoin import app, db, redis, disable_caching
 from safecoin.accounts_db import getCurrentUser, accStr_to_accList
 from safecoin.encryption import decrypt, getCurUsersEmail, verifyUser, verify_pwd_2FA
 from safecoin.forms import DeleteUserForm
@@ -19,11 +19,11 @@ def profilePage():
             err = deleteCurUser(form.password_deleteuser.data)  # Delete user, if all accounts is empty
             if not err:  # Return to home if no errors
                 flash("User successfully deleted!", "success")
-                return redirect(url_for('home'))
+                return redirect(url_for('home')), disable_caching
             flash(err, "error")  # Flashes error if error occurred
         else:
             flash("Something went wrong under user deletion", "error")  # Flashes if authentication failed
-    return render_template('profile.html', form=form, email=getCurUsersEmail().upper())
+    return render_template('profile.html', form=form, email=getCurUsersEmail().upper()), disable_caching
 
 
 # Delete user from db if all accounts are empty

@@ -86,7 +86,7 @@ def verifyUser(email, password, addToActive=False):
     userDB = User.query.filter_by(email=hashed_email).first()
 
     # if the user doesnt exist in database
-    if userDB == None:
+    if userDB is None:
         return False, None, None
 
     # format password from database

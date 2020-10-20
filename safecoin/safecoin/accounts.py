@@ -3,7 +3,7 @@ from flask_login import current_user, login_required, logout_user
 from flask_wtf import FlaskForm
 from safecoin.accounts_db import addNewAccountToCurUser, deleteCurUsersAccountNumber
 
-from safecoin import app, redis, json, db
+from safecoin import app, redis, json, db, disable_caching
 from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAccountForm, CreateDeleteForm
 from safecoin.tmp import TmpAcc
 from safecoin.models import Account
@@ -74,7 +74,7 @@ def accounts():
         # If an error occurs when creating an account flash it and re render the page
         if err:
             flash(err, "error")
-            return render_template('accounts.html', account_list=account_list, form=form)
+            return render_template('accounts.html', account_list=account_list, form=form), disable_caching
         flash(f"Successfully Created Account {create_form.account_name.data}!", "success")
 
     # If delete form is submitted
@@ -84,7 +84,7 @@ def accounts():
         err = deleteCurUsersAccountNumber(delete_form.account_select.data, delete_form.password_delete.data)
         if err:
             flash(err, "error")
-            return render_template('accounts.html', account_list=account_list, form=form)
+            return render_template('accounts.html', account_list=account_list, form=form), disable_caching
         flash(f"Successfully Deleted Account {delete_form.account_select.data}!", "success")
 
     if do_action:
@@ -93,19 +93,19 @@ def accounts():
         if create_form_start:
             if form.create_account.data:
                 flash(f"Validate to create a new account with the name {form.account_name.data}")
-                return render_template('validate_create_account.html', form=create_form)
+                return render_template('validate_create_account.html', form=create_form), disable_caching
             flash("Please enter a name for your account", "error")
-            return render_template('accounts.html', account_list=account_list, form=form)
+            return render_template('accounts.html', account_list=account_list, form=form), disable_caching
 
         # If user pressed delete account and an account is selected from the select form
         if delete_form_start:
             if form.account_select.data == 'x':
                 flash("Please select an account", "error")
-                return render_template('accounts.html', account_list=account_list, form=form)
+                return render_template('accounts.html', account_list=account_list, form=form), disable_caching
             flash(f"Validate to delete your account with the name {form.account_select.data} ")
-            return render_template('validate_delete_account.html', form=delete_form)
+            return render_template('validate_delete_account.html', form=delete_form), disable_caching
 
-    return render_template('accounts.html', account_list=account_list, form=form)
+    return render_template('accounts.html', account_list=account_list, form=form), disable_caching
 
 
 def getAccountsList():

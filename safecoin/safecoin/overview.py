@@ -16,7 +16,7 @@ from flask_login import current_user, login_required
 from flask_wtf import FlaskForm
 from safecoin.accounts_db import addNewAccountToCurUser
 
-from safecoin import app, redis, json, db
+from safecoin import app, redis, json, db, disable_caching
 from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAccountForm, CreateDeleteForm
 from safecoin.tmp import TmpAcc
 from safecoin.models import Account, User
@@ -38,7 +38,7 @@ def overviewPage():
     elif len(account_list)>5:
         account_list=account_list[:5]
 
-    return render_template('overview.html', account_list=account_list, form=form)
+    return render_template('overview.html', account_list=account_list, form=form), disable_caching
 
 
 def getAccountsList():

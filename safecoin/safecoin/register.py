@@ -4,7 +4,7 @@ import base64
 import pyotp
 import flask_qrcode
 ###################
-from safecoin import app, db, bcrypt, redis, json
+from safecoin import app, db, bcrypt, redis, json, disable_caching
 import flask_scrypt
 from safecoin.encryption import encrypt, decrypt, dictToStr
 from safecoin.models import User
@@ -73,7 +73,7 @@ def register():
             # ─── CHECK IF THE EMAIL EXISTS IN DATABASE OR REDIS ───────────────────────
             if User.query.filter_by(email=hashed_email.decode("utf-8")).first() or redis.get(registerRedisKey):
                 flash("error")
-                return render_template("register.html", form=form)
+                return render_template("register.html", form=form), disable_caching
 
             # ─── IF THE USER DOES NOT EXIST IN THE DATABASE ──────────────────
             # Create a user dictionairy for redis.
@@ -127,7 +127,7 @@ def register():
             redis.set(registerRedisKey,userDict)
             #Set session timeout of user at 600 secons, 10 minutes
             redis.expire(registerRedisKey,600)
-            return render_template('TwoFactor.html', form2 = form2, qr_link = qr_link) # Vi må dra med inn qr_linken for å generere qr_koden korrekt
+            return render_template('TwoFactor.html', form2 = form2, qr_link = qr_link), disable_caching  # Vi må dra med inn qr_linken for å generere qr_koden korrekt
 
 
         # ─── DERSOM FEIL VED REGISTEREING ───────────────────────────────────────────────
@@ -185,4 +185,4 @@ def register():
                     flash('Your account has been created! You are now able to log in.', 'success')
 
                     return redirect(url_for('home'))
-    return render_template("register.html", form=form)
+    return render_template("register.html", form=form), disable_caching
