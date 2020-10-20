@@ -18,7 +18,6 @@ class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')], render_kw={"placeholder": "Confirm Password"})
-
     submit = SubmitField('Sign Up')
 
     def validate_email(self, email):
@@ -26,6 +25,7 @@ class RegistrationForm(FlaskForm):
         email = User.query.filter_by(email=hashed_email).first()
         if email:
             raise ValidationError('Something went wrong')
+
 
 class TwoFactorAuthRegForm(FlaskForm):
     otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
@@ -117,3 +117,9 @@ class CreateDeleteForm(FlaskForm):
     email_delete = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
     password_delete = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
     proceed_delete = SubmitField('Proceed')
+
+
+class DeleteUserForm(FlaskForm):
+    password_deleteuser = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "password"})
+    otp_deleteuser = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    delete_deleteuser = SubmitField('Delete user')
