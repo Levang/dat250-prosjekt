@@ -1,7 +1,7 @@
 from flask import render_template, url_for, redirect, request, flash
 from flask_login import login_user, current_user, logout_user, login_required
 ### ------ Internal imports below ------ ###
-from safecoin import app, db, bcrypt, redis
+from safecoin import app, db, bcrypt, redis, disable_caching
 from safecoin.encryption import encrypt, decrypt, verifyUser
 
 import pyotp
@@ -43,14 +43,14 @@ def home():
                 login_user(userDB, remember=form.remember.data)
 
                 # Redirect til overview dersom alt er ok
-                return redirect(url_for("overviewPage"))
+                return redirect(url_for("overviewPage")), disable_caching
 
         else:
             # Generisk feilmelding dersom noe går galt
             flash('Something went wrong. Please try again.')
 
     # dersom noe gaar galt rendre samme side
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form), disable_caching
 
 
 # If we need a method for a user to log out :
@@ -62,4 +62,4 @@ def logout():
 
     #Logg så ut fra login manager
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('home')), disable_caching

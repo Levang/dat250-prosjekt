@@ -76,7 +76,8 @@ def DBparseAccounts(accInput):
             out[nameAccount[1]] = [nameAccount[0]]
     return out
 
-# ─── DICTIONAIRY TO STRING ──────────────────────────────────────────────────────
+
+# ─── DICTIONARY TO STRING ──────────────────────────────────────────────────────
 # This just encodes everything in a dict into a string
 # Used in register to convert information for redis server
 def dictToStr(dictionary):
@@ -85,10 +86,13 @@ def dictToStr(dictionary):
             dictionary[i] = dictionary[i].decode('utf-8')
 
     return json.dumps(dictionary)
+
+
 # Return current users email in clear text
 def getCurUsersEmail():
     user_dict = json.loads(redis.get(current_user.email))
     return user_dict['email']
+
 
 # Verify password, 2fa(otp) against email. Defaults to current email
 def verify_pwd_2FA(password, otp, email=None):
@@ -178,7 +182,6 @@ def getAccountsList(userDict=None):
     return account_list
 
 
-
 # ─── VERIFY USER ────────────────────────────────────────────────────────────────
 def verifyUser(email, password, addToActive=False):
     #hash the email
@@ -224,7 +227,7 @@ def verifyUser(email, password, addToActive=False):
 
 
 # ─── SUBMIT A TRANSACTION ──────────────────────────────────────────────────────
-#This only accepts current user. 
+#This only accepts current user.
 def submitTransaction(password,accountFrom,accountTo,amount,message):
     print("INNE I SUBMIT TRANSACTIONS")
 

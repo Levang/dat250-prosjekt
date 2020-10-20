@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, get_flashed_messages
 from flask_login import login_required
 from time import sleep
-from safecoin import app
+from safecoin import app, disable_caching
 from safecoin.forms import PayForm, ValidatePaymentForm, flash_all_but_field_required
 from safecoin.overview import overviewPage
 from safecoin.encryption import getAccountsList
@@ -93,7 +93,7 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
     return errlist
 
 
-#This only accepts current user. 
+#This only accepts current user.
 def submitTransaction(password,accountFrom,accountTo,amount,message):
     print("INNE I SUBMIT TRANSACTIONS")
 
@@ -132,7 +132,7 @@ def payPage():
         errlist = get_form_errors(form_validate.tfrom.data, form_validate.to.data, form_validate.kr.data, form_validate.ore.data, form_validate.msg.data)
         if errlist:
             flash("An error occurred during validation. Didn't transfer anything.")
-            return render_template('pay.html', form=form)
+            return render_template('pay.html', form=form), disable_caching
 
         submitTransaction(
             password = form_validate.password_payment.data,
@@ -146,7 +146,7 @@ def payPage():
             f"Successfully transferred {form_validate.kr.data},{form_validate.ore.data if form_validate.ore.data else '00'} kr from account {format_account_number(form.tfrom.data)} to {format_account_number(form.to.data)}!",
             "success")
         # sleep(1.5)  # Makes it look like it's working on something. I do not intend to remove this!
-        return render_template('pay.html', form=form)
+        return render_template('pay.html', form=form), disable_caching
 
     # Pressed pay on validation page, and required fields in form is filled
     # or form in validation page isn't filled
@@ -155,10 +155,10 @@ def payPage():
         if errlist:
             for err in errlist:
                 flash(err, "error")
-            return render_template('pay.html', form=form)
+            return render_template('pay.html', form=form), disable_caching
 
         print("-----------------------------THIS SHOULD NOT SHOW UP UNLESS IN VALIDATE")
 
-        return render_template("validate_payment.html", form=form_validate)
+        return render_template("validate_payment.html", form=form_validate), disable_caching
     # Regular pay page
-    return render_template('pay.html', form=form)
+    return render_template('pay.html', form=form), disable_caching
