@@ -79,12 +79,27 @@ class Account(db.Model):
 
 
 class Transactions(db.Model):
-    accountTo = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
-    accountFrom = db.Column(db.String(80), unique=True, nullable=False)
-    amount = db.Column(db.Numeric(256))
-    message = db.Column(db.String(300), )
+    accountFrom = db.Column(db.String(80), nullable=False)
+    accountTo = db.Column(db.String(80), nullable=False, primary_key=True)
+    amountDB = db.Column(db.String(256))
+    message = db.Column(db.String(90))
     time = db.Column(DateTime, default=datetime.datetime.utcnow)
-    eventID = db.Column(db.String(80), unique=True, nullable=False)
+    # Henter verdien fra databasen og konverterer til streng
+
+    @property
+    def amount(self):
+        return int(self.amountDB)
+
+    # setter verdien i databasen, dersom den er en int, blir den til streng
+    @amount.setter
+    def amount(self, value):
+        # Sjekker om jeg faar en int, ellers skal det ikke fungere.
+        if type(value) == int:
+            value = str(value)
+            self.amountDB = value
+        else:
+            raise Exception("Can only set this to be an int")
+
 
 class requestLogs(db.Model):
     time = db.Column(db.String(80), unique=False, nullable=False, primary_key=True)

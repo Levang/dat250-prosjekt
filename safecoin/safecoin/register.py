@@ -190,7 +190,7 @@ def register():
                 # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
                 # You start with an account that we add so that we and
                 # Whomever is going to thest our site can work with it
-                addNewAccountToCurUser(password=form2.password_2fa.data, otp=form2.otp.data,
+                addNewAccountToCurUser(password=form2.password_2fa.data, otp='skip',
                                        user=User.query.filter_by(email=hashed_email).first(), money=True)
                 # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
 

@@ -107,15 +107,20 @@ def payPage():
 
     print(form_validate.proceed_payment.data)
     print(form_validate.is_submitted())
+    print("_------------------------__________________________-----SE HER!")
+    print(form_validate.msg.data)
+
     # Pressed proceed button on validation page
 
-    if form_validate.is_submitted() and form_validate.email_payment.data and form_validate.password_payment.data:
+    #if form_validate.is_submitted() and form_validate.email_payment.data and form_validate.password_payment.data:
+    if form_validate.is_submitted() and form_validate.password_payment.data:
         errlist = get_form_errors(form_validate.tfrom.data, form_validate.to.data, form_validate.kr.data, form_validate.ore.data, form_validate.msg.data)
         if errlist:
             flash("An error occurred during validation. Didn't transfer anything.")
             return render_template('pay.html', form=form), disable_caching
 
         print("SUBMITTERER TRANSAKSJONER")
+        print(form_validate.msg.data)
         submitTransaction(
             password = form_validate.password_payment.data,
             accountFrom = form_validate.tfrom.data,
@@ -124,7 +129,7 @@ def payPage():
             message =form_validate.msg.data
             )
         print("SUBMITTERER TRANSAKSJONER TO")
-        
+
 
         if errlist:
             flash("An error occurred during validation. Didn't transfer anything.")
