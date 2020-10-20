@@ -1,14 +1,11 @@
-from flask import render_template, url_for, redirect, request, flash
+from flask import render_template, url_for, redirect, flash
 from flask_login import login_user, current_user, logout_user, login_required
 ### ------ Internal imports below ------ ###
-from safecoin import app, db, bcrypt, redis, disable_caching
-from safecoin.encryption import encrypt, decrypt, verifyUser
+from safecoin import app, redis, disable_caching
+from safecoin.encryption import verifyUser
 
 import pyotp
-import flask_scrypt
-from safecoin.models import User
 from safecoin.forms import LoginForm
-from safecoin.overview import overviewPage
 
 
 # --- Main page --- #
@@ -45,6 +42,9 @@ def home():
                 # Redirect til overview dersom alt er ok
                 return redirect(url_for("overviewPage")), disable_caching
 
+            else:
+                # Generisk feilmelding dersom noe går galt
+                flash('Something went wrong. Please try again.')
         else:
             # Generisk feilmelding dersom noe går galt
             flash('Something went wrong. Please try again.')

@@ -1,10 +1,10 @@
-from flask import render_template, redirect, url_for, flash, get_flashed_messages
+from flask import render_template, flash
 from flask_login import login_required
 from time import sleep
 from safecoin import app, disable_caching
-from safecoin.forms import PayForm, ValidatePaymentForm, flash_all_but_field_required
+from safecoin.forms import PayForm, ValidatePaymentForm
 from safecoin.overview import overviewPage
-from safecoin.encryption import getAccountsList
+from safecoin.encryption import getAccountsList, submitTransaction
 from safecoin.accounts_db import format_account_number, illegalChar
 from safecoin.models import Account
 
@@ -92,32 +92,6 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
 
     return errlist
 
-
-#This only accepts current user.
-def submitTransaction(password,accountFrom,accountTo,amount,message):
-    print("INNE I SUBMIT TRANSACTIONS")
-
-    #Check user password
-    
-
-    #Decrypt and check user account with user database
-
-    #If internal transfer check that user balance remains unchanged
-
-    #If external transfer
-
-    #Check that total sum of both accounts balance remains unchanged.
-
-    #update database
-
-    #sync redis
-
-    #add the transaction to the transaction history
-
-    #Make transactions page lookup function.
-
-    return False
-
 @app.route('/pay/', methods=["GET", "POST"])
 @login_required
 def payPage():
@@ -134,13 +108,16 @@ def payPage():
             flash("An error occurred during validation. Didn't transfer anything.")
             return render_template('pay.html', form=form), disable_caching
 
+        print("SUBMITTERER TRANSAKSJONER")
         submitTransaction(
             password = form_validate.password_payment.data,
             accountFrom = form_validate.tfrom.data,
             accountTo = form_validate.to.data,
-            amount = krToInt( kr=form_validate.kr.data , ore = form_validate.ore.data ),
+            amount = krToInt( kr = form_validate.kr.data , ore = form_validate.ore.data ),
             message =form_validate.msg.data
             )
+        print("SUBMITTERER TRANSAKSJONER TO")
+        
 
         flash(
             f"Successfully transferred {form_validate.kr.data},{form_validate.ore.data if form_validate.ore.data else '00'} kr from account {format_account_number(form.tfrom.data)} to {format_account_number(form.to.data)}!",

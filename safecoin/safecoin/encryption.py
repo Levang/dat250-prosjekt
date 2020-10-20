@@ -2,8 +2,8 @@ import base64, json, pyotp
 from cryptography.fernet import Fernet
 import flask_scrypt, scrypt
 from flask_login import current_user
-from safecoin.models import User, Account
-from safecoin import redis
+from safecoin.models import User, Account, Transactions
+from safecoin import redis, db
 from flask_login import current_user
 
 # ─── GENERATE KEY ─────────────────────────────────────────────────────────────────
@@ -159,8 +159,6 @@ def getAccountsList(userDict=None):
     i = 0
     account_list = []
 
-    #SJEKK OM ME FUCKER UP!
-
     # Denne fungerer men må ryddes opp i, gjør det om til en funksjon elns.
     for accountnr in userDict['accounts']:
         numberUsr = int(accountnr)
@@ -184,11 +182,13 @@ def getAccountsList(userDict=None):
 
 # ─── VERIFY USER ────────────────────────────────────────────────────────────────
 def verifyUser(email, password, addToActive=False):
+    print("RUNNING VERIFY USER")
     #hash the email
-    if email!=None:
-        hashed_email = flask_scrypt.generate_password_hash(email, "")
-    else:
+    if email==None:
         hashed_email = current_user.email
+    else:
+        hashed_email = flask_scrypt.generate_password_hash(email, "")
+
 
     #create user class with information from database
     userDB = User.query.filter_by(email=hashed_email).first()
@@ -230,48 +230,116 @@ def verifyUser(email, password, addToActive=False):
 #This only accepts current user.
 def submitTransaction(password,accountFrom,accountTo,amount,message):
     print("INNE I SUBMIT TRANSACTIONS")
-
+    print(password)
+    print(current_user.email)
+    accountFrom=str(accountFrom)
+    accountTo=str(accountTo)
     #Check user password
-    verified, userDB, _ = verifyUser(None,password)
+    verified, userDB, ubrukt = verifyUser(None,password)
+    print(verified)
 
-
-    #Decrypt and check user account with user database
+    if verified is False:
+        return
+        #Decrypt and check user account with user database
     decryptKey = decrypt(password, userDB.enKey.encode('utf-8'), True)
     accountsDB = decrypt(decryptKey, userDB.accounts.encode('utf-8'))
 
-    accountsList = getAccountsList(DBparseAccounts(accountsDB))
-    internalTransactionChecks(accountFrom, amount, accountTo, accountsList)
+    print(f"DEKRYPTERER TING {accountsDB}")
 
-    #If external transfer
-    externalTransactionChecks(accountFrom, amount, accountTo, accountsList)
+    accountsDict = DBparseAccounts(accountsDB)
 
+    print(f"ACCOUNTS DICT TING {accountsDict}")
+    print(accountFrom)
+    print(accountsDict[accountFrom])
+    #is the account one of the users accounts
+    if str(accountFrom) in accountsDict:
+                print("KONTO FRA LIGGER I KONTO LISTEN")
+                #if above checks out
+                #do transfer
+                accountDBFrom = Account.query.filter_by(number=accountFrom).first()
+                accountDBTo = Account.query.filter_by(number=accountTo).first()
 
-    #if above checks out, do the transfer of the amount.
+                if TransactionChecks(accountDBFrom, amount, accountDBTo, accountsDict,message)==False:
+                    return
+                print("TRANSFER CHECK RETURNERTE TRUE")
 
-    #update database
+                accountDBFrom.balance -= amount
+                accountDBTo.balance += amount
 
-    #sync redis
+                # LOGGING
+                trans=Transactions()
+                trans.accountTo = accountTo
+                trans.accountFrom = accountFrom
+                trans.amount = amount
+                trans.message = message
+                trans.eventID = 'transaction'
 
-    #add the transaction to the transaction history
+                print("LAGRER I DATABASEN")
 
-    #Make transactions page lookup function.
+                db.session.add(accountDBFrom)
+                db.session.add(accountDBTo)
+                db.session.add(trans)
+                db.session.commit()
+                print("SUNCER REDIS")
 
-    return False
+                redis_sync(decryptKey,current_user.email)
+                print("FERDIG")
+                #add the transaction to the transaction history
+    else:
+        # user doesnt own this account return
+        return
 
+        #sync redis
 
-def internalTransactionChecks(accountFrom, accountTo):
+        #Make transactions page lookup function.
+
+def TransactionChecks(accountFrom, amount, accountTo, accountsDict, message):
     #If internal transfer check that user balance remains unchanged
     #check for stuff
+    if accountFrom==None or accountTo==None or accountFrom==accountTo:
+        print("JEG KOM MEG TIL TRANS CHECKS EN")
+        return False
+    if amount<1 or type(amount)!=int or amount>accountFrom.balance:
+        print("JEG KOM MEG TIL TRANS CHECKS TO")
+        print(amount<1)
+        print(amount!=int)
+        print(amount)
+        print(type(amount))
+        print(amount>accountFrom.balance)
+        return False
 
+    sumBefore=accountFrom.balance+accountTo.balance
+    fromBalance = accountFrom.balance
+    toBalance   = accountTo.balance
+    fromAfter   = fromBalance - amount
+    toAfter     = toBalance + amount
+
+    sumAfter = fromAfter + toAfter
+
+    if sumBefore!=sumAfter:
+        return False
+
+    if illegalChar(message,90):
+        return False
+
+    return True
+
+
+def illegalChar(text, maxlength):
+    if text==None:
+        return False
+
+    try:
+        text=str(text)
+    except:
+        return True
+
+    if len(text)>maxlength:
+        return True
+
+    alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "
+    #Transform name to lowercase and check if its not in the alphabet
+    for letter in text.lower():
+        if letter not in alphabet:
+            return True
     return False
-
-
-
-def externalTransactionChecks(accountFrom, accountTo):
-    #check for stuff
-    #Check that total sum of both accounts balance remains unchanged.
-
-
-    return False
-
-
