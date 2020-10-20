@@ -46,4 +46,3 @@ def deleteCurUser(password):
     logout_user()
     db.session.delete(user)
     db.session.commit()
-    # sync_redis()

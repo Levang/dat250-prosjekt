@@ -17,5 +17,5 @@ from safecoin.models import Account, User
 @app.route("/transfer/", methods=["GET", "POST"])
 @login_required
 def transfer():
-    return render_template('transfer.html')
+    return render_template('transfer.html'), disable_caching
 
