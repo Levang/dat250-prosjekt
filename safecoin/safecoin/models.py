@@ -64,7 +64,7 @@ class User(db.Model, UserMixin):
 
 class Account(db.Model):
     number = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
-    balance = db.Column(db.Numeric(256))  # tallet viser til maks lengde av et siffer
+    balance = db.Column(db.Numeric(80))  # tallet viser til maks lengde av et siffer
     pub_key = db.Column(db.String(300), unique=True, nullable=False)
 
 

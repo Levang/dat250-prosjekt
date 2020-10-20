@@ -28,7 +28,7 @@ def profilePage():
 
 # Delete user from db if all accounts are empty
 def deleteCurUser(password):
-    user = getCurrentUser()  # Get current user
+    user = getCurrentUser()  # Get current user'
 
     if user.accounts:
         # Get list of users accounts
