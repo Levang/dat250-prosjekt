@@ -1,21 +1,22 @@
 from flask import render_template, request, flash, redirect
 from flask_login import current_user, login_required, logout_user
 from flask_wtf import FlaskForm
-from safecoin.accounts_db import addNewAccountToCurUser, deleteCurUsersAccountNumber
+from cryptography.fernet import InvalidToken
 
 from safecoin import app, redis, json, db, disable_caching
 from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAccountForm, CreateDeleteForm
 from safecoin.tmp import TmpAcc
 from safecoin.models import Account
-from safecoin.accounts_db import format_account_number
+from safecoin.accounts_db import format_account_number, addNewAccountToCurUser, deleteCurUsersAccountNumber
+from safecoin.encryption import verify_pwd_2FA
 
 
 # Formaterer
 def format_account_list(acc_list: list):
-    if acc_list == None:
+    if acc_list is None:
         return None
 
-    #Check the formatting
+    # Check the formatting
     if type(acc_list) != list or len(acc_list) < 1 or len(acc_list[0]) < 3 or type(acc_list[0][1]) != int:
         return None
     try:
@@ -68,24 +69,27 @@ def accounts():
 
     # If the create form is submitted
     if create_form.validate_on_submit():
-        #ADDS A new account to the user
-        err = addNewAccountToCurUser(create_form.password_create.data,create_form.account_name.data)
-
+        # ADDS A new account to the user
+        err = addNewAccountToCurUser(create_form.password_create.data, create_form.otp_create.data, create_form.account_name.data)
         # If an error occurs when creating an account flash it and re render the page
         if err:
             flash(err, "error")
             return render_template('accounts.html', account_list=account_list, form=form), disable_caching
         flash(f"Successfully Created Account {create_form.account_name.data}!", "success")
+    elif create_form.proceed_create.data:
+        flash("Didn't make any changes, due to an error")
 
     # If delete form is submitted
     if delete_form.validate_on_submit():
         # Call delete account function
         # If an error occurs when deleting an account flash it and re render the page
-        err = deleteCurUsersAccountNumber(delete_form.account_select.data, delete_form.password_delete.data)
+        err = deleteCurUsersAccountNumber(delete_form.account_select.data, delete_form.password_delete.data, delete_form.otp_delete.data)
         if err:
             flash(err, "error")
             return render_template('accounts.html', account_list=account_list, form=form), disable_caching
         flash(f"Successfully Deleted Account {delete_form.account_select.data}!", "success")
+    elif delete_form.proceed_delete.data:
+        flash("Didn't make any changes, due to an error")
 
     if do_action:
 
@@ -112,7 +116,7 @@ def getAccountsList():
     # Hent account info fra redis
     userDict = redis.get(current_user.email)
 
-    # Konverter til dictionairy
+    # Konverter til dictionary
     userDict = json.loads(userDict)
 
     try:
@@ -125,7 +129,7 @@ def getAccountsList():
     i = 0
     account_list = []
     for accountnr in userDict['accounts']:  # Denne fungerer men må ryddes opp i, gjør det om til en funksjon elns.
-        # accountnuber is a string so convert back to an int
+        # accountnumber is a string so convert back to an int
         numberUsr = int(accountnr)
 
         # Henter første verdi fra accounts listen til accountnummer
