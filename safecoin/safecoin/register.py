@@ -1,10 +1,8 @@
-from flask import render_template, url_for, redirect, request, flash
+from flask import render_template, url_for, redirect, flash
 from configparser import ConfigParser
-import base64
 import pyotp
-import flask_qrcode
 ###################
-from safecoin import app, db, bcrypt, redis, json, disable_caching
+from safecoin import app, db, redis, json, disable_caching
 import flask_scrypt
 from safecoin.encryption import encrypt, decrypt, dictToStr
 from safecoin.models import User

@@ -1,7 +1,7 @@
 from flask_login import UserMixin
-from flask_scrypt import generate_password_hash
 from safecoin import db, login_manager, redis
-
+import datetime
+from sqlalchemy import DateTime
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -61,7 +61,6 @@ class User(db.Model, UserMixin):
 class Account(db.Model):
     number = db.Column(db.String(11), unique=True, nullable=False, primary_key=True)
     balanceField = db.Column(db.String(256))  # tallet viser til maks lengde av et siffer
-    pub_key = db.Column(db.String(300), unique=True, nullable=False)
 
     #Henter verdien fra databasen og konverterer til streng
     @property
@@ -81,15 +80,12 @@ class Account(db.Model):
 
 
 class Transactions(db.Model):
-    accTo = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
-    accFrom = db.Column(db.String(80), unique=True, nullable=False)
+    accountTo = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
+    accountFrom = db.Column(db.String(80), unique=True, nullable=False)
     amount = db.Column(db.Numeric(256))
     message = db.Column(db.String(300), )
-    time = db.Column(db.String(80), nullable=False)
+    time = db.Column(DateTime, default=datetime.datetime.utcnow)
     eventID = db.Column(db.String(80), unique=True, nullable=False)
-    signature = db.Column(db.String(300), unique=True,
-                          nullable=False)  # dunno how long this should be but leaving it at 300 for now
-
 
 class requestLogs(db.Model):
     time = db.Column(db.String(80), unique=False, nullable=False, primary_key=True)
