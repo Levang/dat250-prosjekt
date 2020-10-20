@@ -4,7 +4,7 @@ from time import sleep
 from safecoin import app, disable_caching
 from safecoin.forms import PayForm, ValidatePaymentForm, flash_all_but_field_required
 from safecoin.overview import overviewPage
-from safecoin.encryption import getAccountsList
+from safecoin.encryption import getAccountsList, verify_pwd_2FA
 from safecoin.accounts_db import format_account_number, illegalChar
 from safecoin.models import Account
 
@@ -95,10 +95,13 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
 
 
 # This only accepts current user.
-def submitTransaction(password, accountFrom, accountTo, amount, message):
+def submitTransaction(password, otp, accountFrom, accountTo, amount, message):
     print("INNE I SUBMIT TRANSACTIONS")
 
-    # Check user password
+    authenticated, user = verify_pwd_2FA(password, otp)
+
+    if not authenticated:
+        return "Couldn't make transaction due to an error"
 
     # Decrypt and check user account with user database
 
@@ -128,33 +131,35 @@ def payPage():
     form.get_select_field(account_list)
     form_validate = ValidatePaymentForm()
 
+    print(form_validate.proceed_payment.data)
+    print(form_validate.is_submitted())
     # Pressed proceed button on validation page
-    if form_validate.validate_on_submit():
+    if form_validate.proceed_payment.data:
         errlist = get_form_errors(form_validate.tfrom.data, form_validate.to.data, form_validate.kr.data,
                                   form_validate.ore.data, form_validate.msg.data)
+
+        if not errlist:
+            errlist = submitTransaction(
+                      password=form_validate.password_payment.data,
+                      otp=form_validate.otp_payment.data,
+                      accountFrom=form_validate.tfrom.data,
+                      accountTo=form_validate.to.data,
+                      amount=krToInt(kr=form_validate.kr.data, ore=form_validate.ore.data),
+                      message=form_validate.msg.data
+            )
+
         if errlist:
             flash("An error occurred during validation. Didn't transfer anything.")
-            return render_template('pay.html', form=form), disable_caching
-
-        submitTransaction(
-            password=form_validate.password_payment.data,
-            accountFrom=form_validate.tfrom.data,
-            accountTo=form_validate.to.data,
-            amount=krToInt(kr=form_validate.kr.data, ore=form_validate.ore.data),
-            message=form_validate.msg.data
-        )
-
-        flash(
-            f"Successfully transferred {form_validate.kr.data},{form_validate.ore.data if form_validate.ore.data else '00'} kr from account {format_account_number(form.tfrom.data)} to {format_account_number(form.to.data)}!",
-            "success")
+        else:
+            flash(
+                f"Successfully transferred {form_validate.kr.data},{form_validate.ore.data if form_validate.ore.data else '00'} kr from account {format_account_number(form.tfrom.data)} to {format_account_number(form.to.data)}!",
+                "success")
         # sleep(1.5)  # Makes it look like it's working on something. I do not intend to remove this!
         return render_template('pay.html', form=form), disable_caching
-    elif form_validate.is_submitted():
-        flash("error")
 
     # Pressed pay on validation page, and required fields in form is filled
     # or form in validation page isn't filled
-    if form.validate_on_submit() and not form_validate.is_submitted():
+    if form.validate_on_submit():
         errlist = get_form_errors(form.tfrom.data, form.to.data, form.kr.data, form.ore.data, form.msg.data)
         if errlist:
             for err in errlist:
