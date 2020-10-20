@@ -6,10 +6,10 @@
 
 {% block body %}
 <body>
-    <form method="post">
+    <div class="paydiv">
+        <form method="post">
         {{ form.hidden_tag() }}
-        <table>
-            <tbody>
+            <table>
                 {% with messages = get_flashed_messages(with_categories=true) %}
                   {% if messages %}
                     {% for category, message in messages %}
@@ -21,7 +21,9 @@
                 {% endwith %}
                 <tr>
                     <td colspan="2">
+                    <div class="selectdiv">
                         {{ form.tfrom() }}
+                    </div>
                     </td>
                 </tr>
                 <tr>
@@ -39,7 +41,7 @@
                         {{ form.kr() }}
                     </td>
                     <td colspan="1">
-                        , {{ form.ore() }},-
+                        {{ form.ore() }}
                     </td>
                 </tr>
                 <tr>
@@ -47,9 +49,9 @@
                         {{ form.pay() }}
                     </td>
                 </tr>
-            </tbody>
-        </table>
-    </form>
+            </table>
+        </form>
+    </div>
 </body>
 
 {% endblock %}
