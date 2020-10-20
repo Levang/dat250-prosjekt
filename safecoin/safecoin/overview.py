@@ -21,7 +21,7 @@ from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAcc
 from safecoin.tmp import TmpAcc
 from safecoin.models import Account, User
 from safecoin.accounts_db import format_account_number
-from safecoin.encrypt import getAccountsList
+from safecoin.encryption import getAccountsList
 
 
 @app.route("/overview/", methods=["GET", "POST"])

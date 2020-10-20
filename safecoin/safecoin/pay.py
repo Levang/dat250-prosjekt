@@ -4,7 +4,7 @@ from time import sleep
 from safecoin import app
 from safecoin.forms import PayForm, ValidatePaymentForm, flash_all_but_field_required
 from safecoin.overview import overviewPage
-from safecoin.encrypt import getAccountsList
+from safecoin.encryption import getAccountsList
 from safecoin.accounts_db import format_account_number, illegalChar
 from safecoin.models import Account
 
