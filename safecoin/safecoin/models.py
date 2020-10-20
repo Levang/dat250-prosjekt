@@ -80,10 +80,10 @@ class Account(db.Model):
 
 class Transactions(db.Model):
     accountFrom = db.Column(db.String(80), nullable=False)
-    accountTo = db.Column(db.String(80), nullable=False, primary_key=True)
+    accountTo = db.Column(db.String(80), nullable=False, )
     amountDB = db.Column(db.String(256))
     message = db.Column(db.String(90))
-    time = db.Column(DateTime, default=datetime.datetime.utcnow)
+    time = db.Column(DateTime, default=datetime.datetime.utcnow,nullable=False,primary_key=True)
     # Henter verdien fra databasen og konverterer til streng
 
     @property

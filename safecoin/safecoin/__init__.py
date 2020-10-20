@@ -13,6 +13,8 @@ cfg.read("safecoin/config.ini")
 app = Flask(__name__)
 app.secret_key = cfg["flask"]["secret_key"]
 app.config['SQLALCHEMY_DATABASE_URI'] = cfg["sqlDb"]["path"]  # Path for database
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 redis = FlaskRedis(app)
@@ -28,3 +30,5 @@ disable_caching = {'Cache-Control': 'no-cache, no-store, must-revalidate',
 
 
 from safecoin import home, overview, register, accounts, pay, profile, hist_transfer, transfer, accounts_db, encryption
+
+

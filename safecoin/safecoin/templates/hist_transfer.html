@@ -16,16 +16,20 @@
 {% for transaction in transHistory %}
 <tr>
     <td>
-    {{transaction.to_from}}
+    {{transaction.accountFrom}}
     </td>
     <td>
-    {{transaction.date}}
+    {{transaction.accountTo}}
     </td>
     <td>
     {{transaction.amount}}
+    </td>
+    <td>
+    {{transaction.date}}
     </td>
 </tr>
 {%endfor%}
 </table>
 
 {% endblock %}
+        transHistory.append([i.accountFrom, i.accountTo,i.amount,i.time])
