@@ -84,5 +84,4 @@ class requestLogs(db.Model):
     eventID = db.Column(db.String(80), unique=True, nullable=False)
     eventType = db.Column(db.String(64), unique=True, nullable=False)  # what happend
     message = db.Column(db.String(300))
-    signature = db.Column(db.String(300), unique=True,
-                          nullable=False)  # dunno how long this should be but leaving it at 300 for now
+    signature = db.Column(db.String(300), unique=True,nullable=False)  # dunno how long this should be but leaving it at 300 for now
