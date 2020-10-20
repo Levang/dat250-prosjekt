@@ -7,13 +7,13 @@
 {% block body %}
 
 <body>
-    <form method="post">
-        {{ form.hidden_tag() }}
-        <table>
-            <tbody>
+    <div class="valdiv">
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <table>
                 <tr>
                     <th>
-                        <p class="title"><strong>Validate</strong></p>
+                        <h2>Validate</h2>
                     </th>
                 </tr>
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -26,58 +26,65 @@
                   {% endif %}
                 {% endwith %}
                 <tr>
-                    <td>
+                    <td colspan="2">
                         {{ form.tfrom.label }}
                     </td>
-                    <td>
+                    <td colspan="2">
                         {{ form.tfrom() }}
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         {{ form.to.label }}
-                    </td>
-                    <td>
+                    <td colspan="2">
                         {{ form.to() }}
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         {{ form.msg.label }}
                     </td>
-                    <td>
+                    <td colspan="2">
                         {{ form.msg() }}
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         {{ form.kr.label }}
                     </td>
-                    <td>
+                    <td colspan="1">
                         {{ form.kr() }}
                     </td>
-                    <td>
+                    <td colspan="1">
                         {{ form.ore() }}
                     </td>
                 </tr>
+            </table>
+            <table>
                 <tr>
-                    <td>
-                        {{ form.password_payment() }}
+                    <td colspan="2">
+                        <a>Email</a>
                     </td>
-                </tr>
+                    <td colspan="1">
+                        <a>Password</a>
+                    </td>
                 <tr>
+                    <td colspan="2">
+                        {{ form.email_payment() }}
+                    </td>
+                    <td colspan="1">
+                        {{ form.password_payment() }}
                     <td>
                         {{ form.otp_payment() }}
                     </td>
-                </tr>
-                <tr>
-                    <td>
+                    <td colspan="1">
                         {{ form.proceed_payment() }}
                     </td>
                 </tr>
-            </tbody>
-        </table>
-    </form>
+                </tr>
+            </table>
+        </form>
+    </div>
 </body>
 
 {% endblock %}

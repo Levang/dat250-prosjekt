@@ -96,8 +96,10 @@ def accounts():
         # If user pressed create account and name field is filled
         if create_form_start:
             if form.create_account.data:
+
                 flash(f"Validate to create a new account with the name {form.account_name.data}")
                 return render_template('validate_create_account.html', form=create_form), disable_caching
+
             flash("Please enter a name for your account", "error")
             return render_template('accounts.html', account_list=account_list, form=form), disable_caching
 

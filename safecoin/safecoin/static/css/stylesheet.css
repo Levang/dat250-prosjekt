@@ -266,9 +266,7 @@ body {
  * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
  */
 
-/*
- * ─── PAY----------------------------------------------------------------------
- */
+/*-------------------PAY---------------*/
 .paydiv {
     margin-left: 40%;
     margin-right: 40%;
@@ -321,7 +319,7 @@ body {
     height: 50px;
     text-decoration:none;
 }
-.paydiv select {
+.paydiv select#tfrom {
     -webkit-appearance: none;
     -moz-appearance: none;
     color: white;
@@ -333,12 +331,119 @@ body {
     padding-top: 12px;
     padding-bottom: 12px;
     font-size: 100%;
-    width: 200px;
+    width: 250px;
     height: 50px;
     text-align: center;
 }
+/*oddly specific, but this is the way it has to be */
+.paydiv .selectdiv:after {
+    left: 215px;
+}
+/*-------------------PAY---------------*/
+
+/*------------ValidatePay--------------*/
+.valdiv input{
+    border-width: 2px;
+    border-color: var(--blue3);
+    border-style: solid;
+    border-radius: 50px;
+    font-size: 100%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 20px;
+    text-align: center;
+}
+.valdiv input#msg{
+    width: 408px;
+}
+
+.valdiv input#kr{
+    width: 300px;
+}
+
+.valdiv input#ore{
+    width: 100px;
+}
+.valdiv input#ore, .valdiv input#kr, .valdiv input#msg, .valdiv input#tfrom, .valdiv input#to {
+    color: grey;
+}
+.valdiv table {
+    margin-bottom: 40px;
+}
+.valdiv {
+    margin-left: 35%;
+    margin-right: 40%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.valdiv #proceed_payment {
+    background-color: var(--blue2);
+    border-radius:28px;
+    border:none;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 100px;
+    height: 50px;
+    text-decoration:none;
+}
+/*------------ValidatePay--------------*/
+
 /*
- * ─── PAY----------------------------------------------------------------------
+ * ───ValidateNewAccount-------------------------------------------------
+ */
+.valNewDel input{
+    border-width: 2px;
+    border-color: var(--blue3);
+    border-style: solid;
+    border-radius: 50px;
+    font-size: 100%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 20px;
+    text-align: center;
+}
+
+.valNewDel input#account_name {
+    color: grey;
+}
+.valNewDel {
+    margin-left: 40%;
+    margin-right: 40%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.valNewDel input#proceed_create {
+    background-color: var(--blue2);
+    border-radius:28px;
+    border:none;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 50px;
+    text-decoration:none;
+}
+/*
+ * ─── ValidateNewAccount--------------------------------------------
  */
 @media (max-width:850px) {
 
