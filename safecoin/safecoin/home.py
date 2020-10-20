@@ -45,6 +45,9 @@ def home():
                 # Redirect til overview dersom alt er ok
                 return redirect(url_for("overviewPage")), disable_caching
 
+            else:
+                # Generisk feilmelding dersom noe går galt
+                flash('Something went wrong. Please try again.')
         else:
             # Generisk feilmelding dersom noe går galt
             flash('Something went wrong. Please try again.')

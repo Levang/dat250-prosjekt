@@ -190,6 +190,9 @@ def register():
                     #Whomever is going to thest our site can work with it
                     addNewAccountToCurUser(password=form2.password_2fa.data,user=User.query.filter_by(email=hashed_email).first(),money=True)
                     # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
-
                     return redirect(url_for('home'))
+                else:
+                    # Generisk feilmelding dersom noe går galt
+                    flash('Something went wrong. Please try again.')
+
     return render_template("register.html", form=form), disable_caching
