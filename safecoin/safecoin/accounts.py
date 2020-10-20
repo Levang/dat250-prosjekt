@@ -134,7 +134,7 @@ def getAccountsList():
         #Hent kontobalansen fra accounts database
         accountDB = Account.query.filter_by(number=numberUsr).first()
 
-        #dersom verdien eksisterer  
+        #dersom verdien eksisterer
         if accountDB:
             balance = accountDB.balance
 

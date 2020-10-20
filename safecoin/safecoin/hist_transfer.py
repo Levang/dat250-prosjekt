@@ -20,3 +20,4 @@ from safecoin.accounts_db import format_account_number
 def transactions():
     return render_template('hist_transfer.html')
 
+#Make function to retrive information from transactions database
