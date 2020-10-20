@@ -40,7 +40,7 @@ class User(db.Model, UserMixin):
     #For our use its technically not needed
     #can be set to true permanently
     #but possibly dangerous, so we will set it anyway
-    @propertymaster
+    @property
     def is_active(self):
         #Check if the current_user is logged in
         if redis.get(self.email):
