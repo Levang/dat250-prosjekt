@@ -10,9 +10,9 @@ from safecoin.models import Account
 from safecoin.accounts_db import format_account_number
 
 
-#Formaterer
+# Formaterer
 def format_account_list(acc_list: list):
-    if acc_list==None:
+    if acc_list == None:
         return None
 
     #Check the formatting
@@ -29,58 +29,58 @@ def format_account_list(acc_list: list):
 @app.route("/accounts/", methods=["GET", "POST"])
 @login_required
 def accounts():
-    #Retrive the accounts list
+    # Retrive the accounts list
     account_list = getAccountsList()
 
-    #Declare form class
+    # Declare form class
     form = AccountsForm()
 
-    #Definer hva som skal ligge i dropdown liste
-    #Denne bør være navn og kontonummer
+    # Definer hva som skal ligge i dropdown liste
+    # Denne bør være navn og kontonummer
     form.get_select_field(account_list)
 
-    #Formater accounts om til list of lists
+    # Formater accounts om til list of lists
     format_account_list(account_list)
 
-    #Create Account Form
+    # Create Account Form
     create_form = CreateAccountForm()
 
-    #Delete Account Form
+    # Delete Account Form
     delete_form = CreateDeleteForm()
 
-    if account_list==None:
-        account_list=[['','Please open an account','']]
+    if account_list is None:
+        account_list = [['', 'Please open an account', '']]
 
-    #TODO hva er denne for?
+    # True if a button on accounts page is pressed
     do_action = False
     if form.create_account.data or form.delete_account.data:
-        do_action= True
+        do_action = True
 
-    #TODO hva er denne for?
-    create_form_start =False
+    # True if create account form on accounts page is correctly filled
+    create_form_start = False
     if form.create_account.data and form.account_name.data:
         create_form_start = True
 
-    #TODO hva er denne for?
+    # True if delete account form on accounts page is correctly filled
     delete_form_start = False
     if form.delete_account.data and form.account_select.data:
         delete_form_start = True
 
-    #If the create form is submitted
+    # If the create form is submitted
     if create_form.validate_on_submit():
         #ADDS A new account to the user
         err = addNewAccountToCurUser(create_form.password_create.data,create_form.account_name.data)
 
-        #If an error occurs when creating an account flash it and re render the page
+        # If an error occurs when creating an account flash it and re render the page
         if err:
             flash(err, "error")
             return render_template('accounts.html', account_list=account_list, form=form)
         flash(f"Successfully Created Account {create_form.account_name.data}!", "success")
 
-    #If delete form is submitted
+    # If delete form is submitted
     if delete_form.validate_on_submit():
-        #Call delete account function
-        #If an error occurs when deleting an account flash it and re render the page
+        # Call delete account function
+        # If an error occurs when deleting an account flash it and re render the page
         err = deleteCurUsersAccountNumber(delete_form.account_select.data, delete_form.password_delete.data)
         if err:
             flash(err, "error")
@@ -89,7 +89,7 @@ def accounts():
 
     if do_action:
 
-        # If user pressed create account
+        # If user pressed create account and name field is filled
         if create_form_start:
             if form.create_account.data:
                 flash(f"Validate to create a new account with the name {form.account_name.data}")
@@ -97,7 +97,7 @@ def accounts():
             flash("Please enter a name for your account", "error")
             return render_template('accounts.html', account_list=account_list, form=form)
 
-        # If user pressed delete account
+        # If user pressed delete account and an account is selected from the select form
         if delete_form_start:
             if form.account_select.data == 'x':
                 flash("Please select an account", "error")
@@ -109,14 +109,14 @@ def accounts():
 
 
 def getAccountsList():
-    #Hent account info fra redis
+    # Hent account info fra redis
     userDict = redis.get(current_user.email)
 
-    #Konverter til dictionairy
+    # Konverter til dictionairy
     userDict = json.loads(userDict)
 
     try:
-        #Checking if user has any accounts
+        # Checking if user has any accounts
         userDict['accounts']
     except:
         # #if the user does not have any accounts
@@ -125,26 +125,26 @@ def getAccountsList():
     i = 0
     account_list = []
     for accountnr in userDict['accounts']:  # Denne fungerer men må ryddes opp i, gjør det om til en funksjon elns.
-        #accountnuber is a string so convert back to an int
+        # accountnuber is a string so convert back to an int
         numberUsr = int(accountnr)
 
-        #Henter første verdi fra accounts listen til accountnummer
+        # Henter første verdi fra accounts listen til accountnummer
         name = userDict['accounts'][accountnr][0]
 
-        #Hent kontobalansen fra accounts database
+        # Hent kontobalansen fra accounts database
         accountDB = Account.query.filter_by(number=numberUsr).first()
 
-        #dersom verdien eksisterer
+        # dersom verdien eksisterer
         if accountDB:
             balance = accountDB.balance
 
             # Formater info og legg dette i en liste
             account_list.append([name, numberUsr, balance])
         else:
-            #Dersom vi søker på en konto som ikke ligger i databasen skal vi returnere umiddelbart
-            #Hvordan fikk brukeren denne i listen sin
-            #TODO Vurder om det skal logges
-            #Kontoen ligger ikke i kontodatabasen
+            # Dersom vi søker på en konto som ikke ligger i databasen skal vi returnere umiddelbart
+            # Hvordan fikk brukeren denne i listen sin
+            # TODO Vurder om det skal logges
+            # Kontoen ligger ikke i kontodatabasen
             return None
 
         i += 1

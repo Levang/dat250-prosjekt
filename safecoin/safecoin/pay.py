@@ -118,7 +118,7 @@ def submitTransaction(password,accountFrom,accountTo,amount,message):
     return False
 
 @app.route('/pay/', methods=["GET", "POST"])
-# @login_required
+@login_required
 def payPage():
     account_list = getAccountsList()
 
@@ -144,9 +144,7 @@ def payPage():
         flash(
             f"Successfully transferred {form_validate.kr.data},{form_validate.ore.data if form_validate.ore.data else '00'} kr from account {format_account_number(form.tfrom.data)} to {format_account_number(form.to.data)}!",
             "success")
-
-        #sleep(1.5)  # Makes it look like it's working on something. I do not intend to remove this!
-
+        # sleep(1.5)  # Makes it look like it's working on something. I do not intend to remove this!
         return render_template('pay.html', form=form)
 
     # Pressed pay on validation page, and required fields in form is filled

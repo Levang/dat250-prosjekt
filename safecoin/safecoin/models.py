@@ -40,13 +40,13 @@ class User(db.Model, UserMixin):
     #For our use its technically not needed
     #can be set to true permanently
     #but possibly dangerous, so we will set it anyway
-    @property
+    @propertymaster
     def is_active(self):
         #Check if the current_user is logged in
         if redis.get(self.email):
 
             #If so set data to expire 10 minutes from now
-            redis.expire(self.email,3600)
+            redis.expire(self.email, 3600)
 
             #return true
             return True
@@ -96,5 +96,4 @@ class requestLogs(db.Model):
     eventID = db.Column(db.String(80), unique=True, nullable=False)
     eventType = db.Column(db.String(64), unique=True, nullable=False)  # what happend
     message = db.Column(db.String(300))
-    signature = db.Column(db.String(300), unique=True,
-                          nullable=False)  # dunno how long this should be but leaving it at 300 for now
+    signature = db.Column(db.String(300), unique=True,nullable=False)  # dunno how long this should be but leaving it at 300 for now
