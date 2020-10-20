@@ -80,14 +80,3 @@ def getAccountsList():
 
 
 
-
-# ─── CREATES AND ADDS TO ACCOUNTS DATABASE ──────────────────────────────────────
-# ─── FOR TESTING FORMATTING AND DEVELOPING ──────────────────────────────────────
-def createTestingAcc():
-    listAccounts=[None]*30
-    for i in range(30):
-        temp=Account(number=random.randint(11112200000,11112299999), balance=random.randint(0,10000),pub_key=random.randint(0,1000000000000))
-        db.session.add(temp)
-
-    db.session.commit()
-
