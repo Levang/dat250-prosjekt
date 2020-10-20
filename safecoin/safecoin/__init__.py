@@ -27,10 +27,4 @@ disable_caching = {'Cache-Control': 'no-cache, no-store, must-revalidate',
                    'Expres': '0'}
 
 
-@app.after_request
-def rem_cache(r):
-
-    return r
-
-
 from safecoin import home, overview, register, accounts, pay, profile, hist_transfer, transfer

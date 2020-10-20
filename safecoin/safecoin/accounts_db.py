@@ -72,19 +72,41 @@ def getAccountNumber():
                 raise Exception(f"{account_number}'s length isn't 11!")
             return account_number
 
+def illegalChar(text, maxlength):
+    if text==None:
+        return False
 
-def addNewAccountToCurUser(password, name="My account"):
-    user = current_user
+    try:
+        text=str(text)
+    except:
+        return True
+
+    if len(text)>maxlength:
+        return True
+
+    alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "
+    #Transform name to lowercase and check if its not in the alphabet
+    for letter in text.lower():
+        if letter not in alphabet:
+            return True
+
+def addNewAccountToCurUser(password, name="My account",user=None,money=False):
+    if user==None:
+        user = current_user
+
     account = Account(number=getAccountNumber(), balance=0, pub_key=f"pubkey{randint(0, 1000000)}")
 
-    #Characters allowed in the name
-    alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "
+    # 100000 er 1000.00 kr int er altsaa bare to ekstra nuller
+    if money==True:
+        account = Account(number=getAccountNumber(), balance=100000, pub_key=f"pubkey{randint(0, 1000000)}")
 
-    #Transform name to lowercase and check if its not in the alphabet
-    print(f"---->{name}<---")
-    for letter in name.lower():
-        if letter not in alphabet:
-            return "Couldn't create account with the given name"
+
+    # Max length of your account name
+    # 24 is plenty
+    # Site look and feel is broken by long name
+    # Checks for illegal characters and length
+    if illegalChar(name,24):
+        return "Couldn't create account with the given name"
 
     #Decrypt the encryption key
     enKey = decrypt(password, user.enKey.encode('utf-8'), True)
@@ -110,12 +132,6 @@ def addNewAccountToCurUser(password, name="My account"):
         #check if the account name exists
         if cur_acc_list[0].upper() == name.upper():
             return "Couldn't create account with the given name"
-
-    # Max length of your account name
-    # 24 is plenty
-    # Site look and feel is broken by long name
-    if len(name) > 24:
-        return "Couldn't create account with the given name, name is too long"
 
     # Encrypt the informaton
     NEWaccountsStr=f"{accountsFromDB}{name},{account.number},privatekey{randint(0, 1000000)};"

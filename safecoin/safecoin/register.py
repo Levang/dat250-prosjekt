@@ -9,9 +9,8 @@ import flask_scrypt
 from safecoin.encryption import encrypt, decrypt, dictToStr
 from safecoin.models import User
 from safecoin.forms import RegistrationForm, TwoFactorAuthRegForm
-
-
-# from safecoin.accounts import addNewAccountToUser
+from safecoin.accounts_db import addNewAccountToCurUser
+#from safecoin.accounts import addNewAccountToUser
 # db.create_all()
 
 
@@ -58,6 +57,8 @@ def register():
     # for å legge 2fa-nøkkelen inn i din valgte 2fa app. Denne siden har også et passord felt, 2fa felt (for koden du nå kan generere i appen),
     # og et "read-only" som inneholder eposten du skrev inn på forrige side.
     if form.validate_on_submit():
+        print("THIS RAN")
+
         errList = []
         getPasswordViolations(errList, form.password.data)
 
@@ -183,6 +184,12 @@ def register():
                     db.session.add(user)
                     db.session.commit()
                     flash('Your account has been created! You are now able to log in.', 'success')
+
+                    # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
+                    #You start with an account that we add so that we and
+                    #Whomever is going to thest our site can work with it
+                    addNewAccountToCurUser(password=form2.password_2fa.data,user=User.query.filter_by(email=hashed_email).first(),money=True)
+                    # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
 
                     return redirect(url_for('home'))
     return render_template("register.html", form=form), disable_caching
