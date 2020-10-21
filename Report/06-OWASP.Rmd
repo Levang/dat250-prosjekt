@@ -1,0 +1,26 @@
+# OWASP Top Ten 
+
+## Injection
+
+## Broken Authentication
+
+## Sensitive Data Exposure
+In the development cycle of our website, we have attempted to always keep security in mind. This of course includes encrypting sensitive data, aswell as attempting to handle it as little as possible. This is essential in keeping up with security. The less information we need to handle, the better it is for us, the user, and the security on our website.
+
+### Data Classification
+To accomplish our goals for security we have broadly defined what data is sensitive. While all data is somewhat sensitive, and we'd much rather nothing be exposed to anyone ever, the truth is always that we have to prepare for the worst case scenario. To this end we have a broad idea of what data is critical (personal information, passwords etc) and what data is less sensitive. Check our write-up on databases in chapter \ref{databases} for more details.
+ 
+
+## XML External Entities (XXE)
+
+## Broken Access Control
+
+## Security Misconfiguration
+
+## Cross-Site Scripting
+
+## Insecure Deserialization
+
+## Using Components with known vulnerabilities
+
+## Insufficient Logging & Monitoring
