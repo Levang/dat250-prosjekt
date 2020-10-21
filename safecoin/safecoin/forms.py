@@ -50,7 +50,7 @@ class RemoveForm(FlaskForm):
 class PayForm(FlaskForm):
     tfrom = SelectField('From*', validators=[DataRequired()])
     to = IntegerField('To*', validators=[DataRequired()], render_kw={"placeholder": "xxxxx.xx.xxxxx", "maxlength": 11,"minlength": 11})
-    msg = StringField('KID/message', validators=[Optional()], render_kw={"placeholder": "KID/message","maxlength": 255})
+    msg = StringField('KID/message', validators=[Optional()], render_kw={"placeholder": "KID/message","maxlength": 90})
     kr = IntegerField('Amount*', validators=[DataRequired()], render_kw={"placeholder": "Kr"})
     ore = IntegerField(validators=[Optional()], render_kw={"placeholder": "Øre", "maxlength": 2, "minlength": 2})
     pay = SubmitField('Pay')
