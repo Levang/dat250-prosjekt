@@ -57,7 +57,7 @@ return render_template('TwoFactor.html', form2 = form2, qr_link = qr_link)
 ```
 
 #### Authentication app
-For our users to authenticate they need to make use of any authentication app of choice. Without this they will not be able to sign in, as 2FA is required every time they want to log in, or complete transactions. This is made as easy to do as possible, as everyone is required to add their account to their app of choice already in the register progress, so there is no additional steps required after signing up before logging in.
+For our users to authenticate they need to make use of any authentication app of choice. Without this they will not be able to sign in, as 2FA is required every time they want to log in, or complete transactions. This is made as easy to do as possible, as everyone is required to add their account to their app of choice already in the register progress, so there is no additional steps required after signing up before logging in. Possible apps include google authenticator, authy, microsoft authenticator and many more.
 
 
 ### Flask_Scrypt
