@@ -88,6 +88,21 @@ class AccountsForm(FlaskForm):
     account_select = SelectField('Select Account', validators=[Optional()])
     delete_account = SubmitField('Delete')
 
+    def get_select_field(self, account_list):
+        if account_list is None:
+            self.account_select.choices = [('x', 'No accounts')]
+            return
+        choice_list = [('x', 'Empty accounts')]
+        for account in account_list:
+            if account[2] != 0:
+                continue
+            if type(account[1]) != int:
+                raise TypeError("Account number has to be an int (for correct value storing)")
+            choice_list.append((account[1], f"{account[0]}"))
+        if len(choice_list) == 1:
+            self.account_select.choices = [('x', 'No empty accounts')]
+            return
+        self.account_select.choices = choice_list
 
 
 class CreateAccountForm(FlaskForm):
@@ -110,20 +125,19 @@ class DeleteUserForm(FlaskForm):
     delete_deleteuser = SubmitField('Delete user')
 
 class TransHistory(FlaskForm):
-    account_select = IntegerField('Account Name', render_kw={"readonly": True})
+    accountSelect = SelectField('Account Name', render_kw={"readonly": True})
+    view_hist = SubmitField("View Transactions")
 
     def get_select_field(self, account_list):
         if account_list is None:
-            self.account_select.choices = [('x', 'No accounts')]
+            self.accountSelect.choices = [('x', 'No accounts')]
             return
-        choice_list = [('x', 'Empty accounts')]
+        choice_list = [('x', 'Choose an account')]
         for account in account_list:
-            if account[2] != 0:
-                continue
             if type(account[1]) != int:
                 raise TypeError("Account number has to be an int (for correct value storing)")
-            choice_list.append((account[1], f"{account[0]}"))
+            choice_list.append((account[1], f"{account[0]} ({account[2]} kr)"))
         if len(choice_list) == 1:
-            self.account_select.choices = [('x', 'No empty accounts')]
+            self.accountSelect.choices = [('x', 'No accounts')]
             return
-        self.account_select.choices = choice_list
+        self.accountSelect.choices = choice_list

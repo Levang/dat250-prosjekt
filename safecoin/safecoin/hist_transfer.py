@@ -18,27 +18,27 @@ from safecoin.accounts import getAccountsList
 @login_required
 def transactions():
 
-    fromTrans = TransHistory
-    formTrans.
+    transForm = TransHistory()
     #TODO make this get info from dropdown.
-    selectedAccount="41656916900"
+    #selectedAccount="41656916900"
 
-    userDict=getAccountsList()
+    accountList=getAccountsList()
+    transForm.get_select_field(accountList)
 
-    for i in userDict['accounts']:
-        accounts['accounts'][i]
+    transHistory=[]
+    if transForm.view_hist.data and transForm.accountSelect.data!="x":
+        print(accountList)
+        if transForm.accountSelect.data in accountList:
+            transHistory=Transactions.query.filter((Transactions.accountFrom == transForm.accountSelect.data) | (Transactions.accountTo == transForm.accountSelect.data))
+        for i in transHistory:
+            print(i.accountFrom)
 
-    if selectedAccount not in userDict['accounts']:
-        #Account does not belong to user
-
-        return
 
 
-    transHistory=Transactions.query.filter((Transactions.accountFrom == selectedAccount) | (Transactions.accountTo == selectedAccount))
+    #print(transForm.account_select.data)
 
-    #TODO jinja cant format time object, need to convert to localtime anyways. 
+    #TODO jinja cant format time object, need to convert to localtime anyways.
     #Just make new class and add every field so we can format all thje stuff
+    #form=transForm
 
-    return render_template('hist_transfer.html', transHistory=transHistory), disable_caching
-
-#Make function to retrive information from transactions database
+    return render_template('hist_transfer.html', transHistory=transHistory, form=transForm), disable_caching

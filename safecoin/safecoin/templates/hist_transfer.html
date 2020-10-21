@@ -5,9 +5,21 @@
 {% endblock%}
 
 {% block body %}
+<form method="post">
+    {{ form.hidden_tag() }}
+    <table>
+        <tr>
+            <td>
+                {{form.accountSelect()}}
+            </td>
+            <td>
+                {{form.view_hist()}}
+            </td>
+        </tr>
+    </table>
+</form>
 
-<table> 
-<select onselect="new_get_request_reload_and_show_account_history"><option value="userAccounts">
+<table>
 {%for account in userAccounts%}
 <option value={{account}}>{{account}}</option>
 {%endfor%}
