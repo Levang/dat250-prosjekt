@@ -38,7 +38,6 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
     otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
-    remember = BooleanField('Remember me')
     submit = SubmitField('Login')
 
 
@@ -57,7 +56,8 @@ class PayForm(FlaskForm):
     pay = SubmitField('Pay')
 
     def get_select_field(self, account_list):
-        if account_list is None:
+        print(account_list)
+        if not account_list:
             self.tfrom.choices = [('x', 'No accounts')]
             return
         choice_list = [('x', 'Choose an account')]
@@ -74,7 +74,7 @@ class PayForm(FlaskForm):
 class ValidatePaymentForm(FlaskForm):
     tfrom = IntegerField('From', render_kw={"readonly": True})
     to = IntegerField('To', render_kw={"readonly": True})
-    msg = IntegerField('KID/message', render_kw={"readonly": True, "placeholder": "No KID/message"})
+    msg = StringField('KID/message', render_kw={"readonly": True, "placeholder": "No KID/message"})
     kr = IntegerField('Amount', render_kw={"readonly": True})
     ore = IntegerField('Decimal', render_kw={"readonly": True, "placeholder": "00"})
     password_payment = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
