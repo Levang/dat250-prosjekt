@@ -97,7 +97,7 @@ def accounts():
         if create_form_start:
             if form.create_account.data:
 
-                flash(f"Validate to create a new account with the name {form.account_name.data}")
+                flash(f"Validate creation of account")
                 return render_template('validate_create_account.html', form=create_form), disable_caching
 
             flash("Please enter a name for your account", "error")
@@ -108,7 +108,7 @@ def accounts():
             if form.account_select.data == 'x':
                 flash("Please select an account", "error")
                 return render_template('accounts.html', account_list=account_list, form=form), disable_caching
-            flash(f"Validate to delete your account with the name {form.account_select.data} ")
+            flash(f"Validate deletion of account ")
             return render_template('validate_delete_account.html', form=delete_form), disable_caching
 
     return render_template('accounts.html', account_list=account_list, form=form), disable_caching
