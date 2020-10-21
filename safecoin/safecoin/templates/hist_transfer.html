@@ -12,7 +12,9 @@
             <table>
                 <tr>
                     <td>
-                        {{form.accountSelect()}}
+                        <div class="selectdiv">
+                            {{form.accountSelect()}}
+                        </div>
                     </td>
                     <td>
                         {{form.view_hist()}}
@@ -33,7 +35,10 @@
                     Message
                 </th>
                 <th >
-                    Amount
+                    In
+                </th>
+                <th >
+                    Out
                 </th>
                 <th >
                     Timestamp
@@ -59,6 +64,9 @@
                 </td>
                 <td>
                     {{transaction[4]}}
+                </td>
+                <td>
+                    {{transaction[5]}}
                 </td>
             </tr>
             {%endfor%}
