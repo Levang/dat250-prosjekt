@@ -13,6 +13,7 @@ from safecoin.forms import LoginForm
 @app.route("/login", methods=["GET", "POST"])
 def home():
     form = LoginForm()
+    # print(form.recaptcha)
     if form.validate_on_submit():
         # login=bool
         # userDB = Database class
@@ -20,6 +21,11 @@ def home():
         # returns true and other values only if user is registered in database.
 
         login, userDB, secret = verifyUser(form.email.data, form.password.data, addToActive=True)
+
+        # Convert otp from int to str and add 0 at the start. Keys starting with 0 now works.
+        form.otp.data = str(form.otp.data)
+        while len(form.otp.data) < 6:
+            form.otp.data = "0" + form.otp.data
 
         # ─── KOMMENTERES TILBAKE VED PRODUKSJON ──────────────────────────
         # try:

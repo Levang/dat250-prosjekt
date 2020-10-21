@@ -1,11 +1,11 @@
-
 from flask import flash
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
 import flask_scrypt
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Optional
 
 from safecoin.models import User
+from safecoin.accounts_db import format_account_balance
 
 
 def flash_all_but_field_required(form_field, flash_type="error"):
@@ -38,6 +38,7 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
     otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    recaptcha = RecaptchaField()
     submit = SubmitField('Login')
 
 
@@ -64,7 +65,7 @@ class PayForm(FlaskForm):
         for account in account_list:
             if type(account[1]) != int:
                 raise TypeError("Account number has to be an int (for correct value storing)")
-            choice_list.append((account[1], f"{account[0]} ({account[2]} kr)"))
+            choice_list.append((account[1], f"{account[0]} ({format_account_balance(account[2])} kr)"))
         if len(choice_list) == 1:
             self.account_select.choices = [('x', 'No accounts')]
             return
@@ -124,6 +125,7 @@ class DeleteUserForm(FlaskForm):
     otp_deleteuser = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
     delete_deleteuser = SubmitField('Delete user')
 
+
 class TransHistory(FlaskForm):
     accountSelect = SelectField('Account Name', render_kw={"readonly": True})
     view_hist = SubmitField("View Transactions")
@@ -136,7 +138,7 @@ class TransHistory(FlaskForm):
         for account in account_list:
             if type(account[1]) != int:
                 raise TypeError("Account number has to be an int (for correct value storing)")
-            choice_list.append((account[1], f"{account[0]} ({account[2]} kr)"))
+            choice_list.append((account[1], f"{account[0]} ({format_account_balance(account[2])} kr)"))
         if len(choice_list) == 1:
             self.accountSelect.choices = [('x', 'No accounts')]
             return

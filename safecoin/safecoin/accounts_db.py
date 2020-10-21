@@ -60,6 +60,16 @@ def format_account_number(number: int):
         return number
 
 
+def format_account_balance(balance: int):
+    if balance < 10:
+        return f"0,0{balance}"
+    elif balance < 100:
+        return f"0,{balance}"
+    else:
+        balance = str(balance)
+        return f'{balance[:-2]},{balance[-2:]}'
+
+
 def getAccountNumber():
     while True:
         bank_id = str(randint(4100, 4300))

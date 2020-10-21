@@ -11,7 +11,7 @@ from safecoin.accounts_db import addNewAccountToCurUser
 
 
 # from safecoin.accounts import addNewAccountToUser
-# db.create_all()
+db.create_all()
 
 
 def isCommonPassword(password):
@@ -181,7 +181,6 @@ def register():
                 user.enKey = userDict['enKey']
                 user.accounts = None
                 user.secret = userDict['secret']
-                user.attempts = userDict['attempts']
 
                 db.session.add(user)
                 db.session.commit()

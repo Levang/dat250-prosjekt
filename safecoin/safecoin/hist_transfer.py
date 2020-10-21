@@ -9,8 +9,8 @@ from flask_wtf import FlaskForm
 from safecoin import app, redis, json, db, disable_caching
 from safecoin.forms import TransHistory
 from safecoin.models import Transactions
-from safecoin.accounts_db import format_account_number
-from safecoin.accounts import getAccountsList
+from safecoin.accounts_db import format_account_number, format_account_balance
+from safecoin.accounts import getAccountsList, format_account_list
 
 
 @app.route("/transactions/", methods=["GET", "POST"])
@@ -27,10 +27,11 @@ def transactions():
         if transForm.accountSelect.data in str(accountList):
             query=Transactions.query.filter((Transactions.accountFrom == transForm.accountSelect.data) | (Transactions.accountTo == transForm.accountSelect.data))
 
-            TransList=QueryToList(query,accountList,transForm.accountSelect.data)
+            TransList=QueryToList(query, accountList, transForm.accountSelect.data)
             #print(f'TRANSLIST ER {type(TransList)} {TransList}')
 
     return render_template('hist_transfer.html', transHistory=TransList, form=transForm), disable_caching
+
 
 def QueryToList(query,accountList,currentAccount):
 
@@ -43,27 +44,26 @@ def QueryToList(query,accountList,currentAccount):
     for i in query:
         if i.accountFrom in str(accountList):
             name = user_dict['accounts'][i.accountFrom][0]
-            accountFrom=f'{name} ( {i.accountFrom} )'
+            accountFrom=f'{name} ( {format_account_number(i.accountFrom)} )'
         else:
             accountFrom = i.accountFrom
 
         if i.accountTo in str(accountList):
             name=user_dict['accounts'][i.accountTo][0]
-            accountTo=f'{name} ( {i.accountTo} )'
+            accountTo=f'{name} ( {format_account_number(i.accountTo)} )'
         else:
             accountTo = i.accountTo
 
-        tempAmount = str(i.amount)
-        amount = f'{tempAmount[:-2]},{tempAmount[-2:]}'
-        in_ = ''
-        out = ''
+        amount = format_account_balance(i.amount)
+        in_ = "──"
+        out = "──"
 
         if str(i.accountFrom) == str(currentAccount):
             out = amount
-            in_ = ''
+            in_ = "──"
 
         if str(i.accountTo) == str(currentAccount):
-            out = ''
+            out = "──"
             in_ = amount
 
         #print(f"tempamout is {type(tempAmount)}")
