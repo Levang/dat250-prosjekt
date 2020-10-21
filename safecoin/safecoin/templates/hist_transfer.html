@@ -10,67 +10,71 @@
         <form method="post">
             {{ form.hidden_tag() }}
             <table>
-                <tr>
-                    <td>
-                        <div class="selectdiv">
-                            {{form.accountSelect()}}
-                        </div>
-                    </td>
-                    <td>
-                        {{form.view_hist()}}
-                    </td>
-                </tr>
+                <div class="choose">
+                    <tr>
+                        <td colspan="2">
+                            <div class="selectdiv">
+                                {{form.accountSelect()}}
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            {{form.view_hist()}}
+                        </td>
+                    </tr>
+                </div>
             </table>
         </form>
 
-        <table>
-            <tr>
-                <th>
-                    From
-                </th>
-                <th>
-                    To
-                </th>
-                <th >
-                    Message
-                </th>
-                <th >
-                    In
-                </th>
-                <th >
-                    Out
-                </th>
-                <th >
-                    Timestamp
-                </th>
-            </tr>
-            {%for account in userAccounts%}
-            <option value={{account}}>{{account}}</option>
-            {%endfor%}
+        <div class="tbcontent">
+            <table>
+                <tr>
+                    <th>
+                        From
+                    </th>
+                    <th>
+                        To
+                    </th>
+                    <th >
+                        Message
+                    </th>
+                    <th >
+                        In
+                    </th>
+                    <th >
+                        Out
+                    </th>
+                    <th >
+                        Timestamp
+                    </th>
+                </tr>
+                {%for account in userAccounts%}
+                <option value={{account}}>{{account}}</option>
+                {%endfor%}
 
-            {% for transaction in transHistory %}
-            <tr>
-                <td>
-                {{transaction[0]}}
-                </td>
-                <td>
-                    {{transaction[1]}}
-                </td>
-                <td>
-                    {{transaction[2]}}
-                </td>
-                <td>
-                    {{transaction[3]}}
-                </td>
-                <td>
-                    {{transaction[4]}}
-                </td>
-                <td>
-                    {{transaction[5]}}
-                </td>
-            </tr>
-            {%endfor%}
-        </table>
+                {% for transaction in transHistory %}
+                <tr>
+                    <td>
+                    {{transaction[0]}}
+                    </td>
+                    <td>
+                        {{transaction[1]}}
+                    </td>
+                    <td>
+                        {{transaction[2]}}
+                    </td>
+                    <td>
+                        {{transaction[3]}}
+                    </td>
+                    <td>
+                        {{transaction[4]}}
+                    </td>
+                    <td>
+                        {{transaction[5]}}
+                    </td>
+                </tr>
+                {%endfor%}
+            </table>
+        </div>
     </div>
 </body>
 {% endblock %}

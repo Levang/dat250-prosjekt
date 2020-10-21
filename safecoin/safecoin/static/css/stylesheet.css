@@ -476,6 +476,7 @@ body {
     padding: 20px;
     color: white;
 }
+
 .transhist td{
     padding: 0px;
     padding-top: 20px;
@@ -483,6 +484,19 @@ body {
     margin: 0px;
     text-transform: capitalize;
     font-size: 130%;
+
+}
+
+.transhist table {
+    margin-left: 5%;
+    margin-right:5%;
+}
+
+.transhist .tbcontent table {
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    border-collapse: collapse;
 
 }
 
@@ -498,8 +512,8 @@ body {
     padding-top: 12px;
     padding-bottom: 12px;
     font-size: 100%;
-    width: 250px;
-    height: 50px;
+    width: 280px;
+    height: 60px;
     text-align: center;
 }
 
@@ -508,12 +522,24 @@ body {
     left: 215px;
 }
 
-.userAccounts table {
-    margin-left: 5%;
-    margin-right: 5%;
-    width: 90%;
-    border-collapse: collapse;
 
+.transhist input#view_hist {
+    background-color: var(--blue2);
+    border-radius:28px;
+    border:none;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 50px;
+    text-decoration:none;
 }
 
 /*--------------Transactions-----------*/
