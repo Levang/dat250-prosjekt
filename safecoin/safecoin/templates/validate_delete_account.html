@@ -1,22 +1,23 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Validate</title>
+<title>Delete</title>
 {% endblock %}
 
 {% block body %}
 
 <body>
-    <form method="post">
-        {{ form.hidden_tag() }}
-        <table>
-            <tbody>
+    <div class="valNewDel">
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <table>
                 <tr>
                     <th>
-                        <p class="title"><strong>Validate</strong></p>
+                        <h2>Validate</h2>
                     </th>
                 </tr>
                 {% with messages = get_flashed_messages(with_categories=true) %}
+
                   {% if messages %}
                     {% for category, message in messages %}
                     <tr class=flashes>
@@ -45,9 +46,9 @@
                         {{ form.proceed_delete() }}
                     </td>
                 </tr>
-            </tbody>
-        </table>
-    </form>
+            </table>
+        </form>
+    </div>
 </body>
 
 {% endblock %}

@@ -1,4 +1,3 @@
-
 from safecoin.accounts import format_account_list, format_account_number
 
 import random
@@ -19,26 +18,48 @@ from safecoin.accounts import getAccountsList
 def transactions():
 
     transForm = TransHistory()
-    #TODO make this get info from dropdown.
-    #selectedAccount="41656916900"
 
     accountList=getAccountsList()
     transForm.get_select_field(accountList)
 
-    transHistory=[]
+    TransList=[]
     if transForm.view_hist.data and transForm.accountSelect.data!="x":
-        print(accountList)
-        if transForm.accountSelect.data in accountList:
-            transHistory=Transactions.query.filter((Transactions.accountFrom == transForm.accountSelect.data) | (Transactions.accountTo == transForm.accountSelect.data))
-        for i in transHistory:
-            print(i.accountFrom)
+        if transForm.accountSelect.data in str(accountList):
+            query=Transactions.query.filter((Transactions.accountFrom == transForm.accountSelect.data) | (Transactions.accountTo == transForm.accountSelect.data))
+
+            TransList=QueryToList(query,accountList)
+
+    return render_template('hist_transfer.html', transHistory=TransList, form=transForm), disable_caching
+
+def QueryToList(query,accountList):
+
+    user_dict = json.loads(redis.get(current_user.email))
+
+    print(user_dict)
+
+    listTrans=[]
+
+    for i in query:
+        if i.accountFrom in str(accountList):
+            name = user_dict['accounts'][i.accountFrom][0]
+            accountFrom=f'{name} ( {i.accountFrom} )'
+        else:
+            accountFrom = i.accountFrom
+
+        if i.accountTo in str(accountList):
+            name=user_dict['accounts'][i.accountTo][0]
+            accountTo=f'{name} ( {i.accountTo} )'
+        else:
+            accountTo = i.accountTo
+
+        amount = i.amount
+        message = i.message
+        time = str(i.time)[:-7]
+
+        listTrans.append([accountFrom,accountTo,message,amount,time])
+
+        for i in listTrans:
+            print(f'{i[0]} {i[1]}')
 
 
-
-    #print(transForm.account_select.data)
-
-    #TODO jinja cant format time object, need to convert to localtime anyways.
-    #Just make new class and add every field so we can format all thje stuff
-    #form=transForm
-
-    return render_template('hist_transfer.html', transHistory=transHistory, form=transForm), disable_caching
+    return listTrans

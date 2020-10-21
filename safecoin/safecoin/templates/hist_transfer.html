@@ -20,6 +20,23 @@
 </form>
 
 <table>
+    <tr>
+        <th>
+            From
+        </th>
+        <th>
+            To
+        </th>
+        <th >
+            Message
+        </th>
+        <th >
+            Amount
+        </th>
+        <th >
+            Timestamp
+        </th>
+    </tr>
 {%for account in userAccounts%}
 <option value={{account}}>{{account}}</option>
 {%endfor%}
@@ -28,16 +45,19 @@
 {% for transaction in transHistory %}
 <tr>
     <td>
-    {{transaction.accountFrom}}
+    {{transaction[0]}}
     </td>
     <td>
-    {{transaction.accountTo}}
+    {{transaction[1]}}
     </td>
     <td>
-    {{transaction.amount}}
+    {{transaction[2]}}
     </td>
     <td>
-    {{transaction.date}}
+    {{transaction[3]}}
+    </td>
+    <td>
+    {{transaction[4]}}
     </td>
 </tr>
 {%endfor%}
