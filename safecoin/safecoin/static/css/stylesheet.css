@@ -240,9 +240,9 @@ body {
     -moz-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
-    left: 550px;
+    left: 560px;
     top: 16px;
-    position: absolute;
+    /*position: absolute;*/
     pointer-events: none;
 }
 
@@ -448,6 +448,52 @@ body {
     text-decoration:none;
 }
 /*----ValidateNewAndDeleteAccount------*/
+/*--------------Transactions-----------*/
+
+.transhist td{
+    grid-template-columns: 30% 30% 40%;
+    grid-area: auto;
+    padding: 0px;
+    margin: 0px;
+
+}
+
+.transhist th {
+    background-color: var(--blue2);
+    font-size: 150%;
+    padding: 20px;
+    color: white;
+}
+.transhist td{
+    padding: 0px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin: 0px;
+    text-transform: capitalize;
+    font-size: 130%;
+
+}
+
+.transhist select#accountSelect {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    color: white;
+    border-width: 2px;
+    border-color: var(--blue3);
+    background-color: var(--blue2);
+    border-style: solid;
+    border-radius: 50px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 250px;
+    height: 50px;
+    text-align: center;
+}
+/*oddly specific, but this is the way it has to be */
+.transhist .selectdiv:after {
+    left: 215px;
+/*--------------Transactions-----------*/
 
 @media (max-width:850px) {
 
