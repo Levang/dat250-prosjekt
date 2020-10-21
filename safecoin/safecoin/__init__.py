@@ -26,7 +26,7 @@ login_manager.login_view = '/login'
 
 disable_caching = {'Cache-Control': 'no-cache, no-store, must-revalidate',
                    'Pragma': 'no-cache',
-                   'Expres': '0'}
+                   'Express': '0'}
 
 
 from safecoin import home, overview, register, accounts, pay, profile, hist_transfer, transfer, accounts_db, encryption

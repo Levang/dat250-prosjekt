@@ -38,7 +38,7 @@ def getPasswordViolations(errList, password):
     try:
         want_length = int(policy["length"])
     except (KeyError, TypeError):
-        want_length = 10
+        want_length = 12
 
     if len(password) < want_length:
         errList.append(f"Password should be at least {want_length} characters")
@@ -126,7 +126,7 @@ def register():
 
             # Add it to the redis server
             redis.set(registerRedisKey, userDict)
-            # Set session timeout of user at 600 secons, 10 minutes
+            # Set session timeout of user at 600 seconds, 10 minutes
             redis.expire(registerRedisKey, 600)
             return render_template('TwoFactor.html', form2=form2,
                                    qr_link=qr_link), disable_caching  # Vi må dra med inn qr_linken for å generere qr_koden korrekt
@@ -136,7 +136,6 @@ def register():
             flash(err, "error")
 
     if form2.validate_on_submit():
-
 
         # Regenerate hashed email from last page
         hashed_email = flask_scrypt.generate_password_hash(carryOverEmail, "")
@@ -148,7 +147,7 @@ def register():
         userDict = redis.get(registerRedisKey)
 
         # delete user from redis
-        redis.delete(registerRedisKey)
+        redis.delete(registerRedisKey.decode("utf-8"))
 
         # Format back to dictionairy
         userDict = json.loads(userDict)
@@ -182,6 +181,7 @@ def register():
                 user.enKey = userDict['enKey']
                 user.accounts = None
                 user.secret = userDict['secret']
+                user.attempts = userDict['attempts']
 
                 db.session.add(user)
                 db.session.commit()

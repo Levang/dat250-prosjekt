@@ -186,13 +186,11 @@ def getAccountsList(userDict=None):
 
 # ─── VERIFY USER ────────────────────────────────────────────────────────────────
 def verifyUser(email, password, addToActive=False):
-
-  #hash the email
-    if email==None:
+    # hash the email
+    if email is None:
         hashed_email = current_user.email
     else:
         hashed_email = flask_scrypt.generate_password_hash(email, "")
-
 
     # create user class with information from database
     userDB = User.query.filter_by(email=hashed_email).first()
@@ -243,7 +241,7 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
     print(verified)
 
     if verified is False:
-        return
+        return False
         #Decrypt and check user account with user database
     decryptKey = decrypt(password, userDB.enKey.encode('utf-8'), True)
     accountsDB = decrypt(decryptKey, userDB.accounts.encode('utf-8'))
@@ -264,7 +262,7 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
                 accountDBTo = Account.query.filter_by(number=accountTo).first()
 
                 if TransactionChecks(accountDBFrom, amount, accountDBTo, accountsDict,message)==False:
-                    return
+                    return False
                 print("TRANSFER CHECK RETURNERTE TRUE")
 
                 accountDBFrom.balance -= amount
@@ -288,10 +286,11 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
 
                 redis_sync(decryptKey,current_user.email)
                 print("FERDIG")
+                return True
                 #add the transaction to the transaction history
     else:
         # user doesnt own this account return
-        return
+        return False
 
         #sync redis
 

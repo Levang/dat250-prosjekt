@@ -84,15 +84,13 @@ def addNewAccountToCurUser(password, otp, name="My account", user=None, money=Fa
     if user is None:
         user = current_user
 
-
     enKey = decrypt(password, user.enKey.encode('utf-8'), True)
 
-    account = Account(number=getAccountNumber(), balance=0)
-
     # 100000 er 1000.00 kr int er altsaa bare to ekstra nuller
-    if money==True:
+    if money is True:
         account = Account(number=getAccountNumber(), balance=100000)
-
+    else:
+        account = Account(number=getAccountNumber(), balance=0)
 
     # Max length of your account name
     # 24 is plenty
