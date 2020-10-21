@@ -9,6 +9,8 @@ The users password is cryptographically hashed with scrypt and a random salt. Th
 
 Due to the fact that scrypt is being used for the password hashing, the password can, within reason, be as long as the user wants "NEEDS SOURCE". When the user inputs a valid password, the password gets hashed together with a randomly generated salt. The hashed password is stored alongside its salt in a dictionary until the registration process is complete. 
 
+![Illustrating the flow when a user creates a password, and how the encryption key for the users info gets made.](report_assets/Encryption_reg.png) 
+
 ## TwoFactor Authentication
 If the user passes both the email and password-checks, the user will be sent over to a page where two-factor-authentication will be activated. The user will be presented a QR-code that can be scanned in ones authenticator app of choice, e.g. google authenticator, authy or microsoft authenticator. In the app the user user will have a code that will continually be renewed after a certain amount of time. The user needs to submit their password once again and type in their generated TOTP-code. By making the user use their TOTP code, we simultaneously ensure they have added the secret-key to their app of choice, as they couldn't generate the TOTP without having done so.
 
