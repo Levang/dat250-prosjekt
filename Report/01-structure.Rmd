@@ -125,11 +125,15 @@ class LoginForm(FlaskForm):
 ```
 
 ### base64
+Ardijan
 
 ### cryptography
+Ardijan
 
 ### JSON
+Ardijan
 
 ### Redis
+Ardijan
 We use redis to manage session timeouts, and as a volatile data management system.
  
