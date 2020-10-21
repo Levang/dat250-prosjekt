@@ -191,7 +191,7 @@ def register():
                 # You start with an account that we add so that we and
                 # Whomever is going to thest our site can work with it
                 addNewAccountToCurUser(password=form2.password_2fa.data, otp='',
-                                       user=User.query.filter_by(email=hashed_email).first(), money=True, isNotCurUser=True)
+                                       user=User.query.filter_by(email=hashed_email).first(), money=True, isNotCurrentUser=True)
                 # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
 
                 return redirect(url_for('home'))
