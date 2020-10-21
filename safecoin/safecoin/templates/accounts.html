@@ -10,40 +10,40 @@
         <form method="post" class="actions">
         {{ form.hidden_tag() }}
         <table class="createDelete">
-            <tbody>
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                  {% if messages %}
-                    {% for category, message in messages %}
-                    <tr class=flashes>
-                      <td colspan="3" class="{{ category }}">{{ message }}</td>
-                    </tr>
-                    {% endfor %}
-                  {% endif %}
-                {% endwith %}
-                <tr>
-                    <td>
-                        {{ form.account_name() }}
-                    </td>
-                    <td>
-                        {{ form.create_account() }}
-                    </td>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                <tr class=flashes>
+                  <td colspan="3" class="{{ category }}">{{ message }}</td>
                 </tr>
-                <tr class="deleteinfo">
-                    <td>
-                        You can only delete empty accounts
-                    </td>
-                </tr>
-                <tr class="deleteAccount">
-                    <td>
-                    <div class="selectdiv">
-                        {{ form.account_select() }}
-                    </div>
-                    </td>
-                    <td>
-                        {{ form.delete_account() }}
-                    </td>
-                </tr>
-            </tbody>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            <tr>
+                <td>
+                    <h2>Create Account</h2>
+                </td>
+                <td>
+                    <h2>Delete Account</h2>
+                </td>
+            <tr>
+                <td>
+                    {{ form.account_name() }}
+                </td>
+                <td>
+                    {{ form.delete_account() }}
+                </td>
+            </tr>
+            <tr class="deleteAccount">
+                <td>
+                <div class="selectdiv">
+                    {{ form.create_account() }}
+                </div>
+                </td>
+                <td>
+                    {{ form.account_select() }}
+                </td>
+            </tr>
         </table>
     </form>
     <div class='userAccounts'>

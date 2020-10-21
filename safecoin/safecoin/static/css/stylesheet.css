@@ -240,7 +240,7 @@ body {
     -moz-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
-    left: 175px;
+    left: 550px;
     top: 16px;
     position: absolute;
     pointer-events: none;
@@ -342,6 +342,7 @@ body {
 /*-------------------PAY---------------*/
 
 /*------------ValidatePay--------------*/
+
 .valdiv input{
     border-width: 2px;
     border-color: var(--blue3);
@@ -355,6 +356,7 @@ body {
     height: 20px;
     text-align: center;
 }
+
 .valdiv input#msg{
     width: 408px;
 }
@@ -366,18 +368,22 @@ body {
 .valdiv input#ore{
     width: 100px;
 }
+
 .valdiv input#ore, .valdiv input#kr, .valdiv input#msg, .valdiv input#tfrom, .valdiv input#to {
     color: grey;
 }
+
 .valdiv table {
     margin-bottom: 40px;
 }
+
 .valdiv {
     margin-left: 35%;
     margin-right: 40%;
     margin-top: 30px;
     margin-bottom: 30px;
 }
+
 .valdiv #proceed_payment {
     background-color: var(--blue2);
     border-radius:28px;
@@ -396,11 +402,10 @@ body {
     height: 50px;
     text-decoration:none;
 }
+
 /*------------ValidatePay--------------*/
 
-/*
- * ───ValidateNewAccount-------------------------------------------------
- */
+/*----ValidateNewAndDeleteAccount------*/
 .valNewDel input{
     border-width: 2px;
     border-color: var(--blue3);
@@ -415,7 +420,7 @@ body {
     text-align: center;
 }
 
-.valNewDel input#account_name {
+.valNewDel input#account_name, .valNewDel input#account_select {
     color: grey;
 }
 .valNewDel {
@@ -424,7 +429,7 @@ body {
     margin-top: 30px;
     margin-bottom: 30px;
 }
-.valNewDel input#proceed_create {
+.valNewDel input#proceed_create, .valNewDel input#proceed_delete {
     background-color: var(--blue2);
     border-radius:28px;
     border:none;
@@ -442,9 +447,8 @@ body {
     height: 50px;
     text-decoration:none;
 }
-/*
- * ─── ValidateNewAccount--------------------------------------------
- */
+/*----ValidateNewAndDeleteAccount------*/
+
 @media (max-width:850px) {
 
 .imported{
