@@ -242,7 +242,7 @@ body {
     transform: rotate(90deg);
     left: 560px;
     top: 16px;
-    /*position: absolute;*/
+    position: absolute;
     pointer-events: none;
 }
 
@@ -338,7 +338,7 @@ body {
 }
 /*oddly specific, but this is the way it has to be */
 .paydiv .selectdiv:after {
-    left: 215px;
+    left: 225px;
 }
 /*-------------------PAY---------------*/
 
@@ -519,7 +519,7 @@ body {
 
 /*oddly specific, but this is the way it has to be */
 .transhist .selectdiv:after {
-    left: 215px;
+    left: 245px;
 }
 
 
