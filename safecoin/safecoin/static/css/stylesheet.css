@@ -262,6 +262,7 @@ body {
     height: 50px;
     text-align: center;
 }
+
 /*
  * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
  */
@@ -406,6 +407,7 @@ body {
 /*------------ValidatePay--------------*/
 
 /*----ValidateNewAndDeleteAccount------*/
+
 .valNewDel input{
     border-width: 2px;
     border-color: var(--blue3);
@@ -423,12 +425,14 @@ body {
 .valNewDel input#account_name, .valNewDel input#account_select {
     color: grey;
 }
+
 .valNewDel {
     margin-left: 40%;
     margin-right: 40%;
     margin-top: 30px;
     margin-bottom: 30px;
 }
+
 .valNewDel input#proceed_create, .valNewDel input#proceed_delete {
     background-color: var(--blue2);
     border-radius:28px;
@@ -447,8 +451,16 @@ body {
     height: 50px;
     text-decoration:none;
 }
+
 /*----ValidateNewAndDeleteAccount------*/
 /*--------------Transactions-----------*/
+
+.transhist {
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
 
 .transhist td{
     grid-template-columns: 30% 30% 40%;
@@ -490,9 +502,20 @@ body {
     height: 50px;
     text-align: center;
 }
+
 /*oddly specific, but this is the way it has to be */
 .transhist .selectdiv:after {
     left: 215px;
+}
+
+.userAccounts table {
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    border-collapse: collapse;
+
+}
+
 /*--------------Transactions-----------*/
 
 @media (max-width:850px) {
