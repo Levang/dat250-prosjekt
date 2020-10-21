@@ -123,3 +123,21 @@ class DeleteUserForm(FlaskForm):
     password_deleteuser = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
     otp_deleteuser = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
     delete_deleteuser = SubmitField('Delete user')
+
+class TransHistory(FlaskForm):
+    accountSelect = SelectField('Account Name', render_kw={"readonly": True})
+    view_hist = SubmitField("View Transactions")
+
+    def get_select_field(self, account_list):
+        if account_list is None:
+            self.accountSelect.choices = [('x', 'No accounts')]
+            return
+        choice_list = [('x', 'Choose an account')]
+        for account in account_list:
+            if type(account[1]) != int:
+                raise TypeError("Account number has to be an int (for correct value storing)")
+            choice_list.append((account[1], f"{account[0]} ({account[2]} kr)"))
+        if len(choice_list) == 1:
+            self.accountSelect.choices = [('x', 'No accounts')]
+            return
+        self.accountSelect.choices = choice_list

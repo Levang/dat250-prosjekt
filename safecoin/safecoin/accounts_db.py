@@ -92,10 +92,11 @@ def illegalChar(text, maxlength):
             return True
 
 
-def addNewAccountToCurUser(password, otp, name="My account", user=None, money=False):
-    authenticated, _ = verify_pwd_2FA(password, otp)
-    if not authenticated:
-        return "Couldn't create account due to an error"
+def addNewAccountToCurUser(password, otp, name="My account", user=None, money=False, isNotCurrentUser=False):
+    if isNotCurrentUser:
+        authenticated, _ = verify_pwd_2FA(password, otp)
+        if not authenticated:
+            return "Couldn't create account due to an error"
 
     if user is None:
         user = current_user
