@@ -99,6 +99,11 @@ def verify_pwd_2FA(password, otp, email=None):
     if not email:
         email = getCurUsersEmail()
 
+    # Convert otp from int to str and add 0 at the start. Keys starting with 0 now works.
+    otp = str(otp)
+    while len(otp) < 6:
+        otp = "0" + otp
+
     # Verifies password
     try:
         is_authenticated, user, secret = verifyUser(email, password)

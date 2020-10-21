@@ -7,7 +7,7 @@ from safecoin import app, redis, json, db, disable_caching
 from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAccountForm, CreateDeleteForm
 from safecoin.tmp import TmpAcc
 from safecoin.models import Account
-from safecoin.accounts_db import format_account_number, addNewAccountToCurUser, deleteCurUsersAccountNumber
+from safecoin.accounts_db import format_account_number, format_account_balance, addNewAccountToCurUser, deleteCurUsersAccountNumber
 from safecoin.encryption import verify_pwd_2FA
 
 
@@ -22,6 +22,7 @@ def format_account_list(acc_list: list):
     try:
         for account in acc_list:
             account[1] = format_account_number(account[1])
+            account[2] = format_account_balance(account[2])
     except ValueError:
         print("ACC list formatting fucked itself!!!!!!!!!!!!!!!!!!!!!!!")
         return None
@@ -111,9 +112,6 @@ def accounts():
             flash(f"Validate deletion of account ")
             return render_template('validate_delete_account.html', form=delete_form), disable_caching
 
-    for i in range(len(account_list)):
-        balance=str(account_list[i][2])
-        account_list[i][2]=f'{balance[:-2]},{balance[-2:]}'
     return render_template('accounts.html', account_list=account_list, form=form), disable_caching
 
 

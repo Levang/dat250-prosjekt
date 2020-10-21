@@ -10,7 +10,7 @@ from safecoin import app, redis, json, db, disable_caching
 from safecoin.forms import TransHistory
 from safecoin.models import Transactions
 from safecoin.accounts_db import format_account_number
-from safecoin.accounts import getAccountsList
+from safecoin.accounts import getAccountsList, format_account_list
 
 
 @app.route("/transactions/", methods=["GET", "POST"])
@@ -27,7 +27,7 @@ def transactions():
         if transForm.accountSelect.data in str(accountList):
             query=Transactions.query.filter((Transactions.accountFrom == transForm.accountSelect.data) | (Transactions.accountTo == transForm.accountSelect.data))
 
-            TransList=QueryToList(query,accountList,transForm.accountSelect.data)
+            TransList=QueryToList(query, accountList, transForm.accountSelect.data)
             #print(f'TRANSLIST ER {type(TransList)} {TransList}')
 
     return render_template('hist_transfer.html', transHistory=TransList, form=transForm), disable_caching

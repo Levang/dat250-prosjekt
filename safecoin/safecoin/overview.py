@@ -38,8 +38,4 @@ def overviewPage():
     elif len(account_list) > 5:
         account_list = account_list[:5]
 
-    for i in range(len(account_list)):
-        balance=str(account_list[i][2])
-        account_list[i][2]=f'{balance[:-2]},{balance[-2:]}'
-
     return render_template('overview.html', account_list=account_list, form=form), disable_caching
