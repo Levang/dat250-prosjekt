@@ -88,21 +88,6 @@ class AccountsForm(FlaskForm):
     account_select = SelectField('Select Account', validators=[Optional()])
     delete_account = SubmitField('Delete')
 
-    def get_select_field(self, account_list):
-        if account_list is None:
-            self.account_select.choices = [('x', 'No accounts')]
-            return
-        choice_list = [('x', 'Empty accounts')]
-        for account in account_list:
-            if account[2] != 0:
-                continue
-            if type(account[1]) != int:
-                raise TypeError("Account number has to be an int (for correct value storing)")
-            choice_list.append((account[1], f"{account[0]}"))
-        if len(choice_list) == 1:
-            self.account_select.choices = [('x', 'No empty accounts')]
-            return
-        self.account_select.choices = choice_list
 
 
 class CreateAccountForm(FlaskForm):
@@ -123,3 +108,22 @@ class DeleteUserForm(FlaskForm):
     password_deleteuser = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
     otp_deleteuser = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
     delete_deleteuser = SubmitField('Delete user')
+
+class TransHistory(FlaskForm):
+    account_select = IntegerField('Account Name', render_kw={"readonly": True})
+
+    def get_select_field(self, account_list):
+        if account_list is None:
+            self.account_select.choices = [('x', 'No accounts')]
+            return
+        choice_list = [('x', 'Empty accounts')]
+        for account in account_list:
+            if account[2] != 0:
+                continue
+            if type(account[1]) != int:
+                raise TypeError("Account number has to be an int (for correct value storing)")
+            choice_list.append((account[1], f"{account[0]}"))
+        if len(choice_list) == 1:
+            self.account_select.choices = [('x', 'No empty accounts')]
+            return
+        self.account_select.choices = choice_list
