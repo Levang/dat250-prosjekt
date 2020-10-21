@@ -27,15 +27,16 @@ def transactions():
         if transForm.accountSelect.data in str(accountList):
             query=Transactions.query.filter((Transactions.accountFrom == transForm.accountSelect.data) | (Transactions.accountTo == transForm.accountSelect.data))
 
-            TransList=QueryToList(query,accountList)
+            TransList=QueryToList(query,accountList,transForm.accountSelect.data)
+            #print(f'TRANSLIST ER {type(TransList)} {TransList}')
 
     return render_template('hist_transfer.html', transHistory=TransList, form=transForm), disable_caching
 
-def QueryToList(query,accountList):
+def QueryToList(query,accountList,currentAccount):
 
     user_dict = json.loads(redis.get(current_user.email))
 
-    print(user_dict)
+    #print(user_dict)
 
     listTrans=[]
 
@@ -52,14 +53,26 @@ def QueryToList(query,accountList):
         else:
             accountTo = i.accountTo
 
-        amount = i.amount
+        tempAmount = str(i.amount)
+        amount = f'{tempAmount[:-2]},{tempAmount[-2:]}'
+        in_ = ''
+        out = ''
+
+        if str(i.accountFrom) == str(currentAccount):
+            out = amount
+            in_ = ''
+
+        if str(i.accountTo) == str(currentAccount):
+            out = ''
+            in_ = amount
+
+        #print(f"tempamout is {type(tempAmount)}")
         message = i.message
         time = str(i.time)[:-7]
 
-        listTrans.append([accountFrom,accountTo,message,amount,time])
+        listTrans.append([accountFrom,accountTo,message,in_,out,time])
 
-        for i in listTrans:
-            print(f'{i[0]} {i[1]}')
-
+        # for i in listTrans:
+        #     print(f'{i[0]} {i[1]}')
 
     return listTrans
