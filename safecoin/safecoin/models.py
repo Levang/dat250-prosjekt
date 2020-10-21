@@ -3,6 +3,7 @@ from safecoin import db, login_manager, redis
 import datetime
 from sqlalchemy import DateTime
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.filter_by(email=user_id).first()

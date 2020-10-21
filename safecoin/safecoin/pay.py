@@ -121,7 +121,7 @@ def payPage():
 
         print("SUBMITTERER TRANSAKSJONER")
         print(form_validate.msg.data)
-        submitTransaction(
+        transaction_ok = submitTransaction(
             password = form_validate.password_payment.data,
             accountFrom = form_validate.tfrom.data,
             accountTo = form_validate.to.data,
@@ -130,8 +130,7 @@ def payPage():
             )
         print("SUBMITTERER TRANSAKSJONER TO")
 
-
-        if errlist:
+        if not transaction_ok:
             flash("An error occurred during validation. Didn't transfer anything.")
         else:
             flash(
