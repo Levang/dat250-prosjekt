@@ -96,7 +96,7 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
     return errlist
 
 
-@app.route('/pay/', methods=["GET", "POST"])
+@app.route('/transfer/', methods=["GET", "POST"])
 @login_required
 def payPage():
     account_list = getAccountsList()

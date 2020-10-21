@@ -15,20 +15,23 @@ def profilePage():
     # True if form is validated and submitted correctly
     if form.validate_on_submit():
         # True if password an 2FA is correct
-        if verify_pwd_2FA(form.password_deleteuser.data, form.otp_deleteuser.data):
-            err = deleteCurUser(form.password_deleteuser.data)  # Delete user, if all accounts is empty
-            if not err:  # Return to home if no errors
-                flash("User successfully deleted!", "success")
-                return redirect(url_for('home')), disable_caching
-            flash(err, "error")  # Flashes error if error occurred
+        err = deleteCurUser(form.password_deleteuser.data,
+                            form.otp_deleteuser.data)  # Delete user, if all accounts is empty
+        if not err:  # Return to home if no errors
+            flash("User successfully deleted!", "success")
+            return redirect(url_for('home')), disable_caching
         else:
-            flash("Something went wrong under user deletion", "error")  # Flashes if authentication failed
+            flash(err, "error")  # Flashes if authentication failed
+    elif form.is_submitted():
+        flash("Couldn't delete account due to an error")
     return render_template('profile.html', form=form, email=getCurUsersEmail().upper()), disable_caching
 
 
 # Delete user from db if all accounts are empty
-def deleteCurUser(password):
-    user = getCurrentUser()  # Get current user'
+def deleteCurUser(password, otp):
+    authenticated, user = verify_pwd_2FA(password, otp)
+    if not authenticated:
+        return "Couldn't delete account due to an error"
 
     if user.accounts:
         # Get list of users accounts

@@ -6,8 +6,8 @@ from safecoin.models import Account, User
 
 from safecoin.encryption import decrypt, encrypt, redis_sync, illegalChar, verify_pwd_2FA
 
-# --- Gets account objects --- #
 
+# --- Gets account objects --- #
 def getAccount(account_number):
     account: Account = Account.query.filter_by(number=account_number).first()
     return account
@@ -16,6 +16,7 @@ def getAccount(account_number):
 def getUser(email):
     user: User = User.query.filter_by(email=email).first()
     return user
+
 
 def getCurrentUser():
     user: User = getUser(current_user.email)
@@ -72,24 +73,6 @@ def getAccountNumber():
             if len(str(account_number)) != 11:
                 raise Exception(f"{account_number}'s length isn't 11!")
             return account_number
-
-def illegalChar(text, maxlength):
-    if text is None:
-        return False
-
-    try:
-        text = str(text)
-    except ValueError:
-        return True
-
-    if len(text) > maxlength:
-        return True
-
-    alphabet = "abcdefghijklmnopqrstuvwxyzæøå0123456789 "
-    # Transform name to lowercase and check if its not in the alphabet
-    for letter in text.lower():
-        if letter not in alphabet:
-            return True
 
 
 def addNewAccountToCurUser(password, otp, name="My account", user=None, money=False, isCurrentUser=True):

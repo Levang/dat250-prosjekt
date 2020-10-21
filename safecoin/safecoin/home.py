@@ -37,7 +37,7 @@ def home():
             # Denne returnerer True hvis koden fra brukeren er overens med serveren. MERK: serveren sin
             if totp.verify(form.otp.data):
                 # genererte totp er tilsynelatende omtrent 10 sekunder foran koden som brukeren genererer..
-                login_user(userDB, remember=form.remember.data)
+                login_user(userDB)
 
                 # Redirect til overview dersom alt er ok
                 return redirect(url_for("overviewPage")), disable_caching

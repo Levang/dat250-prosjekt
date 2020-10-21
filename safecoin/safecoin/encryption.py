@@ -56,8 +56,6 @@ def encrypt(key, theThing, password=False):
     if type(theThing) == str:
         theThing = theThing.encode('utf-8')
 
-    print(key)
-    print(theThing)
     return Fernet(key).encrypt(theThing)
 
 
@@ -241,7 +239,7 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
     accountFrom=str(accountFrom)
     accountTo=str(accountTo)
     #Check user password
-    verified, userDB, ubrukt = verifyUser(None,password)
+    verified, userDB, ubrukt = verifyUser(None, password)
     print(verified)
 
     if verified is False:
