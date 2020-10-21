@@ -77,7 +77,6 @@ class Account(db.Model):
         else:
             raise Exception("Can only set this to be an int")
 
-
 class Transactions(db.Model):
     transactionID = db.Column(db.Integer , primary_key=True)
     accountFrom = db.Column(db.String(80), nullable=False)
