@@ -111,6 +111,9 @@ def accounts():
             flash(f"Validate to delete your account with the name {form.account_select.data} ")
             return render_template('validate_delete_account.html', form=delete_form), disable_caching
 
+    for i in range(len(account_list)):
+        balance=str(account_list[i][2])
+        account_list[i][2]=f'{balance[:-2]},{balance[-2:]}'
     return render_template('accounts.html', account_list=account_list, form=form), disable_caching
 
 
