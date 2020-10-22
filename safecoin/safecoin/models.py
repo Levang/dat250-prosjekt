@@ -1,7 +1,8 @@
 from flask_login import UserMixin
-from safecoin import db, login_manager, redis
 import datetime
 from sqlalchemy import DateTime
+
+from safecoin import db, login_manager, redis
 
 
 @login_manager.user_loader
@@ -78,8 +79,9 @@ class Account(db.Model):
         else:
             raise Exception("Can only set this to be an int")
 
+
 class Transactions(db.Model):
-    transactionID = db.Column(db.Integer , primary_key=True)
+    transactionID = db.Column(db.Integer, primary_key=True)
     accountFrom = db.Column(db.String(80), nullable=False)
     accountTo = db.Column(db.String(80), nullable=False, )
     amountDB = db.Column(db.String(256))
@@ -103,9 +105,8 @@ class Transactions(db.Model):
 
 
 class requestLogs(db.Model):
-    time = db.Column(db.String(80), unique=False, nullable=False, primary_key=True)
-    eventID = db.Column(db.String(80), unique=True, nullable=False)
-    eventType = db.Column(db.String(64), unique=True, nullable=False)  # what happend
+    eventID = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
+    email = db.Column(db.String(80))
+    eventType = db.Column(db.String(64), nullable=False)  # what happened
     message = db.Column(db.String(300))
-    signature = db.Column(db.String(300), unique=True,
-                          nullable=False)  # dunno how long this should be but leaving it at 300 for now
+    time = db.Column(DateTime, default=datetime.datetime.utcnow, nullable=False)

@@ -1,7 +1,3 @@
-from safecoin.accounts import format_account_list, format_account_number
-
-import random
-
 from flask import render_template, request, flash, redirect
 from flask_login import current_user, login_required
 from flask_wtf import FlaskForm

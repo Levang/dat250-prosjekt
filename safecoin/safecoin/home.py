@@ -1,11 +1,11 @@
 from flask import render_template, url_for, redirect, flash
 from flask_login import login_user, current_user, logout_user, login_required
-### ------ Internal imports below ------ ###
+import pyotp
+
 from safecoin import app, redis, disable_caching
 from safecoin.encryption import verifyUser
-
-import pyotp
 from safecoin.forms import LoginForm
+from safecoin.logging import log_loginattempt, log_logout
 
 
 # --- Main page --- #
@@ -22,18 +22,17 @@ def home():
 
         login, userDB, secret = verifyUser(form.email.data, form.password.data, addToActive=True)
 
-        # Convert otp from int to str and add 0 at the start. Keys starting with 0 now works.
-        form.otp.data = str(form.otp.data)
-        while len(form.otp.data) < 6:
-            form.otp.data = "0" + form.otp.data
-
         # ─── KOMMENTERES TILBAKE VED PRODUKSJON ──────────────────────────
         # try:
         #     login, userDB, secret = verifyUser(form.email.data,form.password.data,addToActive=True)
         # except:
         #     login=False
-        #     flash('Something went wrong. Please try again.')
         # ─── KOMMENTERES TILBAKE VED PRODUKSJON ──────────────────────────
+
+        # Convert otp from int to str and add 0 at the start. Keys starting with 0 now works.
+        form.otp.data = str(form.otp.data)
+        while len(form.otp.data) < 6:
+            form.otp.data = "0" + form.otp.data
 
         if login:
 
@@ -42,6 +41,7 @@ def home():
 
             # Denne returnerer True hvis koden fra brukeren er overens med serveren. MERK: serveren sin
             if totp.verify(form.otp.data):
+                log_loginattempt(True, userDB.email)
                 # genererte totp er tilsynelatende omtrent 10 sekunder foran koden som brukeren genererer..
                 login_user(userDB)
 
@@ -51,9 +51,11 @@ def home():
             else:
                 # Generisk feilmelding dersom noe går galt
                 flash('Something went wrong. Please try again.')
+                log_loginattempt(False, userDB.email)
         else:
             # Generisk feilmelding dersom noe går galt
             flash('Something went wrong. Please try again.')
+            log_loginattempt(False, userDB.email)
 
     # dersom noe gaar galt rendre samme side
     return render_template("login.html", form=form), disable_caching
@@ -65,6 +67,7 @@ def home():
 def logout():
     #slett ifra redis først ellers er current_user ikke definert.
     redis.delete(current_user.email)
+    log_logout(current_user.email)
 
     #Logg så ut fra login manager
     logout_user()
