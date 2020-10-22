@@ -97,9 +97,13 @@ body {
 .input:hover {
     background-color: var(--lightblue1)
 }
-/*
- * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
- */
+
+td.error{
+    color: red;
+    font-size: 20px;
+}
+
+/*----------ACCOUNTS-------------------*/
 
 .userAccounts {
     margin-top: 50px;
@@ -119,6 +123,7 @@ body {
     grid-area: auto;
     padding: 0px;
     margin: 0px;
+    text-align: center;
 
 }
 
@@ -143,19 +148,19 @@ body {
 .userAccounts td:nth-child(1){
     padding-left: 10px;
     font-weight: bold;
-    width: 20%;
+    width: 30%;
 }
 
 .userAccounts td:nth-child(2){
     text-align: center;
-    width: 20%;
+    width: 30%;
 }
 
 .userAccounts td:nth-child(3){
-    width: 60%;
+    width: 40%;
     padding-right: 30px;
     font-weight: bold;
-    text-align: right;
+    text-align: center;
 }
 .createDelete{
     margin-top:60px;
@@ -271,9 +276,7 @@ body {
     text-align: center;
 }
 
-/*
- * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
- */
+/*----------ACCOUNTS-------------------*/
 
 /*-------------------PAY---------------*/
 .paydiv {
@@ -487,6 +490,7 @@ body {
     grid-area: auto;
     padding: 0px;
     margin: 0px;
+    text-align: center;
 
 }
 
