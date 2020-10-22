@@ -8,6 +8,7 @@ from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAcc
 from safecoin.models import Account
 from safecoin.accounts_db import format_account_number, format_account_balance, addNewAccountToCurUser, deleteCurUsersAccountNumber
 from safecoin.encryption import verify_pwd_2FA
+from safecoin.logging import log_createaccount, log_deleteaccount
 
 
 # Formaterer
@@ -73,11 +74,12 @@ def accounts():
         err = addNewAccountToCurUser(create_form.password_create.data, create_form.otp_create.data, create_form.account_name.data)
         # If an error occurs when creating an account flash it and re render the page
         if err:
-            flash(err, "error")
+            flash("Didn't make any changes, due to an error", "error")
             return render_template('accounts.html', account_list=account_list, form=form), disable_caching
         flash(f"Successfully Created Account {create_form.account_name.data}!", "success")
     elif create_form.proceed_create.data:
-        flash("Didn't make any changes, due to an error")
+        log_createaccount(False, current_user.email, delete_form.account_select.data, "NotAuthenticated")
+        flash("Didn't make any changes, due to an error", "error")
 
     # If delete form is submitted
     if delete_form.validate_on_submit():
@@ -85,11 +87,12 @@ def accounts():
         # If an error occurs when deleting an account flash it and re render the page
         err = deleteCurUsersAccountNumber(delete_form.account_select.data, delete_form.password_delete.data, delete_form.otp_delete.data)
         if err:
-            flash(err, "error")
+            flash("Didn't make any changes, due to an error", "error")
             return render_template('accounts.html', account_list=account_list, form=form), disable_caching
         flash(f"Successfully Deleted Account {delete_form.account_select.data}!", "success")
     elif delete_form.proceed_delete.data:
-        flash("Didn't make any changes, due to an error")
+        log_deleteaccount(False, current_user.email, delete_form.account_select.data, "NotAuthenticated")
+        flash("Didn't make any changes, due to an error", "error")
 
     if do_action:
 
@@ -108,7 +111,7 @@ def accounts():
             if form.account_select.data == 'x':
                 flash("Please select an account", "error")
                 return render_template('accounts.html', account_list=account_list, form=form), disable_caching
-            flash(f"Validate deletion of account ")
+            flash(f"Validate deletion of account")
             return render_template('validate_delete_account.html', form=delete_form), disable_caching
 
     return render_template('accounts.html', account_list=account_list, form=form), disable_caching

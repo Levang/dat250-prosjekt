@@ -1,5 +1,5 @@
 from flask import render_template, flash
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from safecoin import app, disable_caching
 from safecoin.forms import PayForm, ValidatePaymentForm
@@ -7,6 +7,7 @@ from safecoin.overview import overviewPage
 from safecoin.encryption import getAccountsList, submitTransaction, verify_pwd_2FA
 from safecoin.accounts_db import format_account_number, illegalChar
 from safecoin.models import Account
+from safecoin.logging import log_transfer
 
 
 def intconvert_if_possible(var):
@@ -114,6 +115,16 @@ def payPage():
     if form_validate.is_submitted() and form_validate.password_payment.data:
         errlist = get_form_errors(form_validate.tfrom.data, form_validate.to.data, form_validate.kr.data, form_validate.ore.data, form_validate.msg.data)
         if errlist:
+            try:
+                log_transfer(is_validated=False,
+                             from_=form_validate.tfrom.data,
+                             to=form_validate.to.data,
+                             kid=form_validate.msg.data,
+                             amount=krToInt(kr=form_validate.kr.data, ore=form_validate.ore.data),
+                             hashedEmail=current_user.email,
+                             custommsg="TransactionError")
+            except:
+                log_transfer(is_validated=False, hashedEmail=current_user.email, custommsg="TransactionError")
             flash("An error occurred during validation. Didn't transfer anything.")
             return render_template('pay.html', form=form), disable_caching
 
@@ -129,8 +140,24 @@ def payPage():
         print("SUBMITTERER TRANSAKSJONER TO")
 
         if not transaction_ok:
+            try:
+                log_transfer(is_validated=False,
+                             from_=form_validate.tfrom.data,
+                             to=form_validate.to.data,
+                             kid=form_validate.msg.data,
+                             amount=krToInt(kr=form_validate.kr.data, ore=form_validate.ore.data),
+                             hashedEmail=current_user.email,
+                             custommsg="TransactionError")
+            except:
+                log_transfer(is_validated=False, hashedEmail=current_user.email, custommsg="TransactionError")
             flash("An error occurred during validation. Didn't transfer anything.")
         else:
+            log_transfer(is_validated=True,
+                         from_=form_validate.tfrom.data,
+                         to=form_validate.to.data,
+                         kid=form_validate.msg.data,
+                         amount=krToInt(kr=form_validate.kr.data, ore=form_validate.ore.data),
+                         hashedEmail=current_user.email)
             flash(
                 f"Successfully transferred {form_validate.kr.data},{form_validate.ore.data if form_validate.ore.data else '00'} kr from account {format_account_number(form.tfrom.data)} to {format_account_number(form.to.data)}!",
                 "success")
@@ -143,7 +170,7 @@ def payPage():
         errlist = get_form_errors(form.tfrom.data, form.to.data, form.kr.data, form.ore.data, form.msg.data)
         if errlist:
             for err in errlist:
-                flash(err, "error")
+                flash(err, "An error occurred")
             return render_template('pay.html', form=form), disable_caching
 
         print("-----------------------------THIS SHOULD NOT SHOW UP UNLESS IN VALIDATE")

@@ -22,18 +22,17 @@ def home():
 
         login, userDB, secret = verifyUser(form.email.data, form.password.data, addToActive=True)
 
-        # Convert otp from int to str and add 0 at the start. Keys starting with 0 now works.
-        form.otp.data = str(form.otp.data)
-        while len(form.otp.data) < 6:
-            form.otp.data = "0" + form.otp.data
-
         # ─── KOMMENTERES TILBAKE VED PRODUKSJON ──────────────────────────
         # try:
         #     login, userDB, secret = verifyUser(form.email.data,form.password.data,addToActive=True)
         # except:
         #     login=False
-        #     flash('Something went wrong. Please try again.')
         # ─── KOMMENTERES TILBAKE VED PRODUKSJON ──────────────────────────
+
+        # Convert otp from int to str and add 0 at the start. Keys starting with 0 now works.
+        form.otp.data = str(form.otp.data)
+        while len(form.otp.data) < 6:
+            form.otp.data = "0" + form.otp.data
 
         if login:
 

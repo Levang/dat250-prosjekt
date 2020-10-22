@@ -8,6 +8,7 @@ from safecoin.encryption import encrypt, decrypt, dictToStr
 from safecoin.models import User
 from safecoin.forms import RegistrationForm, TwoFactorAuthRegForm
 from safecoin.accounts_db import addNewAccountToCurUser
+from safecoin.logging import log_register, log_startregister, log_createaccount
 
 
 # from safecoin.accounts import addNewAccountToUser
@@ -128,6 +129,7 @@ def register():
             redis.set(registerRedisKey, userDict)
             # Set session timeout of user at 600 seconds, 10 minutes
             redis.expire(registerRedisKey, 600)
+            log_startregister(hashed_email)
             return render_template('TwoFactor.html', form2=form2,
                                    qr_link=qr_link), disable_caching  # Vi må dra med inn qr_linken for å generere qr_koden korrekt
 
@@ -193,6 +195,11 @@ def register():
                                        user=User.query.filter_by(email=hashed_email).first(), money=True, isCurrentUser=False)
                 # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
 
+                log_register(True, hashed_email)
                 return redirect(url_for('home'))
+            else:
+                log_register(False, hashed_email)
+        else:
+            log_register(False, hashed_email)
 
     return render_template("register.html", form=form), disable_caching
