@@ -3,8 +3,7 @@ from flask_login import login_required, current_user
 
 from safecoin import app, disable_caching
 from safecoin.forms import PayForm, ValidatePaymentForm
-from safecoin.overview import overviewPage
-from safecoin.encryption import getAccountsList, submitTransaction, verify_pwd_2FA
+from safecoin.encryption import getAccountsList, submitTransaction
 from safecoin.accounts_db import format_account_number, illegalChar
 from safecoin.models import Account
 from safecoin.logging import log_transfer
@@ -21,21 +20,17 @@ def krToInt(kr, ore):
     if ore == None:
         ore = 0
     # Kr og ore maa kunne konverteres til int, dersom det feiler. er det en feil
-    try:
+    kr = int(kr)
+    kr = str(kr)
 
-        kr = int(kr)
-        kr = str(kr)
-
-        ore = int(ore)
-        # Kan ikke ha mer enn 99 ore eller mindre enn null
-        if ore > 99 or ore < 0:
-            return None
-        elif ore < 10:
-            ore = f"0{ore}"
-        else:
-            ore = str(ore)
-    except AttributeError:  # TODO REMOVE ATTRIBUTE ERROR for production
+    ore = int(ore)
+    # Kan ikke ha mer enn 99 ore eller mindre enn null
+    if ore > 99 or ore < 0:
         return None
+    elif ore < 10:
+        ore = f"0{ore}"
+    else:
+        ore = str(ore)
 
     amount = kr + ore
 
@@ -51,42 +46,36 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
     if not amount:
         errlist.append("Please enter a valid amount to transfer")
 
-    try:
-        # Verifies that from_ is in current users account, yes on redis...
-        if accountFrom == 'x':
-            errlist.append("Please select an account to transfer from")
+    # Verifies that from_ is in current users account, yes on redis...
+    if accountFrom == 'x':
+        errlist.append("Please select an account to transfer from")
 
-        # det er altsaa mindre enn ett ore
+    else:
+        accountFrom = intconvert_if_possible(accountFrom)
+        from_in_myaccounts = False
+        for account in myaccounts:
+            if account[1] == accountFrom:
+                from_in_myaccounts = True
+                break
+        if not from_in_myaccounts:
+            errlist.append("An error occured")
 
-        else:
-            accountFrom = intconvert_if_possible(accountFrom)
-            from_in_myaccounts = False
-            for account in myaccounts:
-                if account[1] == accountFrom:
-                    from_in_myaccounts = True
-                    break
-            if not from_in_myaccounts:
-                errlist.append("An error occured")
+    # Verifies that from_ and to isn't the same account
+    if accountFrom == accountTo:
+        errlist.append("Can't transfer to the same account you transfer from")
 
-        # Verifies that from_ and to isn't the same account
-        if accountFrom == accountTo:
-            errlist.append("Can't transfer to the same account you transfer from")
+    if len(str(accountTo)) != 11:
+        errlist.append("Invalid account number")
 
-        if len(str(accountTo)) != 11:
-            errlist.append("Invalid account number")
+    accTo = Account.query.filter_by(number=accountTo).first()
+    if not accTo:
+        errlist.append(f"Unable to transfer to {accountTo}, it does not exist")
 
-        accTo = Account.query.filter_by(number=accountTo).first()
-        if not accTo:
-            errlist.append(f"Unable to transfer to {accountTo}, it does not exist")
+    if amount < 1:
+        errlist.append("Please enter a valid amount to transfer")
 
-        if amount < 1:
-            errlist.append("Please enter a valid amount to transfer")
-
-        if illegalChar(msg, 256):
-            errlist.append("Invalid KID/message or too long")
-
-    except AttributeError:  # TODO REMOVE ATTRIBUTE ERROR for production
-        general_error = True
+    if illegalChar(msg, 256):
+        errlist.append("Invalid KID/message or too long")
 
     if general_error:
         errlist.append("An error occured")
@@ -103,10 +92,7 @@ def payPage():
     form.get_select_field(account_list)
     form_validate = ValidatePaymentForm()
 
-
     # Pressed proceed button on validation page
-
-    #if form_validate.is_submitted() and form_validate.email_payment.data and form_validate.password_payment.data:
     if form_validate.is_submitted() and form_validate.password_payment.data:
         errlist = get_form_errors(form_validate.tfrom.data, form_validate.to.data, form_validate.kr.data, form_validate.ore.data, form_validate.msg.data)
         if errlist:
@@ -164,7 +150,6 @@ def payPage():
             for err in errlist:
                 flash(err, "An error occurred")
             return render_template('pay.html', form=form), disable_caching
-
 
         return render_template("validate_payment.html", form=form_validate), disable_caching
     # Regular pay page

@@ -1,9 +1,8 @@
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user, logout_user
-import json, pyotp
 from safecoin import app, db, redis, disable_caching
-from safecoin.accounts_db import getCurrentUser, accStr_to_accList
-from safecoin.encryption import decrypt, getCurUsersEmail, verifyUser, verify_pwd_2FA
+from safecoin.accounts_db import accStr_to_accList
+from safecoin.encryption import decrypt, getCurUsersEmail, verify_pwd_2FA
 from safecoin.forms import DeleteUserForm
 from safecoin.logging import log_deleteuser
 

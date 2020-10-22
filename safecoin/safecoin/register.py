@@ -8,11 +8,9 @@ from safecoin.encryption import encrypt, decrypt, dictToStr
 from safecoin.models import User
 from safecoin.forms import RegistrationForm, TwoFactorAuthRegForm
 from safecoin.accounts_db import addNewAccountToCurUser
-from safecoin.logging import log_register, log_startregister, log_createaccount
+from safecoin.logging import log_register, log_startregister
 
-
-# from safecoin.accounts import addNewAccountToUser
-db.create_all()
+# db.create_all()
 
 
 def isCommonPassword(password):
@@ -25,7 +23,7 @@ def isCommonPassword(password):
 
 def getPasswordViolations(errList, password):
     if type(password) != str:
-        errList.append("An error occured!")
+        errList.append("An error occurred!")
         return
 
     if isCommonPassword(password):
@@ -72,7 +70,7 @@ def register():
 
             # ─── CHECK IF THE EMAIL EXISTS IN DATABASE OR REDIS ───────────────────────
             if User.query.filter_by(email=hashed_email.decode("utf-8")).first() or redis.get(registerRedisKey):
-                flash("error")
+                flash("Couldn't continue, due to an error", "error")
                 return render_template("register.html", form=form), disable_caching
 
             # ─── IF THE USER DOES NOT EXIST IN THE DATABASE ──────────────────
@@ -134,6 +132,8 @@ def register():
         # ─── DERSOM FEIL VED REGISTEREING ───────────────────────────────────────────────
         for err in errList:
             flash(err, "error")
+    if form.is_submitted() and not form.errors:
+        flash("Couldn't continue, due to an error", "error")
 
     if form2.validate_on_submit():
 
@@ -181,7 +181,9 @@ def register():
 
                 db.session.add(user)
                 db.session.commit()
+
                 flash('Your account has been created! You are now able to log in.', 'success')
+                log_register(True, hashed_email)
 
                 # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
                 # You start with an account that we add so that we and
@@ -190,11 +192,9 @@ def register():
                                        user=User.query.filter_by(email=hashed_email).first(), money=True, isCurrentUser=False)
                 # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
 
-                log_register(True, hashed_email)
                 return redirect(url_for('home'))
-            else:
-                log_register(False, hashed_email)
-        else:
-            log_register(False, hashed_email)
+
+        flash("Couldn't register user, due to an error", "error")
+        log_register(False, hashed_email)
 
     return render_template("register.html", form=form), disable_caching

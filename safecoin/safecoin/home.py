@@ -14,19 +14,12 @@ from safecoin.logging import log_loginattempt, log_logout
 def home():
     form = LoginForm()
     if form.validate_on_submit():
-        # login=bool
-        # userDB = Database class
-        # Secret = 2fa Secret
-        # returns true and other values only if user is registered in database.
 
-        login, userDB, secret = verifyUser(form.email.data, form.password.data, addToActive=True)
-
-        # ─── KOMMENTERES TILBAKE VED PRODUKSJON ──────────────────────────
-        # try:
-        #     login, userDB, secret = verifyUser(form.email.data,form.password.data,addToActive=True)
-        # except:
-        #     login=False
-        # ─── KOMMENTERES TILBAKE VED PRODUKSJON ──────────────────────────
+        try:
+            login, userDB, secret = verifyUser(form.email.data, form.password.data, addToActive=True)
+        except:
+            login = False
+            userDB = {"email": "NA"}
 
         # Convert otp from int to str and add 0 at the start. Keys starting with 0 now works.
         form.otp.data = str(form.otp.data)
