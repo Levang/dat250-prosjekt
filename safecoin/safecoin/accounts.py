@@ -5,7 +5,6 @@ from cryptography.fernet import InvalidToken
 
 from safecoin import app, redis, json, db, disable_caching
 from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAccountForm, CreateDeleteForm
-from safecoin.tmp import TmpAcc
 from safecoin.models import Account
 from safecoin.accounts_db import format_account_number, format_account_balance, addNewAccountToCurUser, deleteCurUsersAccountNumber
 from safecoin.encryption import verify_pwd_2FA

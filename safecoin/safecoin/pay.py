@@ -1,12 +1,10 @@
 from flask import render_template, flash
 from flask_login import login_required
-from time import sleep
+
 from safecoin import app, disable_caching
 from safecoin.forms import PayForm, ValidatePaymentForm
 from safecoin.overview import overviewPage
-
 from safecoin.encryption import getAccountsList, submitTransaction, verify_pwd_2FA
-
 from safecoin.accounts_db import format_account_number, illegalChar
 from safecoin.models import Account
 

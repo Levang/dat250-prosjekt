@@ -3,7 +3,6 @@ from random import randint
 
 from safecoin import db
 from safecoin.models import Account, User
-
 from safecoin.encryption import decrypt, encrypt, redis_sync, illegalChar, verify_pwd_2FA
 
 
