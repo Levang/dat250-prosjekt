@@ -1,8 +1,33 @@
 # OWASP Top Ten 
 
 ## Injection
+Injection attacks has commonly been the most used attack used in hacking attempts, mainly because it is so simple to accomplish. However these days, while the possibility of SQL-injection and other injection attacks is big, it is also very easy to implement methods to avoid it altogether. The best method to prevent injection attacks is to simply use tried and tested frameworks that provide you with functionality you need, while also providing you with safe and sanitized fields for the user to use. 
+
+### SQL-injection
+To protect against SQL-injection attacks we use `SQLalchemy`. Using `SQLalchemy` we avoid having to construct our own queries, and since `SQLalchemy` by default quotes all special characters, we effectively eliminate any chances of anyone being able to perform a SQL-injection attack on our site. SQLalchemy is an ORM that makes easy to write python code into SQL queries that are always automatically escaped (unless manually set to not do that). In this way our site becomes scalable easier without having to worry about any poorly made SQL queries exposing out website.
+
+### Code Injection
+Another worry is that any form that takes user input is susceptible to code injection. However, just as we did on SQL-injection, we hand off this responsibility to a external package which already handles inputted data, which also is tried and tested by professionals. The packages used to validate user input is `flask-wtf` and WTForms. In essence what these packages do is to force a certain type of field to become whichever type you have designated in the creation of the form. See example below:
+
+```python
+class LoginForm(FlaskForm):
+email = StringField('Email', validators=[DataRequired(), Email()], 
+render_kw={"placeholder": "email@example.com"})
+password = PasswordField('Password', validators=[DataRequired()], 
+render_kw={"placeholder": "Password"})
+otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], 
+render_kw={"placeholder": "Two-Factor Authentication"})
+submit = SubmitField('Login')
+```
+
+What the above form says amongst other things is that the "Email" is a string as it is input in a `StringField`. Similar for the "password" is a string, as the `PasswordField` is a string, only that it hides the input. And so on. `IntegerField` = Integer, and `SubmitField` is just a field that checks whether a button is pressed.
+
+This way even if someone tries to input malicious data into a `SubmitField` the package will just convert the data to a string, hence making it harmless.
+
+(Source: https://wtforms.readthedocs.io/en/2.3.x/)
 
 ## Broken Authentication
+Levang
 
 ## Sensitive Data Exposure
 In the development cycle of our website, we have attempted to always keep security in mind. This of course includes encrypting sensitive data, aswell as attempting to handle it as little as possible. This is essential in keeping up with security. The less information we need to handle, the better it is for us, the user, and the security on our website.
@@ -13,7 +38,7 @@ To accomplish our goals for security we have broadly defined what data is sensit
 ### Implementation
 The thing most important for us to keep in mind when developing our website is that we ideally don't want to handle user data more than simple checks and comparisons (such as password) for verification. When handling the data for a specific form, we do what we need with that data then and there, and then always immediately discard it. Data that is not retained can not be stolen. 
 
-The data we have to store that is sensitive is all cryptographically hashed, using a variety of Fernet and scrypt. In other words, our entire user table in our database is encrypted to some degree. Other information is not as sensitive as it is not personal information, and cannot be edited. A malicious actor knowing account-numbers and associated balances wouldn't make a difference as they wouldn't be able to do anything with it. Passwords are stored as a scrypt hash with a random salt, with the possibility of having a work factor (delay variable) to it, so that it takes longer to brute-force passwords. Our random encryption key for various things is also encrypted using fernet and the users hashed password, meaning we can only decrypt data when given the users password, adding an extra layer of security.
+The data we have to store that is sensitive is all cryptographically hashed, using a variety of Fernet and scrypt. In other words, our entire user table in our database is encrypted to some degree. Other information is not as sensitive as it is not personal information, and cannot be edited. A malicious actor knowing account-numbers and associated balances wouldn't make a difference as they wouldn't be able to do anything with it, as they wouldn't find out who owns the account. Passwords are stored as a scrypt hash with a random salt, with the possibility of having a work factor (delay variable) to it, so that it takes longer to brute-force passwords. Our random encryption key for various things is also encrypted using fernet and the users hashed password, meaning we can only decrypt data when given the users password, adding an extra layer of security.
 
 As for data in transit we have added the HTTPS protocol to our server to make it exponentially more difficult to do an attack on data in transit. Amongst other things this more or less eliminates the possibility of a man-in-the-middle attack. When handling our users data, although encrypted we should always do what we can to make it as difficult as possible.
 
@@ -32,3 +57,4 @@ As an added security feature we have also disabled caching on all our sites. Thi
 ## Using Components with known vulnerabilities
 
 ## Insufficient Logging & Monitoring
+Levang
