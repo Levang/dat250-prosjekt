@@ -1,12 +1,11 @@
-from flask import render_template, request, flash, redirect
+from flask import render_template
 from flask_login import current_user, login_required
-from flask_wtf import FlaskForm
 
-from safecoin import app, redis, json, db, disable_caching
+from safecoin import app, redis, json, disable_caching
 from safecoin.forms import TransHistory
 from safecoin.models import Transactions
 from safecoin.accounts_db import format_account_number, format_account_balance
-from safecoin.accounts import getAccountsList, format_account_list
+from safecoin.accounts import getAccountsList
 
 
 @app.route("/transactions/", methods=["GET", "POST"])

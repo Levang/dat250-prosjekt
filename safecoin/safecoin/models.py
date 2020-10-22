@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
     # Due to how the sessions are set up, being logged in
     # does not mean you have access to change anything in the database
     # It only means having access to read data that is
-    # currently in that users redis dictionairy
+    # currently in that users redis dictionary
     # The password is the only thing that allows a user to change data.
 
     # If the user is not found in redis,

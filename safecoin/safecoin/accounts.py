@@ -1,13 +1,10 @@
-from flask import render_template, request, flash, redirect
-from flask_login import current_user, login_required, logout_user
-from flask_wtf import FlaskForm
-from cryptography.fernet import InvalidToken
+from flask import render_template, flash
+from flask_login import current_user, login_required
 
-from safecoin import app, redis, json, db, disable_caching
-from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAccountForm, CreateDeleteForm
+from safecoin import app, redis, json, disable_caching
+from safecoin.forms import AccountsForm, CreateAccountForm, CreateDeleteForm
 from safecoin.models import Account
 from safecoin.accounts_db import format_account_number, format_account_balance, addNewAccountToCurUser, deleteCurUsersAccountNumber
-from safecoin.encryption import verify_pwd_2FA
 from safecoin.logging import log_createaccount, log_deleteaccount
 
 
@@ -97,11 +94,9 @@ def accounts():
 
         # If user pressed create account and name field is filled
         if create_form_start:
-            if form.create_account.data:
-
-                flash(f"Validate creation of account")
-                return render_template('validate_create_account.html', form=create_form), disable_caching
-
+            flash("Validate creation of account")
+            return render_template('validate_create_account.html', form=create_form), disable_caching
+        elif form.create_account.data:
             flash("Please enter a name for your account", "error")
             return render_template('accounts.html', account_list=account_list, form=form), disable_caching
 
@@ -110,8 +105,10 @@ def accounts():
             if form.account_select.data == 'x':
                 flash("Please select an account", "error")
                 return render_template('accounts.html', account_list=account_list, form=form), disable_caching
-            flash(f"Validate deletion of account")
+            flash("Validate deletion of account")
             return render_template('validate_delete_account.html', form=delete_form), disable_caching
+
+        flash("An error occurred")
 
     return render_template('accounts.html', account_list=account_list, form=form), disable_caching
 

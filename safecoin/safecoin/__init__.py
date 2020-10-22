@@ -1,6 +1,5 @@
-from flask import Flask, redirect
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from configparser import ConfigParser
 from flask_redis import FlaskRedis
@@ -19,7 +18,6 @@ app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ldn29kZAAAAABFDZuYicPzQg5y8Kx5-DD-I_F62'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ldn29kZAAAAAHxWe2VkfSMpE-HN-YKCV2uA7CA_'
 
 db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
 redis = FlaskRedis(app)
 QRcode(app)
 
