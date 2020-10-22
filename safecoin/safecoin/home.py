@@ -13,7 +13,6 @@ from safecoin.logging import log_loginattempt, log_logout
 @app.route("/login", methods=["GET", "POST"])
 def home():
     form = LoginForm()
-    # print(form.recaptcha)
     if form.validate_on_submit():
         # login=bool
         # userDB = Database class

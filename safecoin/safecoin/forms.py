@@ -57,7 +57,6 @@ class PayForm(FlaskForm):
     pay = SubmitField('Pay')
 
     def get_select_field(self, account_list):
-        print(account_list)
         if not account_list:
             self.tfrom.choices = [('x', 'No accounts')]
             return

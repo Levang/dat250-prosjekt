@@ -66,7 +66,6 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
                     from_in_myaccounts = True
                     break
             if not from_in_myaccounts:
-                print("account is not yours")
                 errlist.append("An error occured")
 
         # Verifies that from_ and to isn't the same account
@@ -104,10 +103,6 @@ def payPage():
     form.get_select_field(account_list)
     form_validate = ValidatePaymentForm()
 
-    print(form_validate.proceed_payment.data)
-    print(form_validate.is_submitted())
-    print("_------------------------__________________________-----SE HER!")
-    print(form_validate.msg.data)
 
     # Pressed proceed button on validation page
 
@@ -128,8 +123,6 @@ def payPage():
             flash("An error occurred during validation. Didn't transfer anything.")
             return render_template('pay.html', form=form), disable_caching
 
-        print("SUBMITTERER TRANSAKSJONER")
-        print(form_validate.msg.data)
         transaction_ok = submitTransaction(
             password = form_validate.password_payment.data,
             accountFrom = form_validate.tfrom.data,
@@ -137,7 +130,6 @@ def payPage():
             amount = krToInt( kr = form_validate.kr.data , ore = form_validate.ore.data ),
             message =form_validate.msg.data
             )
-        print("SUBMITTERER TRANSAKSJONER TO")
 
         if not transaction_ok:
             try:
@@ -173,7 +165,6 @@ def payPage():
                 flash(err, "An error occurred")
             return render_template('pay.html', form=form), disable_caching
 
-        print("-----------------------------THIS SHOULD NOT SHOW UP UNLESS IN VALIDATE")
 
         return render_template("validate_payment.html", form=form_validate), disable_caching
     # Regular pay page

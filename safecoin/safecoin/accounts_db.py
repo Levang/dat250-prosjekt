@@ -169,13 +169,9 @@ def deleteCurUsersAccountNumber(account_number: str, password, otp):
     accStr = decrypt(enKey, user.accounts).decode("utf-8")
     accList = accStr_to_accList(accStr)
     for acc in accList:
-        print(f'accnr {acc[1]} {account_number}')
-        print(f'accnr {type(acc[1])} {type(account_number)}')
-
         if int(acc[1]) == account_number:
             accList.remove(acc)
             newAccStr = accList_to_accStr(accList)
-            print(newAccStr)
             user.accounts = encrypt(enKey, newAccStr).decode('utf-8')
             db.session.commit()
             redis_sync(enKey, current_user.email)
