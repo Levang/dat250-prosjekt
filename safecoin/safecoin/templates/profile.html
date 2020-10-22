@@ -6,22 +6,29 @@
 
 {% block body %}
 <body>
-    <form method="post">
-        <h1>{{ email }}</h1>
-
-        {{ form.hidden_tag() }}
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-            <div class=flashes>
-              <p class="{{ category }}">{{ message }}</p>
+    <div class="profilepage">
+        <form method="post">
+            <div class="headerdiv">
+                <h2>{{ email }}</h2>
             </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
 
-        <table>
-            <tbody>
+            {{ form.hidden_tag() }}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                <div class=flashes>
+                  <p class="{{ category }}">{{ message }}</p>
+                </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <table>
+                <tr>
+                    <td>
+                        <h2>Delete User</h2>
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         {{ form.password_deleteuser() }}
@@ -37,8 +44,8 @@
                         {{ form.delete_deleteuser() }}
                     </td>
                 </tr>
-            </tbody>
-        </table>
-    </form>
+            </table>
+        </form>
+    </div>
 </body>
 {% endblock %}
