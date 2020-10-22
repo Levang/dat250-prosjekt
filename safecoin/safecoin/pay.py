@@ -77,7 +77,7 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
 
         accTo = Account.query.filter_by(number=accountTo).first()
         if not accTo:
-            errlist.append(f"Unable to transfer to {accountTo}, it does not exist")
+            errlist.append(f"Unable to transfer to {accountTo}")
 
         if amount < 1:
             errlist.append("Please enter a valid amount to transfer")

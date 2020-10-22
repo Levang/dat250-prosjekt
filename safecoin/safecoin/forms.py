@@ -28,7 +28,7 @@ class RegistrationForm(FlaskForm):
 
 
 class TwoFactorAuthRegForm(FlaskForm):
-    otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlenght": 6})
     submit = SubmitField('Complete Sign Up')
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com", "readonly": True})
     password_2fa = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
@@ -37,7 +37,7 @@ class TwoFactorAuthRegForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
-    otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlength": 6})
     recaptcha = RecaptchaField()
     submit = SubmitField('Login')
 
@@ -78,12 +78,12 @@ class ValidatePaymentForm(FlaskForm):
     kr = IntegerField('Amount', render_kw={"readonly": True})
     ore = IntegerField('Decimal', render_kw={"readonly": True, "placeholder": "00"})
     password_payment = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
-    otp_payment = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    otp_payment = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlength": 6})
     proceed_payment = SubmitField('Proceed')
 
 
 class AccountsForm(FlaskForm):
-    account_name = StringField('Account Name', validators=[Optional()], render_kw={"placeholder": "Account Name"})
+    account_name = StringField('Account Name', validators=[Optional()], render_kw={"placeholder": "Account Name", "maxlength": 30})
     create_account = SubmitField('Create New Account')
     account_select = SelectField('Select Account', validators=[Optional()])
     delete_account = SubmitField('Delete')
@@ -108,20 +108,20 @@ class AccountsForm(FlaskForm):
 class CreateAccountForm(FlaskForm):
     account_name = StringField('Account Name', render_kw={"readonly": True})
     password_create = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
-    otp_create = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    otp_create = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlength": 6})
     proceed_create = SubmitField('Proceed')
 
 
 class CreateDeleteForm(FlaskForm):
     account_select = IntegerField('Account Name', render_kw={"readonly": True})
     password_delete = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
-    otp_delete = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    otp_delete = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlength": 6})
     proceed_delete = SubmitField('Proceed')
 
 
 class DeleteUserForm(FlaskForm):
     password_deleteuser = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
-    otp_deleteuser = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    otp_deleteuser = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlength": 6})
     delete_deleteuser = SubmitField('Delete')
 
 

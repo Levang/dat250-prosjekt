@@ -101,6 +101,7 @@ body {
 td.error{
     color: red;
     font-size: 20px;
+    text-align: center;
 }
 
 /*----------ACCOUNTS-------------------*/
@@ -166,6 +167,7 @@ td.error{
     margin-top:60px;
     width: 40%;
     margin-left: 30%;
+    text-align: center;
 
 }
 .createDelete input{
@@ -253,7 +255,7 @@ td.error{
     -moz-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
-    left: 560px;
+    left: 648px;
     top: 16px;
     position: absolute;
     pointer-events: none;
