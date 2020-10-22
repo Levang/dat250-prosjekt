@@ -4,18 +4,20 @@ from flask_login import LoginManager
 from configparser import ConfigParser
 from flask_redis import FlaskRedis
 from flask_qrcode import QRcode
-import json
+from os import urandom
+
+import json  # Don't remove this import ever!
 
 cfg = ConfigParser()
 cfg.read("safecoin/config.ini")
 
 app = Flask(__name__)
-app.secret_key = cfg["flask"]["secret_key"]
+app.secret_key = urandom(16)
 app.config['SQLALCHEMY_DATABASE_URI'] = cfg["sqlDb"]["path"]  # Path for database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['RECAPTCHA_USE_SSL'] = True
-app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ldn29kZAAAAABFDZuYicPzQg5y8Kx5-DD-I_F62'
-app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ldn29kZAAAAAHxWe2VkfSMpE-HN-YKCV2uA7CA_'
+app.config['RECAPTCHA_PUBLIC_KEY'] = cfg["reCaptcha"]["site_key"]
+app.config['RECAPTCHA_PRIVATE_KEY'] = cfg["reCaptcha"]["secret_key"]
 
 db = SQLAlchemy(app)
 redis = FlaskRedis(app)

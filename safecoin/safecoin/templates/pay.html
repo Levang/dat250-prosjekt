@@ -7,7 +7,7 @@
 {% block body %}
 <body>
     <div class="paydiv">
-        <form method="post">
+        <form method="post" autocomplete="off">
         {{ form.hidden_tag() }}
             <table>
                 {% with messages = get_flashed_messages(with_categories=true) %}
