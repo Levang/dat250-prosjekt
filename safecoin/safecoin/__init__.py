@@ -18,6 +18,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['RECAPTCHA_USE_SSL'] = True
 app.config['RECAPTCHA_PUBLIC_KEY'] = cfg["reCaptcha"]["site_key"]
 app.config['RECAPTCHA_PRIVATE_KEY'] = cfg["reCaptcha"]["secret_key"]
+app.config['SESSION_COOKIE_SECURE'] = True
+print(app.config)
+app.config['SECURITY_TOKEN_MAX_AGE'] = 1800
+app.config['PERMANENT_SESSION_LIFETIME'] = 1800
 
 db = SQLAlchemy(app)
 redis = FlaskRedis(app)
