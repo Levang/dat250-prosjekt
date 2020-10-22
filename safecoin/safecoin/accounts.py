@@ -24,7 +24,6 @@ def format_account_list(acc_list: list):
             account[1] = format_account_number(account[1])
             account[2] = format_account_balance(account[2])
     except ValueError:
-        print("ACC list formatting fucked itself!!!!!!!!!!!!!!!!!!!!!!!")
         return None
 
 

@@ -27,7 +27,6 @@ from safecoin.encryption import getAccountsList
 @login_required
 def overviewPage():
     account_list = getAccountsList()
-    print(account_list)
     form = AccountsForm()
     format_account_list(account_list)
 

@@ -58,8 +58,6 @@ def register():
     # for å legge 2fa-nøkkelen inn i din valgte 2fa app. Denne siden har også et passord felt, 2fa felt (for koden du nå kan generere i appen),
     # og et "read-only" som inneholder eposten du skrev inn på forrige side.
     if form.validate_on_submit():
-        print("THIS RAN")
-
         errList = []
         getPasswordViolations(errList, form.password.data)
 
@@ -158,8 +156,6 @@ def register():
         pwOK = flask_scrypt.check_password_hash(form2.password_2fa.data.encode('utf-8'),
                                                 userDict['password'][:88].encode('utf-8'),
                                                 userDict['password'][88:176].encode('utf-8'))
-        print("ER PASSORD OK?")
-        print(pwOK)
         if pwOK:
             # Decrypt the users decryption key
             decryptionKey = decrypt(form2.password_2fa.data.encode('utf-8'), userDict['enKey'].encode('utf-8'), True)
@@ -172,7 +168,6 @@ def register():
 
             # Hvis brukeren scanner qrkoden (som genereres i html) vil koden som vises i appen deres matche koden til totp.now()
             if totp.verify(form2.otp.data):
-                print("LAGRER BRUKER I DATABASE")
                 # user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey, secret=secret_key)
 
                 # Create user class
