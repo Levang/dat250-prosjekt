@@ -50,7 +50,7 @@ class RemoveForm(FlaskForm):
 
 class PayForm(FlaskForm):
     tfrom = SelectField('From*', validators=[DataRequired()])
-    to = IntegerField('To*', validators=[DataRequired()], render_kw={"placeholder": "Kontonr, 11 siffer", "maxlength": 11,"minlength": 11})
+    to = IntegerField('To*', validators=[DataRequired()], render_kw={"placeholder": "Account number, 11 digits", "maxlength": 11,"minlength": 11})
     msg = StringField('KID/message', validators=[Optional()], render_kw={"placeholder": "KID/message","maxlength": 90})
     kr = IntegerField('Amount*', validators=[DataRequired()], render_kw={"placeholder": "Kr"})
     ore = IntegerField(validators=[Optional()], render_kw={"placeholder": "Øre", "maxlength": 2, "minlength": 2})
@@ -123,7 +123,7 @@ class CreateDeleteForm(FlaskForm):
 class DeleteUserForm(FlaskForm):
     password_deleteuser = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
     otp_deleteuser = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
-    delete_deleteuser = SubmitField('Delete user')
+    delete_deleteuser = SubmitField('Delete')
 
 
 class TransHistory(FlaskForm):

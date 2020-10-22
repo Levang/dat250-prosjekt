@@ -38,9 +38,9 @@ html {
     min-width: 200px
 }
 
-.split_page div{
+/*.split_page div{
     min-height: 1000px;
-}
+}*/
 
 .imported table{
     margin-top: 30px;
@@ -178,6 +178,12 @@ html {
     padding-bottom: 10px;
     text-align: center;
     font-size: 130%;
+}
+
+.g-recaptcha {
+    margin-left: 30%;
+    margin-right: 40%;
+}
 
 @media(max-width:550px){
     .split_page{

@@ -93,6 +93,10 @@ body {
 #logout:hover {
     background: linear-gradient(0deg, rgba(223, 12, 5, 0.9), rgba(97, 1, 1, 0.5));
 }
+
+.input:hover {
+    background-color: var(--lightblue1)
+}
 /*
  * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
  */
@@ -174,6 +178,10 @@ body {
 
 }
 
+.createDelete #create_account:hover, .createDelete #delete_account:hover {
+    background-color: var(--blue3)
+}
+
 .createDelete #create_account{
     background-color: var(--blue2);
     border-radius:28px;
@@ -242,7 +250,7 @@ body {
     transform: rotate(90deg);
     left: 560px;
     top: 16px;
-    /*position: absolute;*/
+    position: absolute;
     pointer-events: none;
 }
 
@@ -320,6 +328,11 @@ body {
     height: 50px;
     text-decoration:none;
 }
+
+.paydiv #pay:hover {
+    background-color: var(--blue3)
+}
+
 .paydiv select#tfrom {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -338,7 +351,7 @@ body {
 }
 /*oddly specific, but this is the way it has to be */
 .paydiv .selectdiv:after {
-    left: 215px;
+    left: 225px;
 }
 /*-------------------PAY---------------*/
 
@@ -404,6 +417,9 @@ body {
     text-decoration:none;
 }
 
+.valdiv #proceed_payment:hover {
+    background-color: var(--blue3)
+}
 /*------------ValidatePay--------------*/
 
 /*----ValidateNewAndDeleteAccount------*/
@@ -450,6 +466,10 @@ body {
     width: 200px;
     height: 50px;
     text-decoration:none;
+}
+
+.valNewDel input#proceed_create:hover, .valNewDel input#proceed_delete:hover {
+    background-color: var(--blue3)
 }
 
 /*----ValidateNewAndDeleteAccount------*/
@@ -512,14 +532,14 @@ body {
     padding-top: 12px;
     padding-bottom: 12px;
     font-size: 100%;
-    width: 280px;
+    width: 300px;
     height: 60px;
     text-align: center;
 }
 
 /*oddly specific, but this is the way it has to be */
 .transhist .selectdiv:after {
-    left: 215px;
+    left: 270px;
 }
 
 
@@ -542,8 +562,66 @@ body {
     text-decoration:none;
 }
 
+.transhist input#view_hist:hover {
+    background-color: var(--blue3)
+}
+
 /*--------------Transactions-----------*/
 
+/*--------------Profile----------------*/
+
+.profilepage {
+    text-align: left;
+}
+
+.profilepage .headerdiv {
+    padding-left: 20px;
+}
+
+.profilepage table {
+    margin-left: 45%;
+    margin-right: 45%;
+}
+
+.profilepage input{
+    border-width: 2px;
+    border-color: var(--blue3);
+    border-style: solid;
+    border-radius: 50px;
+    font-size: 100%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 20px;
+    text-align: center;
+}
+
+
+.profilepage #delete_deleteuser {
+    background-color: var(--blue2);
+    border-radius:28px;
+    border:none;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 50px;
+    text-decoration:none;
+}
+
+.profilepage #delete_deleteuser:hover {
+    background-color: var(--blue3)
+}
+
+/*--------------Profile----------------*/
 @media (max-width:850px) {
 
 .imported{
