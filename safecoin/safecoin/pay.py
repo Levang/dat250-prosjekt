@@ -20,20 +20,22 @@ def krToInt(kr, ore):
     if ore == None:
         ore = 0
     # Kr og ore maa kunne konverteres til int, dersom det feiler. er det en feil
-    kr = int(kr)
-    kr = str(kr)
+    try:
+        kr = int(kr)
+        kr = str(kr)
 
-    ore = int(ore)
-    # Kan ikke ha mer enn 99 ore eller mindre enn null
-    if ore > 99 or ore < 0:
+        ore = int(ore)
+        # Kan ikke ha mer enn 99 ore eller mindre enn null
+        if ore > 99 or ore < 0:
+            return None
+        elif ore < 10:
+            ore = f"0{ore}"
+        else:
+            ore = str(ore)
+    except:
         return None
-    elif ore < 10:
-        ore = f"0{ore}"
-    else:
-        ore = str(ore)
 
     amount = kr + ore
-
     return int(amount)
 
 

@@ -1,13 +1,10 @@
-from flask import render_template, request, flash, redirect
-from flask_login import current_user, login_required, logout_user
-from flask_wtf import FlaskForm
-from cryptography.fernet import InvalidToken
+from flask import render_template, flash
+from flask_login import current_user, login_required
 
-from safecoin import app, redis, json, db, disable_caching
-from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAccountForm, CreateDeleteForm
+from safecoin import app, redis, json, disable_caching
+from safecoin.forms import AccountsForm, CreateAccountForm, CreateDeleteForm
 from safecoin.models import Account
 from safecoin.accounts_db import format_account_number, format_account_balance, addNewAccountToCurUser, deleteCurUsersAccountNumber
-from safecoin.encryption import verify_pwd_2FA
 from safecoin.logging import log_createaccount, log_deleteaccount
 
 

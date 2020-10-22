@@ -21,13 +21,17 @@ def isCommonPassword(password):
     return False
 
 
-def getPasswordViolations(errList, password):
+def getPasswordViolations(errList, password, email):
     if type(password) != str:
         errList.append("An error occurred!")
         return
 
     if isCommonPassword(password):
         errList.append("Password is too common")
+        return
+
+    if "safecoin" in password.lower() or email.lower() in password.lower():
+        errList.append("Please choose a better password")
         return
 
     # Password params
@@ -57,7 +61,7 @@ def register():
     # og et "read-only" som inneholder eposten du skrev inn på forrige side.
     if form.validate_on_submit():
         errList = []
-        getPasswordViolations(errList, form.password.data)
+        getPasswordViolations(errList, form.password.data, form.email.data)
 
         # Is there any error in the generated information
         if len(errList) == 0:
@@ -132,7 +136,7 @@ def register():
         # ─── DERSOM FEIL VED REGISTEREING ───────────────────────────────────────────────
         for err in errList:
             flash(err, "error")
-    if form.is_submitted() and not form.errors:
+    if form.is_submitted() and not form.email.errors:
         flash("Couldn't continue, due to an error", "error")
 
     if form2.validate_on_submit():
