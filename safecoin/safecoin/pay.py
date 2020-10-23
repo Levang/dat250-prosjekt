@@ -1,5 +1,5 @@
 from flask import render_template, flash
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user , fresh_login_required
 
 from safecoin import app, disable_caching
 from safecoin.forms import PayForm, ValidatePaymentForm
@@ -90,6 +90,7 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
 
 @app.route('/transfer/', methods=["GET", "POST"])
 @login_required
+@fresh_login_required
 def payPage():
     account_list = getAccountsList()
 

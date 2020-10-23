@@ -29,6 +29,7 @@ QRcode(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/login'
+login_manager.session_protection = "strong"
 
 disable_caching = {'Cache-Control': 'no-cache, no-store, must-revalidate',
                    'Pragma': 'no-cache',

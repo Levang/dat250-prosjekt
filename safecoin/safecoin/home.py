@@ -1,5 +1,5 @@
 from flask import render_template, url_for, redirect, flash
-from flask_login import login_user, current_user, logout_user, login_required
+from flask_login import login_user, current_user, logout_user, login_required, fresh_login_required
 import pyotp
 
 from safecoin import app, redis, disable_caching
@@ -11,6 +11,7 @@ from safecoin.logging import log_loginattempt, log_logout
 # --- Main page --- #
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
+@fresh_login_required
 def home():
     form = LoginForm()
     if form.validate_on_submit():
