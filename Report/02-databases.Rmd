@@ -1,4 +1,4 @@
-# Databases
+# Databases {#databases}
 
 Our databases are designed with the assumption that a malicious actor could potentially get a hold of all of them and knows our source code. In a perfect world they would not be able to use any of this to extract any valuable information. 
 
@@ -22,7 +22,7 @@ Users is a database of registered users, their 2fa `secret` key, and their accou
 
 - `enEmail` is the users clear text email encrypted by our randomly generated Fernet key. EnEmail is mainly a method for for double checking if the users input is valid, as the normal `email` is hashed.
 
-- `password+salt` is the users password. It is stored as a cryptographical hash of itself prepended to a salt. This prevents rainbow table attacks on the database. The `salt` is the only thing stored in plaintext and is a cryptographically random number. The salt is stored in the same database-entry as the password, appended to the end of it. The encrypted password and the salt are always the same length, due to this we can append, and split them as we need them.
+- `password+salt` is the users password. It is stored as a cryptographical hash by scrypt of itself prepended to the salt used to encrypt it. This prevents rainbow table attacks on the database. The `salt` is the only thing stored in plaintext and is a cryptographically random number. The salt is stored in the same database-entry as the password, appended to the end of it. The encrypted password and the salt are always the same length, due to this we can append, and split them as we need them.
 
 - `enKey` is the users encryption-key that has been encrypted by the users hashed password. This way we can extract any information we need given we get the users password.
 
@@ -48,25 +48,27 @@ account balance
 
 - `balance` is simply the balance of the account.
 
+Nothing in the accounts table has been encrypted as it makes no difference to us whether a malicious party knows how much money is in a specific account. The don't know the owner, and will not be able to log in or do any attacks based on knowing the account number, and the associated balance. Had they been able to identify the owner, they could technically try to do a targeted attack on the owner of the account, but the rest of the security features on out website should be able to prevent that.
+
 
 ## Transactions {#databases-transactions}
 
 Transactions is a database containing all transactions that have been performed ever. It should contain no sensitive information.
 
 ```
-accTo  accFrom  amount  message  time  eventID  sign
+transactionID  accountFrom  accountTo  amountDB  message  time
 ```
 
-- `uid` is a unique transaction id associated with the account. This is included to make sure a signed transaction can only be counted once.
+- `transactionID` is a unique transaction id associated with the account. It simply iterates from 0 and up to a arbitrary number such that every transaction gets a unique ID.
 
-- `date` is the timestamp of when the transaction was made. Probably UNIX time.
+- `accountFrom` is the account the transaction is made from.
 
-- `timeout` is a timestamp of when the transaction should expire. This prevents transactions that fail being reused by a bad actor some time in the future.
+- `accountTo` is the account to which the transaction is being sent.
 
-- `from` is the account number that is transferring. It is stored as a cryptographic hash to prevent the backtracking discussed earlier.
+- `amountDB` is the the amount that being sent from `accountFrom` to `accountTo`. 
 
-- `to` is the account number that is receiving. It is stored as a cryptographic hash to prevent the backtracking discussed earlier.
+- `message` is a message that gets sent along with the transaction. This could either be a normal message, or normally usually a KID-message.
 
-- `amount` is the amount that is transferring. Note that this can not be more than the balance of the `from` account.
+- `time` is just a timestamp for the transaction.
 
-- `sign` is the signature of the transaction, signed with the `private_key` of the `from` account. If the transaction is changed in any way then this signature must also change, preventing transactions being reused.
+As none of this data should be sensitive, nothing in the transactions table is encrypted. If someone got a hold of our database they could backtrack the transaction, but aside from knowing about something that has already gone through, this shouldn't affect our security.
