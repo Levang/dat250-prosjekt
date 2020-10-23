@@ -62,8 +62,4 @@ As an added security feature we have also disabled caching on all our sites. Thi
   Ardijan
 
 ## Insufficient Logging & Monitoring
-<<<<<<< HEAD
-  
-=======
 Levang
->>>>>>> report
