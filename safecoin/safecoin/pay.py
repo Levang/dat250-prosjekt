@@ -33,7 +33,7 @@ def krToInt(kr, ore):
         else:
             ore = str(ore)
     except:
-        return None
+        return 0
 
     amount = kr + ore
     return int(amount)
@@ -46,6 +46,8 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
 
     amount = krToInt(kr, ore)
     if not amount:
+        errlist.append("Please enter a valid amount to transfer")
+    elif amount < 1:
         errlist.append("Please enter a valid amount to transfer")
 
     # Verifies that from_ is in current users account, yes on redis...
@@ -69,13 +71,9 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
     if len(str(accountTo)) != 11:
         errlist.append("Invalid account number")
 
-
     accTo = Account.query.filter_by(number=accountTo).first()
     if not accTo:
         errlist.append(f"Unable to transfer to {accountTo}")
-
-    if amount < 1:
-        errlist.append("Please enter a valid amount to transfer")
 
     if illegalChar(msg, 256):
         errlist.append("Invalid KID/message or too long")

@@ -7,7 +7,7 @@
 {% block body %}
 
 <body>
-        <form method="post" class="actions">
+        <form method="post" class="actions" autocomplete="off">
         {{ form.hidden_tag() }}
         <table class="createDelete">
             {% with messages = get_flashed_messages(with_categories=true) %}

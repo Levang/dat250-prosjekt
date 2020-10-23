@@ -21,8 +21,8 @@ def isCommonPassword(password):
     return False
 
 
-def getPasswordViolations(errList, password, email):
-    if type(password) != str:
+def getPasswordViolations(errList, password, confirmpwd, email):
+    if type(password) != str or type(confirmpwd) != str:
         errList.append("An error occurred!")
         return
 
@@ -45,6 +45,10 @@ def getPasswordViolations(errList, password, email):
 
     if len(password) < want_length:
         errList.append(f"Password should be at least {want_length} characters")
+        return
+
+    if password != confirmpwd:
+        errList.append(f"Passwords doesn't match")
 
 
 @app.route("/register/", methods=["GET", "POST"])
@@ -61,7 +65,7 @@ def register():
     # og et "read-only" som inneholder eposten du skrev inn på forrige side.
     if form.validate_on_submit():
         errList = []
-        getPasswordViolations(errList, form.password.data, form.email.data)
+        getPasswordViolations(errList, form.password.data, form.confirm_password.data, form.email.data)
 
         # Is there any error in the generated information
         if len(errList) == 0:
@@ -136,7 +140,7 @@ def register():
         # ─── DERSOM FEIL VED REGISTEREING ───────────────────────────────────────────────
         for err in errList:
             flash(err, "error")
-    if form.is_submitted() and not form.email.errors:
+    elif form.submit() and not form2.is_submitted():
         flash("Couldn't continue, due to an error", "error")
 
     if form2.validate_on_submit():
