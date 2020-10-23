@@ -27,6 +27,10 @@ body {
     margin: 0px;
 }
 
+.welcome {
+    margin-left: 5%;
+}
+
 .img img{
     width: 100%;
 }
@@ -255,7 +259,6 @@ td.error{
     -moz-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
-    left: 648px;
     top: 16px;
     position: absolute;
     pointer-events: none;
@@ -359,7 +362,13 @@ td.error{
     left: 225px;
 }
 /*-------------------PAY---------------*/
+/*--------------Account----------------*/
 
+.accountdiv .selectdiv:after {
+    left: 265px;
+}
+
+/*--------------Account----------------*/
 /*------------ValidatePay--------------*/
 
 .valdiv input{

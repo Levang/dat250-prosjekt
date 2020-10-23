@@ -7,48 +7,48 @@
 {% block body %}
 
 <body>
+    <div class="accountdiv">
         <form method="post" class="actions" autocomplete="off">
-        {{ form.hidden_tag() }}
-        <table class="createDelete">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
+            {{ form.hidden_tag() }}
+            <table class="createDelete">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
                 {% for category, message in messages %}
                 <tr class=flashes>
                     <td colspan="2" class="{{ category }}">{{ message }}</td>
                 </tr>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-            <tr>
-                <td>
-                    <h2>Create Account</h2>
-                </td>
-                <td>
-                    <h2>Delete Account</h2>
-                </td>
-            <tr>
-                <td>
-                    {{ form.create_account() }}
-                </td>
-                <td>
-                    {{ form.delete_account() }}
-                </td>
-            </tr>
-            <tr class="deleteAccount">
-                <td>
-                <div class="selectdiv">
-                    {{ form.account_name() }}
-                </div>
-                </td>
-                <td>
-                    {{ form.account_select() }}
-                </td>
-            </tr>
-        </table>
-    </form>
-    <div class='userAccounts'>
-        <table>
-            <tbody>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                <tr>
+                    <td>
+                        <h2>Create Account</h2>
+                    </td>
+                    <td>
+                        <h2>Delete Account</h2>
+                    </td>
+                <tr>
+                    <td>
+                        {{ form.create_account() }}
+                    </td>
+                    <td>
+                        {{ form.delete_account() }}
+                    </td>
+                </tr>
+                <tr class="deleteAccount">
+                    <td>
+                        {{ form.account_name() }}
+                    </td>
+                    <td>
+                        <div class="selectdiv">
+                        {{ form.account_select() }}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div class='userAccounts'>
+            <table>
                 <tr>
                     <th>
                         Name
@@ -74,11 +74,9 @@
                         </td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        </table>
+            </table>
+        </div>
     </div>
-
-
 </body>
 
 {% endblock %}

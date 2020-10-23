@@ -290,6 +290,9 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
 def TransactionChecks(accountFrom, amount, accountTo, accountsDict, message):
     #If internal transfer check that user balance remains unchanged
     #check for stuff
+    if amount==None:
+        return False
+
     if accountFrom==None or accountTo==None or accountFrom==accountTo:
         return False
     if amount<1 or type(amount)!=int or amount>accountFrom.balance:
