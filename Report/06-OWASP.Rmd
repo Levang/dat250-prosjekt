@@ -113,13 +113,23 @@ def isCommonPassword(password):
     return False
 ```
 
- 
-
 ### Ensure registration, credential recovery, and API pathways are hardened against account enumeration attacks by using the same messages for all outcomes
 
 ### Use a server-side, secure,built-in session manager that generates a new random session ID with high entropy after login. Session IDs should not be in the URL, be securely stored and invalidated after logout, idle, and absolute timeouts.
 
+We use flask_login to manage users sessions, this is built in and this generates a new session ID with every browser instance when
+session_protection is set to strong.
 
+```python
+app.config['SECURITY_TOKEN_MAX_AGE'] = 3600
+app.config['PERMANENT_SESSION_LIFETIME'] = 3600
+app.config['REMEMBER_COOKIE_DURATION'] = timedelta(minutes=0)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = '/login'
+login_manager.session_protection = "strong" #Ensuers a new session ID is created for every browser instance
+```
 
 
 ## Sensitive Data Exposure
@@ -132,16 +142,90 @@ To limit the risk of data exposure, we attempt to handle as little personal info
 
 We separate the data we store into different database tables. The user table has the highest security requirement, while the transaction, account and logging tables demand lower security. The encryption and hashing of the tables are adjusted accordingly.
 
-### Don’t store sensitive data unnecessarily.Discard it as soon as possible or use PCI DSS complianttokenization or even truncation. Data that is not retained cannot be stolen.
+### Don’t store sensitive data unnecessarily.Discard it as soon as possible or use PCI DSS complianttokenization or even truncation. Data that is not retained cannot be sto len.
+All sensitive data is only temporarily stored in redis with an expiry date, otherwise it is at rest and stored in an encrypted form which is inaccessible without user input. This way ensure that we do not store or have access to decrypted data longer than necessary.
+
+Redis sync, syncs redis with database, requries users to be verified beforehand.
+```python
+def redis_sync(deKey, hashed_mail):
+    if type(deKey) == str:
+        deKey = deKey.encode('utf-8')
+    # Get user from database
+    userDB = User.query.filter_by(email=hashed_mail).first()
+
+    # create user dict for json dump
+    userInfo = {}
+
+    # Add plaintext email as a key
+    # Check if its a string
+    if type(userDB.enEmail) == str:
+        userInfo['email'] = decrypt(deKey, userDB.enEmail.encode('utf-8')).decode('utf-8')
+    else:
+        userInfo['email'] = decrypt(deKey, userDB.email).decode('utf-8')
+
+    # If the user has any accounts
+    if userDB.accounts is not None:
+        # decrypt them
+        if type(userDB.accounts) == str:
+            accounts = decrypt(deKey, userDB.accounts.encode('utf-8'))
+        else:
+            accounts = decrypt(deKey, userDB.accounts)
+
+        # add them to the dictionairy of the user
+        userInfo['accounts'] = DBparseAccounts(accounts)
+
+    userInfo = json.dumps(userInfo)
+    # add it to the redis database
+
+    redis.set(userDB.email, userInfo)
+    # set the expiration time of the data added
+    # 900 seconds= 15 minutes
+    redis.expire(userDB.email, 900)
+```
 
 ### Store passwords using strong adaptive and salted hashing functions with a work factor (delay factor), such as Argon2, scrypt, bcrypt, or PBKDF2. [-@OWASP10]
 
-The password stored in the database is stored 
+The password stored in the database is generated with scrypt. We use the default settings here, these settings in combination with our password length requirement of 12
+we can rest assured that randomly bruteforcing these passwords would take longer than the years we have left to live with todays computers. 
+
+#TODO Vidar kan du skrive litt her? En linje eller to idk...
+
+```python
+# ─── SALT AND HASH PASSWORD ──────────────────────────────────────
+salt = flask_scrypt.generate_random_salt()
+
+# add hashed password to user dictionairy
+# This can be directly saved to database later
+userDict['password'] = flask_scrypt.generate_password_hash(form.password.data, salt) + salt
+```python
+
+This function is the flask_scrypt default settings which we use to generate the password hash.
+```python
+def generate_password_hash(password, salt, N=2**14, r=8, p=1, buflen=64):
+
+
+    if PYTHON2:
+        password = password.encode('utf-8')
+        salt = salt.encode('utf-8')
+    pw_hash = scrypt_hash(password, salt, N, r, p, buflen)
+    return enbase64(pw_hash)
+```
+
 
 ### Make sure to encrypt all sensitive data at rest.
 
 
 ### Disable caching for responses that contain sensitive data
+
+We have disabled browser caching on the website, this is so that the browser does not store potentially personal information and so that users/bad-actors can go back and look at previously browser cached pages after logout.
+
+```python
+disable_caching = {'Cache-Control': 'no-cache, no-store, must-revalidate',
+                   'Pragma': 'no-cache',
+                   'Express': '0'}
+```
+
+
 
 
 The data we have to store that is sensitive is all cryptographically hashed, using a variety of Fernet and scrypt. In other words, our entire user table in our database is encrypted to some degree. Other information is not as sensitive as it is not personal information, and cannot be edited. A malicious actor knowing account-numbers and associated balances wouldn't make a difference as they wouldn't be able to do anything with it, as they wouldn't find out who owns the account. Passwords are stored as a scrypt hash with a random salt, with the possibility of having a work factor (delay variable) to it, so that it takes longer to brute-force passwords. Our random encryption key for various things is also encrypted using fernet and the users hashed password, meaning we can only decrypt data when given the users password, adding an extra layer of security.
@@ -150,7 +234,6 @@ To secure data in transit, we use HTTPS instead of the older HTTP.
 
 Caching on all our sites is disabled. This prevents users form clicking "back" and finding sensitive data.
 
-## XML External Entities (XXE)
 
 ## Broken Access Control
 
