@@ -22,7 +22,7 @@ def transactions():
 
     if transForm.view_hist.data and transForm.accountSelect.data!="x":
 
-        #Sanetize input
+        #Sanetize input illegalChar(text,maxlength,"string Allowed chars")
         illegal=illegalChar(transForm.accountSelect.data,11,"0123456789")
 
         if (str(transForm.accountSelect.data) in str(accountList)) and illegal==False:
@@ -30,6 +30,7 @@ def transactions():
 
             TransList=QueryToList(query, accountList, transForm.accountSelect.data)
         else:
+            pass
             #TODO LOG THIS!
 
     return render_template('hist_transfer.html', transHistory=TransList, form=transForm), disable_caching
