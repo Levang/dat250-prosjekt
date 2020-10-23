@@ -23,7 +23,9 @@ The above "query.filter_by" sanitizes input by default and is the only method us
 illegal=illegalChar(transForm.accountSelect.data,11,"0123456789")
 
 if (str(transForm.accountSelect.data) in str(accountList)) and illegal==False:
-    query=Transactions.query.filter((Transactions.accountFrom == transForm.accountSelect.data) | (Transactions.accountTo == transForm.accountSelect.data))
+    query=Transactions.query.filter((Transactions.accountFrom == 
+            transForm.accountSelect.data) | (Transactions.accountTo == 
+              transForm.accountSelect.data))
 
     TransList=QueryToList(query, accountList, transForm.accountSelect.data)
 else:
@@ -64,9 +66,54 @@ Levang
 
 ### Where possible, implement multi-factor authentication to prevent automated, credential stuffing, brute force, and stolen credential re-use attacks.
 
-### Where possible, implement multi-factor authentication to prevent automated, credential stuffing, brute force, and stolen credential re-use attacks.
-
 ### Implement weak-password checks, such as testing new or changed passwords against a list of the top 10000 worst passwords.
+Password requirements:
+  - Minimum 12 characters in length
+  - Not an integer
+  - Cannot match top 10000 most common passwords that are 12 characters or longer
+  - Cannot contain the users email address
+
+The users password is cryptographically hashed with scrypt and a random salt. 
+The password and its salt are then concatinated and stored together.
+
+Scrypt allows the password to be of an arbitrary length.
+
+Code for the password requirements.
+```python
+def getPasswordViolations(errList, password, email):
+    if type(password) != str:
+        errList.append("An error occurred!")
+        return
+
+    if isCommonPassword(password):
+        errList.append("Password is too common")
+        return
+
+    if "safecoin" in password.lower() or email.lower() in password.lower():
+        errList.append("Please choose a better password")
+        return
+
+    # Password params
+    cfg = ConfigParser()
+    cfg.read("safecoin/config.ini")
+    policy = cfg["passwordPolicy"]
+    try:
+        want_length = int(policy["length"])
+    except (KeyError, TypeError):
+        want_length = 12
+
+    if len(password) < want_length:
+        errList.append(f"Password should be at least {want_length} characters")
+
+def isCommonPassword(password):
+    with open("safecoin/commonPasswords.txt", "r") as f:
+        for weakpwd in f:
+            if password == weakpwd[:-1]:
+                return True
+    return False
+```
+
+ 
 
 ### Ensure registration, credential recovery, and API pathways are hardened against account enumeration attacks by using the same messages for all outcomes
 
