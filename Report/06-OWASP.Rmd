@@ -1,65 +1,154 @@
-# OWASP Top Ten 
+# OWASP Top Ten
+In this chapter we will go through the each prevention we have implemented for the the OWASP Top 10 vulnerabilities. Some of the OWASP 10 prevention measures are not implemented because they are not applicable or too complex to implement for this project. 
+
+Every subsection title is the prevention measure as written in the OWASP Top 10 document [-@OWASP10]
 
 ## Injection
-Injection attacks has commonly been the most used attack used in hacking attempts, mainly because it is so simple to accomplish. However these days, while the possibility of SQL-injection and other injection attacks is big, it is also very easy to implement methods to avoid it altogether. The best method to prevent injection attacks is to simply use tried and tested frameworks that provide you with functionality you need, while also providing you with safe and sanitized fields for the user to use. 
 
-### SQL-injection
-To protect against SQL-injection attacks we use `SQLalchemy`. Using `SQLalchemy` we avoid having to construct our own queries, and since `SQLalchemy` by default quotes all special characters, we effectively eliminate any chances of anyone being able to perform a SQL-injection attack on our site. SQLalchemy is an ORM that makes easy to write python code into SQL queries that are always automatically escaped (unless manually set to not do that). In this way our site becomes scalable easier without having to worry about any poorly made SQL queries exposing out website.
+### The preferred option is to use a safe API, which avoids the use of the interpreter entirely or provides a parameterized interface, or migrate to use Object Relational Mapping Tools (ORMs).
+We use the flask-API `flask_sqlalchemy` and strictly only query the database through it. This is not inherently safe on it's own, but used correctly it mitigates or completely eliminates the possibility of an SQL-injection attack.
 
-### Code Injection
-Another worry is that any form that takes user input is susceptible to code injection. However, just as we did on SQL-injection, we hand off this responsibility to a external package which already handles inputted data, which also is tried and tested by professionals. The packages used to validate user input is `flask-wtf` and WTForms. In essence what these packages do is to force a certain type of field to become whichever type you have designated in the creation of the form. See example below:
+Example:
 
 ```python
-class LoginForm(FlaskForm):
-email = StringField('Email', validators=[DataRequired(), Email()], 
-render_kw={"placeholder": "email@example.com"})
-password = PasswordField('Password', validators=[DataRequired()], 
-render_kw={"placeholder": "Password"})
-otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], 
-render_kw={"placeholder": "Two-Factor Authentication"})
-submit = SubmitField('Login')
+def getAccount(account_number):
+    account: Account = Account.query.filter_by(number=account_number).first()
+    return account
 ```
 
-What the above form says amongst other things is that the "Email" is a string as it is input in a `StringField`. Similar for the "password" is a string, as the `PasswordField` is a string, only that it hides the input. And so on. `IntegerField` = Integer, and `SubmitField` is just a field that checks whether a button is pressed.
+The above "query.filter_by" sanitizes input by default and is the only method used to query the database. The only exception being:
 
-This way even if someone tries to input malicious data into a `SubmitField` the package will just convert the data to a string, hence making it harmless.
+```python
+try:
+    accountSelected=int(transForm.accountSelect.data)
+    if str(accountSelected) in str(accountList):
+        query=Transactions.query.filter((Transactions.accountFrom ==  
+                transForm.accountSelect.data) | (Transactions.accountTo ==
+                transForm.accountSelect.data))
 
-(Source: https://wtforms.readthedocs.io/en/2.3.x/)
+        TransList=QueryToList(query, accountList, transForm.accountSelect.data)
+except:
+    pass
+```
+Here we get input from the user about which account history the user wants to view. The method "query.filter" is not considered safe. Since the account number can be converted to an integer and back, any dangerous value would prevent this conversion, thus raise and exception and skip the query.
+The account number is also looked up in the user's account list. These safety measures make this query safe.
+
+### Use positive or "whitelist" server-side input validation. This is not a complete defense as many applications require special characters, such as text areas or APIs for mobile applications.
+
+As seen in the example above, input validation is input validation is used to ensure query safety. We specifically require there to be no special characters and for general input fields, we use an illegal character checking function:
+
+```python
+#True means illegal character exists
+def illegalChar(text, maxlength):
+   if text==None:
+       return False
+
+   try:
+       text=str(text)
+   except:
+       return True    
+
+   if len(text)>maxlength:
+       return True
+
+   alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "
+   #Transform name to lowercase and check if its not in the alphabet
+   for letter in text.lower():
+       if letter not in alphabet:
+           return True
+   return False
+```
 
 ## Broken Authentication
 Levang
 
+### Where possible, implement multi-factor authentication to prevent automated, credential stuffing, brute force, and stolen credential re-use attacks.
+
+### Where possible, implement multi-factor authentication to prevent automated, credential stuffing, brute force, and stolen credential re-use attacks.
+
+### Implement weak-password checks, such as testing new or changed passwords against a list of the top 10000 worst passwords.
+
+### Ensure registration, credential recovery, and API pathways are hardened against account enumeration attacks by using the same messages for all outcomes
+
+### Use a server-side, secure,built-in session manager that generates a new random session ID with high entropy after login. Session IDs should not be in the URL, be securely stored and invalidated after logout, idle, and absolute timeouts.
+
+
+
+
 ## Sensitive Data Exposure
-In the development cycle of our website, we have attempted to always keep security in mind. This of course includes encrypting sensitive data, aswell as attempting to handle it as little as possible. This is essential in keeping up with security. The less information we need to handle, the better it is for us, the user, and the security on our website.
+To limit the risk of data exposure, we attempt to handle as little personal information as possible. 
 
-### Data Classification
-To accomplish our goals for security we have broadly defined what data is sensitive. While all data is somewhat sensitive, and we'd much rather nothing be exposed to anyone ever. The truth however is always that we have to prepare for the worst case scenario. To this end we have a broad idea of what data is critical (personal information, passwords etc) and what data is less sensitive. Check our write-up on databases in chapter \ref{databases} for more details on how the data we store is handled.
 
-### Implementation
-The thing most important for us to keep in mind when developing our website is that we ideally don't want to handle user data more than simple checks and comparisons (such as password) for verification. When handling the data for a specific form, we do what we need with that data then and there, and then always immediately discard it. Data that is not retained can not be stolen. 
+### Classify data processed, stored, or transmitted by an application. Identify which data is sensitive according to privacy laws, regulatory requirements, or business needs
+
+### Apply controls as per the classification.
+
+We separate the data we store into different database tables. The user table has the highest security requirement, while the transaction, account and logging tables demand lower security. The encryption and hashing of the tables are adjusted accordingly.
+
+### Don’t store sensitive data unnecessarily.Discard it as soon as possible or use PCI DSS complianttokenization or even truncation. Data that is not retained cannot be stolen.
+
+### Store passwords using strong adaptive and salted hashing functions with a work factor (delay factor), such as Argon2, scrypt, bcrypt, or PBKDF2. [-@OWASP10]
+
+The password stored in the database is stored 
+
+### Make sure to encrypt all sensitive data at rest.
+
+
+### Disable caching for responses that contain sensitive data
+
 
 The data we have to store that is sensitive is all cryptographically hashed, using a variety of Fernet and scrypt. In other words, our entire user table in our database is encrypted to some degree. Other information is not as sensitive as it is not personal information, and cannot be edited. A malicious actor knowing account-numbers and associated balances wouldn't make a difference as they wouldn't be able to do anything with it, as they wouldn't find out who owns the account. Passwords are stored as a scrypt hash with a random salt, with the possibility of having a work factor (delay variable) to it, so that it takes longer to brute-force passwords. Our random encryption key for various things is also encrypted using fernet and the users hashed password, meaning we can only decrypt data when given the users password, adding an extra layer of security.
 
-As for data in transit we have added the HTTPS protocol to our server to make it exponentially more difficult to do an attack on data in transit. Amongst other things this more or less eliminates the possibility of a man-in-the-middle attack. When handling our users data, although encrypted we should always do what we can to make it as difficult as possible.
+To secure data in transit, we use HTTPS instead of the older HTTP.
 
-As an added security feature we have also disabled caching on all our sites. This to prevent users from being able to just click "back" and find sensitive data, and also to prevent certain attacks.
+Caching on all our sites is disabled. This prevents users form clicking "back" and finding sensitive data.
 
 ## XML External Entities (XXE)
 
 ## Broken Access Control
+
+### With the exception of public resources, deny by default.
+
+### Implement access control mechanisms once and re-use them throughout the application, including minimizing CORS usage.
+
+### Model access controls should enforce record ownership, rather than accepting that the user can create, read, update, or delete any record.
+
+### Rate limit API and controller access to minimize the harm from automated attack tooling  --- ARDIJAN
+
   Levang
 
 ## Security Misconfiguration
+
+
+
+
+
   Ardijan
 
 ## Cross-Site Scripting
   Ardijan
 
 ## Insecure Deserialization
+
+### Isolating and running code that deserializes in low privilege environments when possible.
+
+
   Ardijan
 
 ## Using Components with known vulnerabilities
   Ardijan
+  
+### Remove unused dependencies, unnecessary features, components, files, and documentation.
+
+### Monitor for libraries and components that are unmaintained or do not create security patches for older versions. If patching is not possible, consider deploying a virtual patchto monitor, detect, or protect against the discovered issue.
+
+
 
 ## Insufficient Logging & Monitoring
 Levang
+
+### Ensure that logs are generated in a format that can be easily consumed by a centralized log management solutions.
+
+### Ensure high-value transactions have an audit trail with integrity controls to prevent tampering or deletion, such as append-only database tables or similar.
+
+

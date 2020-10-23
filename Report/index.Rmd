@@ -14,11 +14,6 @@ bibliography: bibliography.bib
 ---
 
 
-# Preface {-}
-
-This is a report/documentation for the website [safecoin.tech](https://safecoin.tech/), a banking site designed to be... well... safe!
-
-
 ```{r child = '01-structure.Rmd'}
 ```
 ```{r child = '02-databases.Rmd'}
@@ -26,8 +21,6 @@ This is a report/documentation for the website [safecoin.tech](https://safecoin.
 ```{r child = '03-registration.Rmd'}
 ```
 ```{r child = '04-authentication.Rmd'}
-```
-```{r child = '05-accountsTransactions.Rmd'}
 ```
 ```{r child = '05-accountsTransactions.Rmd'}
 ```
