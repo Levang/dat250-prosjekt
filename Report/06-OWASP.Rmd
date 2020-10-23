@@ -22,13 +22,19 @@ As an added security feature we have also disabled caching on all our sites. Thi
 ## XML External Entities (XXE)
 
 ## Broken Access Control
+  Levang
 
 ## Security Misconfiguration
+  Ardijan
 
 ## Cross-Site Scripting
+  Ardijan
 
 ## Insecure Deserialization
+  Ardijan
 
 ## Using Components with known vulnerabilities
+  Ardijan
 
 ## Insufficient Logging & Monitoring
+  
