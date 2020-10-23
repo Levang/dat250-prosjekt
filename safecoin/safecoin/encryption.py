@@ -228,7 +228,7 @@ def verifyUser(email, password, addToActive=False):
 
         return True, userDB, secret_key
 
-    return False, None, None
+    return False, userDB, None
 
 
 # ─── SUBMIT A TRANSACTION ──────────────────────────────────────────────────────

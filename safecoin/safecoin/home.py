@@ -21,6 +21,9 @@ def home():
             login = False
             userDB = {"email": "NA"}
 
+        if not userDB:
+            userDB = {"email": "NA"}
+
         # Convert otp from int to str and add 0 at the start. Keys starting with 0 now works.
         form.otp.data = str(form.otp.data)
         while len(form.otp.data) < 6:
