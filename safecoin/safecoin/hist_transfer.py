@@ -6,6 +6,7 @@ from safecoin.forms import TransHistory
 from safecoin.models import Transactions
 from safecoin.accounts_db import format_account_number, format_account_balance
 from safecoin.accounts import getAccountsList
+from safecoin.encryption import illegalChar
 
 
 @app.route("/transactions/", methods=["GET", "POST"])
@@ -18,11 +19,18 @@ def transactions():
     transForm.get_select_field(accountList)
 
     TransList=[]
+
     if transForm.view_hist.data and transForm.accountSelect.data!="x":
-        if transForm.accountSelect.data in str(accountList):
+
+        #Sanetize input
+        illegal=illegalChar(transForm.accountSelect.data,11,"0123456789")
+
+        if (str(transForm.accountSelect.data) in str(accountList)) and illegal==False:
             query=Transactions.query.filter((Transactions.accountFrom == transForm.accountSelect.data) | (Transactions.accountTo == transForm.accountSelect.data))
 
             TransList=QueryToList(query, accountList, transForm.accountSelect.data)
+        else:
+            #TODO LOG THIS!
 
     return render_template('hist_transfer.html', transHistory=TransList, form=transForm), disable_caching
 

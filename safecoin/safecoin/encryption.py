@@ -315,7 +315,7 @@ def TransactionChecks(accountFrom, amount, accountTo, accountsDict, message):
     return True
 
 
-def illegalChar(text, maxlength):
+def illegalChar(text, maxlength,alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "):
     if text==None:
         return False
 
@@ -327,7 +327,6 @@ def illegalChar(text, maxlength):
     if len(text)>maxlength:
         return True
 
-    alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "
     #Transform name to lowercase and check if its not in the alphabet
     for letter in text.lower():
         if letter not in alphabet:
