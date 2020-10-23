@@ -19,6 +19,10 @@ def intconvert_if_possible(var):
 def krToInt(kr, ore):
     if ore == None:
         ore = 0
+
+    if kr == None:
+        kr=0
+
     # Kr og ore maa kunne konverteres til int, dersom det feiler. er det en feil
     try:
         kr = int(kr)
@@ -33,9 +37,9 @@ def krToInt(kr, ore):
         else:
             ore = str(ore)
     except:
-        return 0
+        return None
 
-    amount = kr + ore
+    amount = f"{kr}{ore}"
     return int(amount)
 
 
@@ -45,7 +49,7 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
     general_error = False  # For returning a non informative error #PLEASE USE raise Exception("")
 
     amount = krToInt(kr, ore)
-    if not amount:
+    if amount==None: #SLUTT Å ENDRE DETTE!
         errlist.append("Please enter a valid amount to transfer")
     elif amount < 1:
         errlist.append("Please enter a valid amount to transfer")
