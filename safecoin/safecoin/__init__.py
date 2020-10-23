@@ -21,6 +21,7 @@ app.config['RECAPTCHA_PRIVATE_KEY'] = cfg["reCaptcha"]["secret_key"]
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SECURITY_TOKEN_MAX_AGE'] = 3600
 app.config['PERMANENT_SESSION_LIFETIME'] = 3600
+app.config['REMEMBER_COOKIE_DURATION'] = timedelta(minutes=0)
 
 db = SQLAlchemy(app)
 redis = FlaskRedis(app)
