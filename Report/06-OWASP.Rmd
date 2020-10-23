@@ -19,44 +19,44 @@ def getAccount(account_number):
 The above "query.filter_by" sanitizes input by default and is the only method used to query the database. The only exception being:
 
 ```python
-try:
-    accountSelected=int(transForm.accountSelect.data)
-    if str(accountSelected) in str(accountList):
-        query=Transactions.query.filter((Transactions.accountFrom ==  
-                transForm.accountSelect.data) | (Transactions.accountTo ==
-                transForm.accountSelect.data))
+#Sanetize input illegalChar(text,maxlength,"string Allowed chars")
+illegal=illegalChar(transForm.accountSelect.data,11,"0123456789")
 
-        TransList=QueryToList(query, accountList, transForm.accountSelect.data)
-except:
+if (str(transForm.accountSelect.data) in str(accountList)) and illegal==False:
+    query=Transactions.query.filter((Transactions.accountFrom == transForm.accountSelect.data) | (Transactions.accountTo == transForm.accountSelect.data))
+
+    TransList=QueryToList(query, accountList, transForm.accountSelect.data)
+else:
     pass
+    #TODO LOG THIS!
 ```
 Here we get input from the user about which account history the user wants to view. The method "query.filter" is not considered safe. Since the account number can be converted to an integer and back, any dangerous value would prevent this conversion, thus raise and exception and skip the query.
 The account number is also looked up in the user's account list. These safety measures make this query safe.
 
 ### Use positive or "whitelist" server-side input validation. This is not a complete defense as many applications require special characters, such as text areas or APIs for mobile applications.
 
-As seen in the example above, input validation is input validation is used to ensure query safety. We specifically require there to be no special characters and for general input fields, we use an illegal character checking function:
+As seen in the example above, input validation is used to ensure database queries are safe from sql-injection. We specifically require there to be no special characters and for general input fields, we use an illegal character checking function:
 
+It checks the input text character by character and only allows the characters that exists it the alphabet to be used.
+In the above code you can see how its implemented and that it allowes nothing but numbers, not even spaces.
 ```python
-#True means illegal character exists
-def illegalChar(text, maxlength):
-   if text==None:
-       return False
+def illegalChar(text, maxlength,alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "):
+    if text==None:
+        return False
 
-   try:
-       text=str(text)
-   except:
-       return True    
+    try:
+        text=str(text)
+    except:
+        return True
 
-   if len(text)>maxlength:
-       return True
+    if len(text)>maxlength:
+        return True
 
-   alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "
-   #Transform name to lowercase and check if its not in the alphabet
-   for letter in text.lower():
-       if letter not in alphabet:
-           return True
-   return False
+    #Transform name to lowercase and check if its not in the alphabet
+    for letter in text.lower():
+        if letter not in alphabet:
+            return True
+    return False
 ```
 
 ## Broken Authentication
