@@ -139,7 +139,7 @@ def addNewAccountToCurUser(password, otp, name="My account", user=None, money=Fa
             return "Couldn't create account with the given name"
 
     # Encrypt the information
-    NEWaccountsStr = f"{accountsFromDB}{name},{account.number},privatekey{randint(0, 1000000)};"
+    NEWaccountsStr = f"{accountsFromDB}{name},{account.number};"
     encryptedAccounts = encrypt(enKey, NEWaccountsStr)
 
     user.accounts = encryptedAccounts.decode('utf-8')

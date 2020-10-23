@@ -8,18 +8,18 @@
 
 <body>
     <div class="accountdiv">
-        <form method="post" class="actions">
+        <form method="post" class="actions" autocomplete="off">
             {{ form.hidden_tag() }}
             <table class="createDelete">
                 {% with messages = get_flashed_messages(with_categories=true) %}
-                  {% if messages %}
-                    {% for category, message in messages %}
-                    <tr class=flashes>
-                      <td colspan="2" class="{{ category }}">{{ message }}</td>
-                    </tr>
+                {% if messages %}
+                {% for category, message in messages %}
+                <tr class=flashes>
+                    <td colspan="2" class="{{ category }}">{{ message }}</td>
+                </tr>
                     {% endfor %}
-                  {% endif %}
-                {% endwith %}
+                    {% endif %}
+                    {% endwith %}
                 <tr>
                     <td>
                         <h2>Create Account</h2>
