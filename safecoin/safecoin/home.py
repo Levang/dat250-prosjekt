@@ -11,7 +11,6 @@ from safecoin.logging import log_loginattempt, log_logout
 # --- Main page --- #
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
-@fresh_login_required
 def home():
     form = LoginForm()
     if form.validate_on_submit():
