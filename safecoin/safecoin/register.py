@@ -8,9 +8,8 @@ from safecoin.encryption import encrypt, decrypt, dictToStr
 from safecoin.models import User
 from safecoin.forms import RegistrationForm, TwoFactorAuthRegForm
 from safecoin.accounts_db import addNewAccountToCurUser
+from safecoin.logging import log_register, log_startregister
 
-
-# from safecoin.accounts import addNewAccountToUser
 # db.create_all()
 
 
@@ -22,13 +21,17 @@ def isCommonPassword(password):
     return False
 
 
-def getPasswordViolations(errList, password):
+def getPasswordViolations(errList, password, email):
     if type(password) != str:
-        errList.append("An error occured!")
+        errList.append("An error occurred!")
         return
 
     if isCommonPassword(password):
         errList.append("Password is too common")
+        return
+
+    if "safecoin" in password.lower() or email.lower() in password.lower():
+        errList.append("Please choose a better password")
         return
 
     # Password params
@@ -57,10 +60,8 @@ def register():
     # for å legge 2fa-nøkkelen inn i din valgte 2fa app. Denne siden har også et passord felt, 2fa felt (for koden du nå kan generere i appen),
     # og et "read-only" som inneholder eposten du skrev inn på forrige side.
     if form.validate_on_submit():
-        print("THIS RAN")
-
         errList = []
-        getPasswordViolations(errList, form.password.data)
+        getPasswordViolations(errList, form.password.data, form.email.data)
 
         # Is there any error in the generated information
         if len(errList) == 0:
@@ -73,7 +74,7 @@ def register():
 
             # ─── CHECK IF THE EMAIL EXISTS IN DATABASE OR REDIS ───────────────────────
             if User.query.filter_by(email=hashed_email.decode("utf-8")).first() or redis.get(registerRedisKey):
-                flash("error")
+                flash("Couldn't continue, due to an error", "error")
                 return render_template("register.html", form=form), disable_caching
 
             # ─── IF THE USER DOES NOT EXIST IN THE DATABASE ──────────────────
@@ -128,12 +129,15 @@ def register():
             redis.set(registerRedisKey, userDict)
             # Set session timeout of user at 600 seconds, 10 minutes
             redis.expire(registerRedisKey, 600)
+            log_startregister(hashed_email)
             return render_template('TwoFactor.html', form2=form2,
                                    qr_link=qr_link), disable_caching  # Vi må dra med inn qr_linken for å generere qr_koden korrekt
 
         # ─── DERSOM FEIL VED REGISTEREING ───────────────────────────────────────────────
         for err in errList:
             flash(err, "error")
+    if form.is_submitted() and not form.email.errors:
+        flash("Couldn't continue, due to an error", "error")
 
     if form2.validate_on_submit():
 
@@ -156,8 +160,6 @@ def register():
         pwOK = flask_scrypt.check_password_hash(form2.password_2fa.data.encode('utf-8'),
                                                 userDict['password'][:88].encode('utf-8'),
                                                 userDict['password'][88:176].encode('utf-8'))
-        print("ER PASSORD OK?")
-        print(pwOK)
         if pwOK:
             # Decrypt the users decryption key
             decryptionKey = decrypt(form2.password_2fa.data.encode('utf-8'), userDict['enKey'].encode('utf-8'), True)
@@ -170,7 +172,6 @@ def register():
 
             # Hvis brukeren scanner qrkoden (som genereres i html) vil koden som vises i appen deres matche koden til totp.now()
             if totp.verify(form2.otp.data):
-                print("LAGRER BRUKER I DATABASE")
                 # user = User(email=hashed_email.decode("utf-8"), enEmail=mailEncrypted, password=(hashed_pw+salt).decode("utf-8"),enKey=encryptedKey, secret=secret_key)
 
                 # Create user class
@@ -181,11 +182,12 @@ def register():
                 user.enKey = userDict['enKey']
                 user.accounts = None
                 user.secret = userDict['secret']
-                user.attempts = userDict['attempts']
 
                 db.session.add(user)
                 db.session.commit()
+
                 flash('Your account has been created! You are now able to log in.', 'success')
+                log_register(True, hashed_email)
 
                 # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
                 # You start with an account that we add so that we and
@@ -195,5 +197,8 @@ def register():
                 # ─── ADD ACCOUNT WITH MONEY TO USER ─────────────────────────────────────────────
 
                 return redirect(url_for('home'))
+
+        flash("Couldn't register user, due to an error", "error")
+        log_register(False, hashed_email)
 
     return render_template("register.html", form=form), disable_caching

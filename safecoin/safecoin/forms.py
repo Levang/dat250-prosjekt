@@ -1,11 +1,11 @@
-
 from flask import flash
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
+from flask_wtf import FlaskForm, RecaptchaField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, SelectField
 import flask_scrypt
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Optional
 
 from safecoin.models import User
+from safecoin.accounts_db import format_account_balance
 
 
 def flash_all_but_field_required(form_field, flash_type="error"):
@@ -24,11 +24,11 @@ class RegistrationForm(FlaskForm):
         hashed_email = flask_scrypt.generate_password_hash(email.data, "")
         email = User.query.filter_by(email=hashed_email).first()
         if email:
-            raise ValidationError('Something went wrong')
+            raise ValidationError("Couldn't continue, due to an error")
 
 
 class TwoFactorAuthRegForm(FlaskForm):
-    otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlenght": 6})
     submit = SubmitField('Complete Sign Up')
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com", "readonly": True})
     password_2fa = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
@@ -37,7 +37,8 @@ class TwoFactorAuthRegForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": "email@example.com"})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
-    otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    otp = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlength": 6})
+    recaptcha = RecaptchaField()
     submit = SubmitField('Login')
 
 
@@ -49,14 +50,13 @@ class RemoveForm(FlaskForm):
 
 class PayForm(FlaskForm):
     tfrom = SelectField('From*', validators=[DataRequired()])
-    to = IntegerField('To*', validators=[DataRequired()], render_kw={"placeholder": "xxxxx.xx.xxxxx", "maxlength": 11,"minlength": 11})
+    to = IntegerField('To*', validators=[DataRequired()], render_kw={"placeholder": "Account number, 11 digits", "maxlength": 11,"minlength": 11})
     msg = StringField('KID/message', validators=[Optional()], render_kw={"placeholder": "KID/message","maxlength": 90})
     kr = IntegerField('Amount*', validators=[DataRequired()], render_kw={"placeholder": "Kr"})
     ore = IntegerField(validators=[Optional()], render_kw={"placeholder": "Øre", "maxlength": 2, "minlength": 2})
     pay = SubmitField('Pay')
 
     def get_select_field(self, account_list):
-        print(account_list)
         if not account_list:
             self.tfrom.choices = [('x', 'No accounts')]
             return
@@ -64,7 +64,7 @@ class PayForm(FlaskForm):
         for account in account_list:
             if type(account[1]) != int:
                 raise TypeError("Account number has to be an int (for correct value storing)")
-            choice_list.append((account[1], f"{account[0]} ({account[2]} kr)"))
+            choice_list.append((account[1], f"{account[0]} ({format_account_balance(account[2])} kr)"))
         if len(choice_list) == 1:
             self.account_select.choices = [('x', 'No accounts')]
             return
@@ -78,12 +78,12 @@ class ValidatePaymentForm(FlaskForm):
     kr = IntegerField('Amount', render_kw={"readonly": True})
     ore = IntegerField('Decimal', render_kw={"readonly": True, "placeholder": "00"})
     password_payment = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
-    otp_payment = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    otp_payment = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlength": 6})
     proceed_payment = SubmitField('Proceed')
 
 
 class AccountsForm(FlaskForm):
-    account_name = StringField('Account Name', validators=[Optional()], render_kw={"placeholder": "Account Name"})
+    account_name = StringField('Account Name', validators=[Optional()], render_kw={"placeholder": "Account Name", "maxlength": 30})
     create_account = SubmitField('Create New Account')
     account_select = SelectField('Select Account', validators=[Optional()])
     delete_account = SubmitField('Delete')
@@ -108,21 +108,22 @@ class AccountsForm(FlaskForm):
 class CreateAccountForm(FlaskForm):
     account_name = StringField('Account Name', render_kw={"readonly": True})
     password_create = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
-    otp_create = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    otp_create = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlength": 6})
     proceed_create = SubmitField('Proceed')
 
 
 class CreateDeleteForm(FlaskForm):
     account_select = IntegerField('Account Name', render_kw={"readonly": True})
     password_delete = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
-    otp_delete = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
+    otp_delete = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlength": 6})
     proceed_delete = SubmitField('Proceed')
 
 
 class DeleteUserForm(FlaskForm):
     password_deleteuser = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})
-    otp_deleteuser = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication"})
-    delete_deleteuser = SubmitField('Delete user')
+    otp_deleteuser = IntegerField('Two-factor Authentication', validators=[DataRequired()], render_kw={"placeholder": "Two-Factor Authentication", "maxlength": 6})
+    delete_deleteuser = SubmitField('Delete')
+
 
 class TransHistory(FlaskForm):
     accountSelect = SelectField('Account Name', render_kw={"readonly": True})
@@ -136,7 +137,7 @@ class TransHistory(FlaskForm):
         for account in account_list:
             if type(account[1]) != int:
                 raise TypeError("Account number has to be an int (for correct value storing)")
-            choice_list.append((account[1], f"{account[0]} ({account[2]} kr)"))
+            choice_list.append((account[1], f"{account[0]} ({format_account_balance(account[2])} kr)"))
         if len(choice_list) == 1:
             self.accountSelect.choices = [('x', 'No accounts')]
             return

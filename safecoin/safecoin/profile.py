@@ -1,10 +1,10 @@
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user, logout_user
-import json, pyotp
 from safecoin import app, db, redis, disable_caching
-from safecoin.accounts_db import getCurrentUser, accStr_to_accList
-from safecoin.encryption import decrypt, getCurUsersEmail, verifyUser, verify_pwd_2FA
+from safecoin.accounts_db import accStr_to_accList
+from safecoin.encryption import decrypt, getCurUsersEmail, verify_pwd_2FA
 from safecoin.forms import DeleteUserForm
+from safecoin.logging import log_deleteuser
 
 
 @app.route('/profile/', methods=["GET", "POST"])
@@ -31,6 +31,10 @@ def profilePage():
 def deleteCurUser(password, otp):
     authenticated, user = verify_pwd_2FA(password, otp)
     if not authenticated:
+        try:
+            log_deleteuser(False, current_user.email, "NotAuthenticated")
+        except:
+            log_deleteuser(False, "NotAuthenticated")
         return "Couldn't delete account due to an error"
 
     if user.accounts:
@@ -42,6 +46,7 @@ def deleteCurUser(password, otp):
         # Loops through accounts and verifies that all accounts are empty
         for acc in accList:
             if acc[2] != 0.0:
+                log_deleteuser(False, user.email, "HasAccounts")
                 return "All bank accounts must be empty before you delete your user."
 
     # Delete user from db
@@ -49,3 +54,4 @@ def deleteCurUser(password, otp):
     logout_user()
     db.session.delete(user)
     db.session.commit()
+    log_deleteuser(True, user.email)

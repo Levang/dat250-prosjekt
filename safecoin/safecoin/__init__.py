@@ -1,6 +1,5 @@
-from flask import Flask, redirect
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from configparser import ConfigParser
 from flask_redis import FlaskRedis
@@ -14,9 +13,11 @@ app = Flask(__name__)
 app.secret_key = cfg["flask"]["secret_key"]
 app.config['SQLALCHEMY_DATABASE_URI'] = cfg["sqlDb"]["path"]  # Path for database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['RECAPTCHA_USE_SSL'] = True
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ldn29kZAAAAABFDZuYicPzQg5y8Kx5-DD-I_F62'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ldn29kZAAAAAHxWe2VkfSMpE-HN-YKCV2uA7CA_'
 
 db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
 redis = FlaskRedis(app)
 QRcode(app)
 
@@ -29,6 +30,6 @@ disable_caching = {'Cache-Control': 'no-cache, no-store, must-revalidate',
                    'Express': '0'}
 
 
-from safecoin import home, overview, register, accounts, pay, profile, hist_transfer, transfer, accounts_db, encryption
+from safecoin import home, overview, register, accounts, pay, profile, hist_transfer, accounts_db, encryption
 
 

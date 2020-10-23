@@ -14,7 +14,7 @@
               {% if messages %}
                 {% for category, message in messages %}
                 <tr class=flashes>
-                  <td colspan="3" class="{{ category }}">{{ message }}</td>
+                  <td colspan="2" class="{{ category }}">{{ message }}</td>
                 </tr>
                 {% endfor %}
               {% endif %}
@@ -28,7 +28,7 @@
                 </td>
             <tr>
                 <td>
-                    {{ form.account_name() }}
+                    {{ form.create_account() }}
                 </td>
                 <td>
                     {{ form.delete_account() }}
@@ -37,7 +37,7 @@
             <tr class="deleteAccount">
                 <td>
                 <div class="selectdiv">
-                    {{ form.create_account() }}
+                    {{ form.account_name() }}
                 </div>
                 </td>
                 <td>

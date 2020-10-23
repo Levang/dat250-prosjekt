@@ -83,9 +83,9 @@ The hashing algortithms `bcrypt` and `argon2` were also considered as alternativ
  
 
 ### flask_sqlalchemy
-From SQLalchemy's website: "The main goal of SQLAlchemy is to change the way you think about databases and SQL!" SQLalchemy was designed to be for efficient and high-performing database access, adapted into a simple and pythonic language, in other words a tool designed to make database-management effiecient and easy-to-use. The library automates redundant and time-consuming processes while the administrator retains the control of how the database is designed and how the SQL is constructed.
+From SQLalchemy's website: "The main goal of SQLAlchemy is to change the way you think about databases and SQL!" SQLalchemy was designed to be for efficient and high-performing database access, adapted into a simple and pythonic language, in other words a tool designed to make database-management efficiient and easy-to-use. The library automates redundant and time-consuming processes while the administrator retains the control of how the database is designed and how the SQL is constructed.
 
-It was a simple choice to go for `SQLalchemy` as it is such an easy and highly efficient tool to use to make clear and tidy database instructions, while at the same time eliminating the risk of SQL-injection attacks. Using a library like `SQLalchemy` is therefore a massive advantage for us in terms of not only easy-of-use and efficiency, but also providing security by making all database queries sanitized by default.
+It was a simple choice to go for `SQLalchemy` as it is such an easy and highly efficient tool to use to make clear and tidy database instructions, while at the same time eliminating the risk of SQL-injection attacks. Using a library like `SQLalchemy` is therefore a massive advantage for us in terms of not only ease-of-use and efficiency, but also providing security by making all database queries sanitized by default. There was always a real choice to go for something traditional such as sqlite3, but as using sqlite3 would potentially make it easy for us to make a mistake in how we structure our queries, we elected to go for SQLAlchemy instead.
 
 (Source: https://www.sqlalchemy.org/)
 
@@ -137,5 +137,7 @@ Ardijan
 
 ### Redis
 Ardijan
+
+
 We use redis to manage session timeouts, and as a volatile data management system.
  

@@ -99,6 +99,11 @@ def verify_pwd_2FA(password, otp, email=None):
     if not email:
         email = getCurUsersEmail()
 
+    # Convert otp from int to str and add 0 at the start. Keys starting with 0 now works.
+    otp = str(otp)
+    while len(otp) < 6:
+        otp = "0" + otp
+
     # Verifies password
     try:
         is_authenticated, user, secret = verifyUser(email, password)
@@ -175,7 +180,6 @@ def getAccountsList(userDict=None):
 
         if accountDB:
             balance = accountDB.balance
-            # print(name)
             account_list.append([name, numberUsr, balance])
         else:
             return None
@@ -230,15 +234,10 @@ def verifyUser(email, password, addToActive=False):
 # ─── SUBMIT A TRANSACTION ──────────────────────────────────────────────────────
 # This only accepts current user.
 def submitTransaction(password, accountFrom, accountTo, amount, message):
-    print("INNE I SUBMIT TRANSACTIONS")
-
-    print(password)
-    print(current_user.email)
     accountFrom=str(accountFrom)
     accountTo=str(accountTo)
     #Check user password
     verified, userDB, ubrukt = verifyUser(None, password)
-    print(verified)
 
     if verified is False:
         return False
@@ -246,16 +245,11 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
     decryptKey = decrypt(password, userDB.enKey.encode('utf-8'), True)
     accountsDB = decrypt(decryptKey, userDB.accounts.encode('utf-8'))
 
-    print(f"DEKRYPTERER TING {accountsDB}")
 
     accountsDict = DBparseAccounts(accountsDB)
 
-    print(f"ACCOUNTS DICT TING {accountsDict}")
-    print(accountFrom)
-    print(accountsDict[accountFrom])
     #is the account one of the users accounts
     if str(accountFrom) in accountsDict:
-                print("KONTO FRA LIGGER I KONTO LISTEN")
                 #if above checks out
                 #do transfer
                 accountDBFrom = Account.query.filter_by(number=accountFrom).first()
@@ -263,7 +257,6 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
 
                 if TransactionChecks(accountDBFrom, amount, accountDBTo, accountsDict,message)==False:
                     return False
-                print("TRANSFER CHECK RETURNERTE TRUE")
 
                 accountDBFrom.balance -= amount
                 accountDBTo.balance += amount
@@ -276,16 +269,13 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
                 trans.message = message
                 trans.eventID = 'transaction'
 
-                print("LAGRER I DATABASEN")
 
                 db.session.add(accountDBFrom)
                 db.session.add(accountDBTo)
                 db.session.add(trans)
                 db.session.commit()
-                print("SUNCER REDIS")
 
                 redis_sync(decryptKey,current_user.email)
-                print("FERDIG")
                 return True
                 #add the transaction to the transaction history
     else:
@@ -301,15 +291,8 @@ def TransactionChecks(accountFrom, amount, accountTo, accountsDict, message):
     #If internal transfer check that user balance remains unchanged
     #check for stuff
     if accountFrom==None or accountTo==None or accountFrom==accountTo:
-        print("JEG KOM MEG TIL TRANS CHECKS EN")
         return False
     if amount<1 or type(amount)!=int or amount>accountFrom.balance:
-        print("JEG KOM MEG TIL TRANS CHECKS TO")
-        print(amount<1)
-        print(amount!=int)
-        print(amount)
-        print(type(amount))
-        print(amount>accountFrom.balance)
         return False
 
     sumBefore=accountFrom.balance+accountTo.balance

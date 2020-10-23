@@ -93,9 +93,18 @@ body {
 #logout:hover {
     background: linear-gradient(0deg, rgba(223, 12, 5, 0.9), rgba(97, 1, 1, 0.5));
 }
-/*
- * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
- */
+
+.input:hover {
+    background-color: var(--lightblue1)
+}
+
+td.error{
+    color: red;
+    font-size: 20px;
+    text-align: center;
+}
+
+/*----------ACCOUNTS-------------------*/
 
 .userAccounts {
     margin-top: 50px;
@@ -115,6 +124,7 @@ body {
     grid-area: auto;
     padding: 0px;
     margin: 0px;
+    text-align: center;
 
 }
 
@@ -139,24 +149,25 @@ body {
 .userAccounts td:nth-child(1){
     padding-left: 10px;
     font-weight: bold;
-    width: 20%;
+    width: 30%;
 }
 
 .userAccounts td:nth-child(2){
     text-align: center;
-    width: 20%;
+    width: 30%;
 }
 
 .userAccounts td:nth-child(3){
-    width: 60%;
+    width: 40%;
     padding-right: 30px;
     font-weight: bold;
-    text-align: right;
+    text-align: center;
 }
 .createDelete{
     margin-top:60px;
     width: 40%;
     margin-left: 30%;
+    text-align: center;
 
 }
 .createDelete input{
@@ -172,6 +183,10 @@ body {
     height: 20px;
     text-align: center;
 
+}
+
+.createDelete #create_account:hover, .createDelete #delete_account:hover {
+    background-color: var(--blue3)
 }
 
 .createDelete #create_account{
@@ -240,9 +255,9 @@ body {
     -moz-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
-    left: 560px;
+    left: 648px;
     top: 16px;
-    /*position: absolute;*/
+    position: absolute;
     pointer-events: none;
 }
 
@@ -263,9 +278,7 @@ body {
     text-align: center;
 }
 
-/*
- * ─── ACCOUNTS ───────────────────────────────────────────────────────────────────
- */
+/*----------ACCOUNTS-------------------*/
 
 /*-------------------PAY---------------*/
 .paydiv {
@@ -320,6 +333,11 @@ body {
     height: 50px;
     text-decoration:none;
 }
+
+.paydiv #pay:hover {
+    background-color: var(--blue3)
+}
+
 .paydiv select#tfrom {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -338,7 +356,7 @@ body {
 }
 /*oddly specific, but this is the way it has to be */
 .paydiv .selectdiv:after {
-    left: 215px;
+    left: 225px;
 }
 /*-------------------PAY---------------*/
 
@@ -404,6 +422,9 @@ body {
     text-decoration:none;
 }
 
+.valdiv #proceed_payment:hover {
+    background-color: var(--blue3)
+}
 /*------------ValidatePay--------------*/
 
 /*----ValidateNewAndDeleteAccount------*/
@@ -452,6 +473,10 @@ body {
     text-decoration:none;
 }
 
+.valNewDel input#proceed_create:hover, .valNewDel input#proceed_delete:hover {
+    background-color: var(--blue3)
+}
+
 /*----ValidateNewAndDeleteAccount------*/
 /*--------------Transactions-----------*/
 
@@ -467,6 +492,7 @@ body {
     grid-area: auto;
     padding: 0px;
     margin: 0px;
+    text-align: center;
 
 }
 
@@ -476,6 +502,7 @@ body {
     padding: 20px;
     color: white;
 }
+
 .transhist td{
     padding: 0px;
     padding-top: 20px;
@@ -483,6 +510,19 @@ body {
     margin: 0px;
     text-transform: capitalize;
     font-size: 130%;
+
+}
+
+.transhist table {
+    margin-left: 5%;
+    margin-right:5%;
+}
+
+.transhist .tbcontent table {
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    border-collapse: collapse;
 
 }
 
@@ -498,26 +538,96 @@ body {
     padding-top: 12px;
     padding-bottom: 12px;
     font-size: 100%;
-    width: 250px;
-    height: 50px;
+    width: 300px;
+    height: 60px;
     text-align: center;
 }
 
 /*oddly specific, but this is the way it has to be */
 .transhist .selectdiv:after {
-    left: 215px;
+    left: 270px;
 }
 
-.userAccounts table {
-    margin-left: 5%;
-    margin-right: 5%;
-    width: 90%;
-    border-collapse: collapse;
 
+.transhist input#view_hist {
+    background-color: var(--blue2);
+    border-radius:28px;
+    border:none;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 50px;
+    text-decoration:none;
+}
+
+.transhist input#view_hist:hover {
+    background-color: var(--blue3)
 }
 
 /*--------------Transactions-----------*/
 
+/*--------------Profile----------------*/
+
+.profilepage {
+    text-align: left;
+}
+
+.profilepage .headerdiv {
+    padding-left: 20px;
+}
+
+.profilepage table {
+    margin-left: 45%;
+    margin-right: 45%;
+}
+
+.profilepage input{
+    border-width: 2px;
+    border-color: var(--blue3);
+    border-style: solid;
+    border-radius: 50px;
+    font-size: 100%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 20px;
+    text-align: center;
+}
+
+
+.profilepage #delete_deleteuser {
+    background-color: var(--blue2);
+    border-radius:28px;
+    border:none;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 100%;
+    width: 200px;
+    height: 50px;
+    text-decoration:none;
+}
+
+.profilepage #delete_deleteuser:hover {
+    background-color: var(--blue3)
+}
+
+/*--------------Profile----------------*/
 @media (max-width:850px) {
 
 .imported{

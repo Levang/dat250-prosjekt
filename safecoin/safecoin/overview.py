@@ -1,34 +1,16 @@
-# ─── NOTATER ARDIJAN ────────────────────────────────────────────────────────────
-# ─── FIKS ───────────────────────────────────────────────────────────────────────
-# Overview          --DONE
-# Ny account        --Doing
-# Pay funksjon      --
-# Slett account     --
-# Trans historikk   --
-# ─── NOTATER ARDIJAN ────────────────────────────────────────────────────────────
+from flask import render_template
+from flask_login import login_required
 
-from safecoin.accounts import format_account_list, format_account_number
-
-import random
-
-from flask import render_template, request, flash, redirect
-from flask_login import current_user, login_required
-from flask_wtf import FlaskForm
-from safecoin.accounts_db import addNewAccountToCurUser
-
-from safecoin import app, redis, json, db, disable_caching
-from safecoin.forms import AccountsForm, flash_all_but_field_required, CreateAccountForm, CreateDeleteForm
-from safecoin.tmp import TmpAcc
-from safecoin.models import Account, User
-from safecoin.accounts_db import format_account_number
-from safecoin.encryption import getAccountsList
+from safecoin import app, disable_caching
+from safecoin.forms import AccountsForm
+from safecoin.encryption import getAccountsList, getCurUsersEmail
+from safecoin.accounts import format_account_list
 
 
 @app.route("/overview/", methods=["GET", "POST"])
 @login_required
 def overviewPage():
     account_list = getAccountsList()
-    print(account_list)
     form = AccountsForm()
     format_account_list(account_list)
 
@@ -38,8 +20,13 @@ def overviewPage():
     elif len(account_list) > 5:
         account_list = account_list[:5]
 
-    for i in range(len(account_list)):
-        balance=str(account_list[i][2])
-        account_list[i][2]=f'{balance[:-2]},{balance[-2:]}'
+    email = "HACKER"
+    try:
+        email = getCurUsersEmail().upper().split("@")[0]
+    except:
+        try:
+            email = getCurUsersEmail().upper()
+        except:
+            pass
 
-    return render_template('overview.html', account_list=account_list, form=form), disable_caching
+    return render_template('overview.html', account_list=account_list, form=form, email=email), disable_caching

@@ -3,8 +3,8 @@ from random import randint
 
 from safecoin import db
 from safecoin.models import Account, User
-
 from safecoin.encryption import decrypt, encrypt, redis_sync, illegalChar, verify_pwd_2FA
+from safecoin.logging import log_createaccount, log_deleteaccount
 
 
 # --- Gets account objects --- #
@@ -60,6 +60,16 @@ def format_account_number(number: int):
         return number
 
 
+def format_account_balance(balance: int):
+    if balance < 10:
+        return f"0,0{balance}"
+    elif balance < 100:
+        return f"0,{balance}"
+    else:
+        balance = str(balance)
+        return f'{balance[:-2]},{balance[-2:]}'
+
+
 def getAccountNumber():
     while True:
         bank_id = str(randint(4100, 4300))
@@ -79,6 +89,10 @@ def addNewAccountToCurUser(password, otp, name="My account", user=None, money=Fa
     if isCurrentUser:
         authenticated, _ = verify_pwd_2FA(password, otp)
         if not authenticated:
+            try:
+                log_createaccount(False, current_user.email, custommsg="NotAuthenticated")
+            except:
+                log_createaccount(False, custommsg="NotAuthenticated")
             return "Couldn't create account due to an error"
 
     if user is None:
@@ -97,6 +111,7 @@ def addNewAccountToCurUser(password, otp, name="My account", user=None, money=Fa
     # Site look and feel is broken by long name
     # Checks for illegal characters and length
     if illegalChar(name, 24):
+        log_createaccount(False, user.email, account.number, "BadName")
         return "Couldn't create account with the given name"
 
     # Attempt decryption of the users accounts
@@ -111,6 +126,7 @@ def addNewAccountToCurUser(password, otp, name="My account", user=None, money=Fa
 
     # Max amount of accounts
     if len(accountsListSplit1) > 25:
+        log_createaccount(False, user.email, account.number, "TooManyAccounts")
         return "Couldn't create account, because number of accounts can't exceed 25"
 
     # Split the accounts again this is now a list of lists
@@ -119,6 +135,7 @@ def addNewAccountToCurUser(password, otp, name="My account", user=None, money=Fa
 
         # check if the account name exists
         if cur_acc_list[0].upper() == name.upper():
+            log_createaccount(False, user.email, account.number, "BadName")
             return "Couldn't create account with the given name"
 
     # Encrypt the information
@@ -131,32 +148,34 @@ def addNewAccountToCurUser(password, otp, name="My account", user=None, money=Fa
     db.session.add(user)
     db.session.commit()
     redis_sync(enKey, user.email)
+    log_createaccount(True, user.email, account.number, f"(Balance:{account.balance}kr)(Name:{name})")
 
 
 def deleteCurUsersAccountNumber(account_number: str, password, otp):
     # Return error if password or otp is wrong
-    authenticated, _ = verify_pwd_2FA(password, otp)
+    authenticated, user = verify_pwd_2FA(password, otp)
     if not authenticated:
+        try:
+            log_deleteaccount(False, current_user.email, account_number, "NotAuthenticated")
+        except:
+            log_deleteaccount(False, accountNumber=account_number, custommsg="NotAuthenticated")
         return "Couldn't delete account due to an error"
 
-    user = getCurrentUser()
     account = getAccount(account_number)
     if account.balance != 0:
+        log_deleteaccount(False, user.email, account_number, "AccountNotEmpty")
         return "Couldn't delete account with a balance not equal to 0.0"
     enKey = decrypt(password, user.enKey, True)
     accStr = decrypt(enKey, user.accounts).decode("utf-8")
     accList = accStr_to_accList(accStr)
     for acc in accList:
-        print(f'accnr {acc[1]} {account_number}')
-        print(f'accnr {type(acc[1])} {type(account_number)}')
-
         if int(acc[1]) == account_number:
             accList.remove(acc)
             newAccStr = accList_to_accStr(accList)
-            print(newAccStr)
             user.accounts = encrypt(enKey, newAccStr).decode('utf-8')
-            # db.session.delete(account)
             db.session.commit()
             redis_sync(enKey, current_user.email)
+            log_deleteaccount(True, user.email, account_number, f"(Name:{acc[0]})")
             return
+    log_deleteaccount(False, user.email, account_number)
     return "Couldn't delete the given account"
