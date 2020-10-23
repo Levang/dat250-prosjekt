@@ -59,16 +59,22 @@ As an added security feature we have also disabled caching on all our sites. Thi
 ## XML External Entities (XXE)
 
 ## Broken Access Control
+  Levang
 
 ## Security Misconfiguration
+  Ardijan
 
 ## Cross-Site Scripting
+  Ardijan
 
 ## Insecure Deserialization
+  Ardijan
 
 ## Using Components with known vulnerabilities
+  Ardijan
 
 ## Insufficient Logging & Monitoring
+<<<<<<< HEAD
 A point where many companies lack is in making sure they have the ability to track suspicious activity by having sufficient logging and monitoring. While not always relevant, as discussed earlier we should always consider the worst case scenarios for everything. By having decent logging and monitoring we will always be able to backtrack what has happened on the server in case anything bad or suspicious was going on.
 
 We track almost everything that happens on the server in our database so that it will be easy to store, retrieve and sort lots of data. For logging we've made functions for each `eventType`, which log the related information for each of them. Some of these types are login, failed login, register, transaction and quite a few others. These functions look like this:
@@ -111,3 +117,10 @@ Everything on our website that is user-interactable is logged. Every log contain
 
 
 With this we could even backtrack if we needed. It is stored in a database that would be easy for admins to access and is in a format that could easily be consumed later by some centralized log management solution.
+=======
+<<<<<<< HEAD
+  
+=======
+Levang
+>>>>>>> report
+>>>>>>> 9f63ae280110398bf3199cdc268d6bc315199c86
