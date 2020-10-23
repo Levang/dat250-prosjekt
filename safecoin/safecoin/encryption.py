@@ -228,7 +228,7 @@ def verifyUser(email, password, addToActive=False):
 
         return True, userDB, secret_key
 
-    return False, None, None
+    return False, userDB, None
 
 
 # ─── SUBMIT A TRANSACTION ──────────────────────────────────────────────────────
@@ -290,6 +290,9 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
 def TransactionChecks(accountFrom, amount, accountTo, accountsDict, message):
     #internal transfer check that user balance remains unchanged
     #check for stuff
+    if amount==None:
+        return False
+
     if accountFrom==None or accountTo==None or accountFrom==accountTo:
         return False
     if amount<1 or type(amount)!=int or amount>accountFrom.balance:
@@ -312,7 +315,7 @@ def TransactionChecks(accountFrom, amount, accountTo, accountsDict, message):
     return True
 
 
-def illegalChar(text, maxlength):
+def illegalChar(text, maxlength,alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "):
     if text==None:
         return False
 
@@ -324,7 +327,6 @@ def illegalChar(text, maxlength):
     if len(text)>maxlength:
         return True
 
-    alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "
     #Transform name to lowercase and check if its not in the alphabet
     for letter in text.lower():
         if letter not in alphabet:

@@ -50,8 +50,8 @@ class RemoveForm(FlaskForm):
 
 class PayForm(FlaskForm):
     tfrom = SelectField('From*', validators=[DataRequired()])
-    to = IntegerField('To*', validators=[DataRequired()], render_kw={"placeholder": "Account number, 11 digits", "maxlength": 11,"minlength": 11})
-    msg = StringField('KID/message', validators=[Optional()], render_kw={"placeholder": "KID/message","maxlength": 90})
+    to = IntegerField('To*', validators=[DataRequired()], render_kw={"placeholder": "To account", "maxlength": 11,"minlength": 11})
+    msg = StringField('KID/message', validators=[Optional()], render_kw={"placeholder": "KID / message","maxlength": 90})
     kr = IntegerField('Amount*', validators=[DataRequired()], render_kw={"placeholder": "Kr"})
     ore = IntegerField(validators=[Optional()], render_kw={"placeholder": "Øre", "maxlength": 2, "minlength": 2})
     pay = SubmitField('Pay')
@@ -74,7 +74,7 @@ class PayForm(FlaskForm):
 class ValidatePaymentForm(FlaskForm):
     tfrom = IntegerField('From', render_kw={"readonly": True})
     to = IntegerField('To', render_kw={"readonly": True})
-    msg = StringField('KID/message', render_kw={"readonly": True, "placeholder": "No KID/message"})
+    msg = StringField('KID/message', render_kw={"readonly": True, "placeholder": "No KID / message"})
     kr = IntegerField('Amount', render_kw={"readonly": True})
     ore = IntegerField('Decimal', render_kw={"readonly": True, "placeholder": "00"})
     password_payment = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Password"})

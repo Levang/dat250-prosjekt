@@ -72,7 +72,8 @@ def accounts():
         if err:
             flash("Didn't make any changes, due to an error", "error")
             return render_template('accounts.html', account_list=account_list, form=form), disable_caching
-        flash(f"Successfully Created Account {create_form.account_name.data}!", "success")
+        flash(f"Successfully Created Account {create_form.account_name.data}", "success")
+        flash(f"Please refresh to view changes", "success")
     elif create_form.proceed_create.data:
         log_createaccount(False, current_user.email, delete_form.account_select.data, "NotAuthenticated")
         flash("Didn't make any changes, due to an error", "error")
@@ -85,7 +86,8 @@ def accounts():
         if err:
             flash("Didn't make any changes, due to an error", "error")
             return render_template('accounts.html', account_list=account_list, form=form), disable_caching
-        flash(f"Successfully Deleted Account {delete_form.account_select.data}!", "success")
+        flash(f"Successfully Deleted Account {delete_form.account_select.data}", "success")
+        flash(f"Please refresh to view changes", "success")
     elif delete_form.proceed_delete.data:
         log_deleteaccount(False, current_user.email, delete_form.account_select.data, "NotAuthenticated")
         flash("Didn't make any changes, due to an error", "error")

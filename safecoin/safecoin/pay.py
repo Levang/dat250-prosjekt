@@ -19,6 +19,10 @@ def intconvert_if_possible(var):
 def krToInt(kr, ore):
     if ore == None:
         ore = 0
+
+    if kr == None:
+        kr=0
+
     # Kr og ore maa kunne konverteres til int, dersom det feiler. er det en feil
     try:
         kr = int(kr)
@@ -35,7 +39,7 @@ def krToInt(kr, ore):
     except:
         return None
 
-    amount = kr + ore
+    amount = f"{kr}{ore}"
     return int(amount)
 
 
@@ -45,7 +49,9 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
     general_error = False  # For returning a non informative error #PLEASE USE raise Exception("")
 
     amount = krToInt(kr, ore)
-    if not amount:
+    if amount==None: #SLUTT Å ENDRE DETTE!
+        errlist.append("Please enter a valid amount to transfer")
+    elif amount < 1:
         errlist.append("Please enter a valid amount to transfer")
 
     # Verifies that from_ is in current users account, yes on redis...
@@ -69,13 +75,9 @@ def get_form_errors(accountFrom, accountTo, kr, ore, msg):
     if len(str(accountTo)) != 11:
         errlist.append("Invalid account number")
 
-
     accTo = Account.query.filter_by(number=accountTo).first()
     if not accTo:
         errlist.append(f"Unable to transfer to {accountTo}")
-
-    if amount < 1:
-        errlist.append("Please enter a valid amount to transfer")
 
     if illegalChar(msg, 256):
         errlist.append("Invalid KID/message or too long")
