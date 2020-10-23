@@ -27,7 +27,19 @@ This way even if someone tries to input malicious data into a `SubmitField` the 
 (Source: https://wtforms.readthedocs.io/en/2.3.x/)
 
 ## Broken Authentication
-Levang
+Broken Authentication is one of the largest vulnerabilities to exploit. Many large attacks in the past have been self-mutating worms that search the open internet for certain open ports, (e.g. telnet), and try to log in using default admin credentials (e.g. for routers, modems or printers). Attacks such as this relatively easily could potentially give a malicious actor a pretty sizeable botnet at their disposal, or they could use the access to do other malicious things. 
+
+Broken Authentication is also about ensuring a certain complexity for users\' passwords, using multi-factor authentication, and making sure to use a secure and robust session/login manager.
+
+
+### Implementation
+To ensure a higher level of security on our website we have implemented features such as password complexity and two-factor authentication. For the password complexity we have elected to not set requirements to standard rules like requiring atleast 1 symbol/digit for the password to be valid. Length is a more important factor to prevent brute force attacks, so instead of the normal 8 characters passwords that most rules require, we require 12 characters. We have also implemented a check of the users password against the top 44000 most used passwords that are 12 characters or more, if it's in the list, it's not allowed.
+
+To slow down bots we have implemented Google's reCAPTCHA solution that adds a little widget to your website you need to click or solve to prove that you're not a robot.
+
+Along with stronger passwords and reCAPTCHA we have implemented two-factor-authentication to prevent easy access to anyones accounts, while also significantly slowing down, or preventing robots from being able to brute force anyones user-account. Adding two-factor authentication effectively makes the job of hacking into anyones account a much more involved process as you would have to get your hands on information that only exists in two places. The server, or the users phone. However if anyone got their hands on anyones secret key, or physical access to someones phone, only email and password would stand in their way. However the likelihood of anyone going that far, let alone finding the owner of a specific account is negligible.
+
+If a user fails to log in, each attempt will be delayed more and more to prevent anyone from attempting to access someones account who don't explicitly know the password. We also log any attempts to log in, and would be able to sort through data if we suspect anything going on. If a user is able to log in we recognize the users session, as it is handled in both redis and by flask-login. At login a user gets a session cookie that also gets deleted on logout. If either redis or flask-login gets a bug or something unexpected happens, the users session is immediately invalidated and they would have to log in again, adding an additional layer of security.
 
 ## Sensitive Data Exposure
 In the development cycle of our website, we have attempted to always keep security in mind. This of course includes encrypting sensitive data, aswell as attempting to handle it as little as possible. This is essential in keeping up with security. The less information we need to handle, the better it is for us, the user, and the security on our website.
@@ -57,4 +69,45 @@ As an added security feature we have also disabled caching on all our sites. Thi
 ## Using Components with known vulnerabilities
 
 ## Insufficient Logging & Monitoring
-Levang
+A point where many companies lack is in making sure they have the ability to track suspicious activity by having sufficient logging and monitoring. While not always relevant, as discussed earlier we should always consider the worst case scenarios for everything. By having decent logging and monitoring we will always be able to backtrack what has happened on the server in case anything bad or suspicious was going on.
+
+We track almost everything that happens on the server in our database so that it will be easy to store, retrieve and sort lots of data. For logging we've made functions for each `eventType`, which log the related information for each of them. Some of these types are login, failed login, register, transaction and quite a few others. These functions look like this:
+
+```python
+
+def log_register(is_validated: bool, hashedEmail: str):
+    msg = "Created:"
+    if is_validated:
+        msg += "YES"
+    else:
+        msg += "NO"
+
+    log(msg, "register", hashedEmail)
+
+```
+We pass the `message`, `eventType` and `hashedEmail` into a log functions which takes the information, builds the database request and commits it to the database:
+
+```python
+
+def log(message: str = "NA", eventType: str = "NA", hashedEmail: str = "NA"):
+    req = requestLogs(message=message, eventType=eventType, email=hashedEmail)
+    db.session.add(req)
+    db.session.commit()
+
+```
+
+Everything on our website that is user-interactable is logged. Every log contains the following info:
+
+- eventID
+    - Incremental ID for easy storing and sorting.
+- email
+    - Hashedemail of the user.
+- eventType
+    - What kind of event. E.g. transaction, login, failed login, register, delete user etc.
+- message
+    - Event message. Eventually KID message for transfers.
+- time
+    - Timestamp of the event.
+
+
+With this we could even backtrack if we needed. It is stored in a database that would be easy for admins to access and is in a format that could easily be consumed later by some centralized log management solution.
