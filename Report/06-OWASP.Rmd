@@ -66,12 +66,19 @@ Levang
 
 ### Where possible, implement multi-factor authentication to prevent automated, credential stuffing, brute force, and stolen credential re-use attacks.
 
+we h
+
+
 ### Implement weak-password checks, such as testing new or changed passwords against a list of the top 10000 worst passwords.
 Password requirements:
-  - Minimum 12 characters in length
-  - Not an integer
-  - Cannot match top 10000 most common passwords that are 12 characters or longer
-  - Cannot contain the users email address
+
+- Minimum 12 characters in length
+
+- Not an integer
+
+- Cannot match top 10000 most common passwords that are 12 characters or longer
+
+- Cannot contain the users email address
 
 The users password is cryptographically hashed with scrypt and a random salt. 
 The password and its salt are then concatinated and stored together.
@@ -148,7 +155,21 @@ app.config['REMEMBER_COOKIE_DURATION'] = timedelta(minutes=0)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/login'
-login_manager.session_protection = "strong" #Ensuers a new session ID is created for every browser instance
+#Ensuers a new session ID is created for every browser instance
+login_manager.session_protection = "strong" 
+
+
+#Logout route
+@app.route("/logout")
+@login_required
+def logout():
+    #slett ifra redis først ellers er current_user ikke definert.
+    redis.delete(current_user.email)
+    log_logout(current_user.email)
+
+    #Logg så ut fra login manager
+    logout_user()
+    return redirect(url_for('home')), disable_caching
 ```
 
 
@@ -163,11 +184,11 @@ We separate the data we store into different database tables. The user table has
 ### Apply controls as per the classification.
 
 
-
 ### Don’t store sensitive data unnecessarily. Discard it as soon as possible or use PCI DSS compliant tokenization or even truncation. Data that is not retained cannot be sto len.
 All sensitive data is only temporarily stored in redis with an expiry date, otherwise it is at rest and stored in an encrypted form which is inaccessible without user input. This way ensure that we do not store or have access to decrypted data longer than necessary.
 
-Redis sync, syncs redis with database, requries users to be verified beforehand.
+
+Redis sync, syncs redis with database, requires users to be verified beforehand.
 ```python
 def redis_sync(deKey, hashed_mail):
     if type(deKey) == str:
@@ -207,7 +228,12 @@ def redis_sync(deKey, hashed_mail):
 
 ### Store passwords using strong adaptive and salted hashing functions with a work factor (delay factor), such as Argon2, scrypt, bcrypt, or PBKDF2
 
+<<<<<<< HEAD
 The password stored in the database is generated with `scrypt`. We use the default settings here, as can be seen in the code-snippet below. These settings make sure that memory and CPU-usage is very high, and therefore very expensive in a brute-force attack.
+=======
+The password stored in the database is generated with scrypt. We use the default settings as seen in the code snippet below. These settings in combination with our password length requirement of 12
+we can rest assured that randomly bruteforcing these passwords would take longer than the years we have left to live with todays computers. 
+>>>>>>> e27d718ecb36a21bc3b56ebaef16052b3ddf64ee
 
 
 ```python
