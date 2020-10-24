@@ -1,72 +1,128 @@
-# Databases
+# Databases {#databases}
 
-Our databases are designed with the assumption that a malicious actor could potentially get a hold of all of them and knows our source code. In a perfect world they would not be able to use any of this to extract any valuable information. 
+Our database is designed with user security and anonymity in mind. The database is split into four tables:
 
-The weakpoint is the fact that if an account number is known and an attacker has a hold of the database, it is very simple to look up the account balance in the **Accounts** table.
+```
+- Users         - Encrypted, holds personal information
+- Accounts      - Plain text, holds all accounts and their balance
+- Transactions  - Plain text, holds all transactions
+- Logging       - Plain text, used to log pseudo-anonymous activity
+```
 
-Some notation:
-
-- `(a)` means the hash of `a` is stored.
-- `((a))` means an encrypted form of `a` is stored.
+This structure was made with one thing in mind; To give the user control of their information. This is achieved by encrypting the users table, which prevents
+updating or reading the information without the users password. This forces developers to always keep security in mind, since he/she cant alter or read usable information from database without having the users permission. The drawback on the other hand is that we need another way to temporarily store the users decrypted information while they are logged in.
 
 
 ## Users {#databases-users}
 
-Users is a database of registered users, their 2fa `secret` key, and their accounts along with the keys to control those accounts. None of the sensitive information in this database should ever be stored in a plaintext state. It should optimally be cryptographically hashed, but for data that is not user supplied, at least encrypted using the information supplied by the user. Doing it that way means we get to encrypt user data and not store the key anywhere.
+Users is a database of registered users, their 2fa `secret` key, and their accounts. This table does not contain any unencrypted or hashed information.
 
+**User table Fields**
+```python
+class User(db.Model, UserMixin):
+    email = db.Column(db.String(80), primary_key=True, unique=True, nullable=False)
+    enEmail = db.Column(db.String(80), nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    enKey = db.Column(db.String(128))
+    accounts = db.Column(db.String(10000))
+    secret = db.Column(db.String(32 + 128))
+
+    # If the user is not found in redis,
+    # the user is effectively not logged in
+    @property
+    def is_authenticated(self):
+        # Check if the current_user is logged in
+        if redis.get(self.email):
+            # If so set data to expire 10 minutes from now
+            redis.expire(self.email, 3600)
+            # return true to the flask login manager
+            return True
+        return False
+
+    #essentially same as above property
+    @property
+    def is_active(self):
+        if redis.get(self.email):
+            redis.expire(self.email, 3600)
+            return True
+        return False
 ```
-(email)  ((enEmail))  ((password))+salt ((enKey)) ((accounts))  ((secret))
-```
 
-- `email` is the users identifier. It is stored in in a hashed state by scrypt, without salt. This also increases security because the only way to find out which emails are registered is to brute force all emails which should hopefully take a long time because the hash is cryptographic. This comes at the cost of not knowing what emails are registered so any email notifications are impossible except for something like "There were multiple failed attempts at signing into your account" since the attacker actually provides the email in this case.
+- `email` is the users identifier. It is stored in in a hashed state, without salt. The reason for hashing this is simply to have a fixed length for database lookup entries.
 
-- `enEmail` is the users clear text email encrypted by our randomly generated Fernet key. EnEmail is mainly a method for for double checking if the users input is valid, as the normal `email` is hashed.
+- `enEmail` is the users clear text email encrypted with the users Fernet key.
 
-- `password+salt` is the users password. It is stored as a cryptographical hash of itself prepended to a salt. This prevents rainbow table attacks on the database. The `salt` is the only thing stored in plaintext and is a cryptographically random number. The salt is stored in the same database-entry as the password, appended to the end of it. The encrypted password and the salt are always the same length, due to this we can append, and split them as we need them.
+- `password` is the users hashed password concatenated with the salt used to hash it. The `salt` is the only thing stored in plaintext. The resulting hash and salt is always the same length and thereby we can split this information into its respective parts.
 
-- `enKey` is the users encryption-key that has been encrypted by the users hashed password. This way we can extract any information we need given we get the users password.
+- `enKey` is the users encryption-key that has been encrypted by the users hashed password without salt. This creates a new unique hash that is different from the salted password hash above. This hash is not done for security reasons, its purpose is to create a fixed length 32 byte key to encrypt the encryption key.
 
-- `accounts` holds all information about which accounts the current user owns. This has been encrypted with the decrypted `enKey`, this way we only have a decrypted version of the accounts when the user supplies their password.
+- `accounts` holds account ownership information that is encrypted with the encryption key.
 
-- `secret` is the secret key used to generate One Time Passcodes (OTP's). This has been encrypted with the decrypted `enKey`, this way we only have a decrypted version of the secret-key when the user supplies their password.
+- `secret` is the secret key used to generate One Time Passcodes (OTP's). 
 
-As shown all the data in this database table is very heavily encrypted. The idea is as stated earlier that a malicious actor *could* potentially get a hold of our database. While we certainly will always do everything we can to ensure both physical and digital access, the worst case scenario should always be considered.
+As shown all the data in this database table is either encrypted or hashed. While we certainly will always do everything we can to secure both physical and remote access, the worst case scenario should always be considered. The way this is structured, the user could potentially leave the website open on their computer and still be confident that no one could make changes to their account.
 
 ## Accounts {#databases-accounts}
 
-Accounts is a database containing all banking accounts registered and their balance. Accounts should be borderline "use and dispose" meaning they should be easy to create and not limited in supply.
+Accounts is a table containing all banking accounts and their balance. Accounts are "use and dispose" meaning they are be easy to create and not limited in supply.
+
+```python
+class Account(db.Model):
+    number = db.Column(db.String(11), unique=True, nullable=False, primary_key=True)
+    balanceField = db.Column(db.String(256))  # tallet viser til maks lengde av et siffer
+
+    # Henter verdien fra databasen og konverterer til streng
+    @property
+    def balance(self):
+        return int(self.balanceField)
+
+    # setter verdien i databasen, dersom den er en int, blir den til streng
+    @balance.setter
+    def balance(self, value):
+        # Sjekker om jeg faar en int, ellers skal det ikke fungere.
+        if type(value) == int:
+            value = str(value)
+            self.balanceField = value
+        else:
+            raise Exception("Can only set this to be an int")
 
 ```
-account balance
-```
 
-- `account` is just the account number. For our bank we have the standard `xxxx yy zzzzc` format. 
-    - `xxxx` is a bankregistrationnumber which identify the bank, and the associated department in the bank. For us those numbers are a random integer between 4100-4300.  
-    - `yy` signify account type, where we have only one type, given the number 69. 
-    - `zzzz` is the customer account number, and is also a randomint between 1000-9999, as this simply is a random number
-    - `c` is the "control-digit" which is calculated normally by taking the the number of the 10 preceding digits, and doing modulo 11 on them, for our case we have done modulo 10.
+- `account` is the account number. We use the standard `xxxx yy zzzzc` format. 
+    - `xxxx`    is a bank registration number which identify the bank.
+    - `yy`      signifies account type, where we have only one. 
+    - `zzzz`    is the customers account number.
+    - `c`       is the "control-digit". Calculated by **xxxxyyzzzz**%10
 
-- `balance` is simply the balance of the account.
+- `balance` is a property of the account, it converts the balance into an int since its stored as a string. This is to prevent rounding errors. 
+
+Nothing in the accounts table is encrypted.
 
 
 ## Transactions {#databases-transactions}
 
-Transactions is a database containing all transactions that have been performed ever. It should contain no sensitive information.
+Transactions is a database containing all transactions.
 
+```python
+class Transactions(db.Model):
+    transactionID = db.Column(db.Integer, primary_key=True)
+    accountFrom = db.Column(db.String(80), nullable=False)
+    accountTo = db.Column(db.String(80), nullable=False, )
+    amountDB = db.Column(db.String(256))
+    message = db.Column(db.String(90))
+    time = db.Column(DateTime, default=datetime.datetime.utcnow,nullable=False)
 ```
-accTo  accFrom  amount  message  time  eventID  sign
-```
 
-- `uid` is a unique transaction id associated with the account. This is included to make sure a signed transaction can only be counted once.
+- `transactionID` is a unique transaction id associated with the transaction.
 
-- `date` is the timestamp of when the transaction was made. Probably UNIX time.
+- `accountFrom` transaction origin.
+ 
+- `accountTo` transaction destination.
 
-- `timeout` is a timestamp of when the transaction should expire. This prevents transactions that fail being reused by a bad actor some time in the future.
+- `amountDB` amount being sent. 
 
-- `from` is the account number that is transferring. It is stored as a cryptographic hash to prevent the backtracking discussed earlier.
+- `message` a short message/number sent along with the transaction. This could plain text or a KID-message.
 
-- `to` is the account number that is receiving. It is stored as a cryptographic hash to prevent the backtracking discussed earlier.
+- `time` a time-stamp for the transaction.
 
-- `amount` is the amount that is transferring. Note that this can not be more than the balance of the `from` account.
-
-- `sign` is the signature of the transaction, signed with the `private_key` of the `from` account. If the transaction is changed in any way then this signature must also change, preventing transactions being reused.
+The data in transactions table is not encrypted, but since the users table which holds ownership information is encrypted there is no direct way to find which user made the transaction. A user could potentially compromise their own or the receivers anonymity by writing personal information in the message field.

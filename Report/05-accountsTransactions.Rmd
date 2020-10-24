@@ -1,0 +1,110 @@
+# Accounts and transactions
+
+The ownership of an account is determined by which user holds the account number in their accounts list. In order for a user to release ownership if an account the account balance must be 0. An account can loose its owner but it can never be deleted from the accounts database, this ensures that we cant generate the same account-number twice.
+
+Transactions was written with security in mind, it was written as if redis was compromised and not trustable. Therefore for every transaction the user must provide their respective password and only then be able to trasfer the given amount. 
+
+It is quite extensive but summarized these are the steps.
+
+- User is logged in.
+- Verify the user with `verifyUser` function (same as mentioned in authentication)
+- Check ownership
+- Both accounts exist
+- Check transaction validity eg. check sum of both account balances is the same before and after, sender has the required balance etc.
+- Do the actual transaction of balance
+- Update both balances
+- Write new transaction information to transactions database.
+
+```python
+def submitTransaction(password, accountFrom, accountTo, amount, message):
+    accountFrom=str(accountFrom)
+    accountTo=str(accountTo)
+    #Check user password
+    verified, userDB, ubrukt = verifyUser(None, password)
+
+    if verified is False:
+        return False
+        #Decrypt and check user account with user database
+    decryptKey = decrypt(password, userDB.enKey.encode('utf-8'), True)
+    accountsDB = decrypt(decryptKey, userDB.accounts.encode('utf-8'))
+
+
+    accountsDict = DBparseAccounts(accountsDB)
+
+    #is the account one of the users accounts
+    if str(accountFrom) in accountsDict:
+        #if above checks out
+        #do transfer
+        accountDBFrom = Account.query.filter_by(number=accountFrom).first()
+        accountDBTo = Account.query.filter_by(number=accountTo).first()
+
+        if TransactionChecks(accountDBFrom, amount, accountDBTo, accountsDict,message)==False:
+            return False
+
+        accountDBFrom.balance -= amount
+        accountDBTo.balance += amount
+
+        # LOGGING
+        trans=Transactions()
+        trans.accountTo = accountTo
+        trans.accountFrom = accountFrom
+        trans.amount = amount
+        trans.message = message
+        trans.eventID = 'transaction'
+
+
+        db.session.add(accountDBFrom)
+        db.session.add(accountDBTo)
+        db.session.add(trans)
+        db.session.commit()
+
+        redis_sync(decryptKey,current_user.email)
+        return True
+        #add the transaction to the transaction history
+    else:
+        # user does not own this account, return
+        return False
+
+
+def TransactionChecks(accountFrom, amount, accountTo, accountsDict, message):
+    #internal transfer check that user balance remains unchanged
+    #check for stuff
+    if accountFrom==None or accountTo==None or accountFrom==accountTo:
+        return False
+    if amount<1 or type(amount)!=int or amount>accountFrom.balance:
+        return False
+
+    sumBefore=accountFrom.balance+accountTo.balance
+    fromBalance = accountFrom.balance
+    toBalance   = accountTo.balance
+    fromAfter   = fromBalance - amount
+    toAfter     = toBalance + amount
+
+    sumAfter = fromAfter + toAfter
+
+    if sumBefore!=sumAfter:
+        return False
+
+    if illegalChar(message,90):
+        return False
+
+    return True
+
+def illegalChar(text, maxlength,alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "):
+    if text==None:
+        return False
+
+    try:
+        text=str(text)
+    except:
+        return True
+
+    if len(text)>maxlength:
+        return True
+
+    #Transform name to lowercase and check if its not in the alphabet
+    for letter in text.lower():
+        if letter not in alphabet:
+            return True
+    return False
+```

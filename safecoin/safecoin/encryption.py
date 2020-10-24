@@ -288,7 +288,7 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
 
 
 def TransactionChecks(accountFrom, amount, accountTo, accountsDict, message):
-    #If internal transfer check that user balance remains unchanged
+    #internal transfer check that user balance remains unchanged
     #check for stuff
     if amount==None:
         return False
