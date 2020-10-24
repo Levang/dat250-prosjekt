@@ -1,9 +1,10 @@
-from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
 from configparser import ConfigParser
-from flask_redis import FlaskRedis
 from flask_qrcode import QRcode
+from flask_login import LoginManager
+from flask_redis import FlaskRedis
+from datetime import timedelta
+from flask import Flask
 from os import urandom
 
 import json  # Don't remove this import ever!
