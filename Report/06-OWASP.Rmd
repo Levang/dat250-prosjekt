@@ -78,7 +78,7 @@ The password and its salt are then concatinated and stored together.
 
 Scrypt allows the password to be of an arbitrary length.
 
-Code for the password requirements.
+Code for the password requirements:
 ```python
 def getPasswordViolations(errList, password, email):
     if type(password) != str:
@@ -115,6 +115,26 @@ def isCommonPassword(password):
 
 ### Ensure registration, credential recovery, and API pathways are hardened against account enumeration attacks by using the same messages for all outcomes
 
+While developing the website we had generic errors in mind as a measure to prevent account enumeration. The code-snippet below contains a short example:
+
+```python
+
+    else:
+        # Generisk feilmelding dersom noe går galt
+        flash('Something went wrong. Please try again.')
+        log_loginattempt(False, userDB.email)
+else:
+    # Generisk feilmelding dersom noe går galt
+    flash('Something went wrong. Please try again.')
+    log_loginattempt(False, userDB.email)
+
+
+#example from register page where this is the only error message
+flash("Couldn't continue, due to an error", "error")
+
+```
+An attacker will in this case not be able to determine whether an account exists in the database or not.
+
 ### Use a server-side, secure,built-in session manager that generates a new random session ID with high entropy after login. Session IDs should not be in the URL, be securely stored and invalidated after logout, idle, and absolute timeouts.
 
 We use flask_login to manage users sessions, this is built in and this generates a new session ID with every browser instance when
@@ -138,11 +158,13 @@ To limit the risk of data exposure, we attempt to handle as little personal info
 
 ### Classify data processed, stored, or transmitted by an application. Identify which data is sensitive according to privacy laws, regulatory requirements, or business needs
 
-### Apply controls as per the classification.
-
 We separate the data we store into different database tables. The user table has the highest security requirement, while the transaction, account and logging tables demand lower security. The encryption and hashing of the tables are adjusted accordingly.
 
-### Don’t store sensitive data unnecessarily.Discard it as soon as possible or use PCI DSS complianttokenization or even truncation. Data that is not retained cannot be sto len.
+### Apply controls as per the classification.
+
+
+
+### Don’t store sensitive data unnecessarily. Discard it as soon as possible or use PCI DSS compliant tokenization or even truncation. Data that is not retained cannot be sto len.
 All sensitive data is only temporarily stored in redis with an expiry date, otherwise it is at rest and stored in an encrypted form which is inaccessible without user input. This way ensure that we do not store or have access to decrypted data longer than necessary.
 
 Redis sync, syncs redis with database, requries users to be verified beforehand.
@@ -183,12 +205,10 @@ def redis_sync(deKey, hashed_mail):
     redis.expire(userDB.email, 900)
 ```
 
-### Store passwords using strong adaptive and salted hashing functions with a work factor (delay factor), such as Argon2, scrypt, bcrypt, or PBKDF2. [-@OWASP10]
+### Store passwords using strong adaptive and salted hashing functions with a work factor (delay factor), such as Argon2, scrypt, bcrypt, or PBKDF2
 
-The password stored in the database is generated with scrypt. We use the default settings here, these settings in combination with our password length requirement of 12
-we can rest assured that randomly bruteforcing these passwords would take longer than the years we have left to live with todays computers. 
+The password stored in the database is generated with `scrypt`. We use the default settings here, as can be seen in the code-snippet below. These settings make sure that memory and CPU-usage is very high, and therefore very expensive in a brute-force attack.
 
-#TODO Vidar kan du skrive litt her? En linje eller to idk...
 
 ```python
 # ---- SALT AND HASH PASSWORD -------------------------------------------------
