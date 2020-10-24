@@ -10,14 +10,13 @@ Requirements and notes coming soon!>
 
 ## Site Map
 
-![Image](assets/Pagemap.png)
+![Image](Report/report_assets/pagemap_safecoin.png)
 
-<!-- 
-Frontpage
+### Frontpage
+
 - Innlogging
 - Div info
-
-- Autentisering
+- Registrering
 
 ### Oversikt
 
@@ -37,7 +36,7 @@ Betale til en konto
 3. Fortsett/Avbryt
 
 **Autentisering**
-- Bekreftelse på betaling -->
+- Bekreftelse på betaling
 
 ## Sikkerhet bruker:
 
