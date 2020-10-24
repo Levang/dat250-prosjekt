@@ -228,12 +228,8 @@ def redis_sync(deKey, hashed_mail):
 
 ### Store passwords using strong adaptive and salted hashing functions with a work factor (delay factor), such as Argon2, scrypt, bcrypt, or PBKDF2
 
-<<<<<<< HEAD
-The password stored in the database is generated with `scrypt`. We use the default settings here, as can be seen in the code-snippet below. These settings make sure that memory and CPU-usage is very high, and therefore very expensive in a brute-force attack.
-=======
 The password stored in the database is generated with scrypt. We use the default settings as seen in the code snippet below. These settings in combination with our password length requirement of 12
 we can rest assured that randomly bruteforcing these passwords would take longer than the years we have left to live with todays computers. 
->>>>>>> e27d718ecb36a21bc3b56ebaef16052b3ddf64ee
 
 
 ```python
