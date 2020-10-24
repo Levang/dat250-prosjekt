@@ -25,20 +25,13 @@ Frontpage
 - Saldo
 - Lenker til underliggende sider
 
-
 ### Transaksjonshistorikk
 
-- Velg konto og se hele transaksjonshistorikk for den kontoen (read only, sorterbart)
-
+- Velg konto og se hele transaksjonshistorikk for den kontoen
 
 ### Overføre
 
-- Overføre mellom egne kontoer
-
-
-### Betale
-
-Betale til en annen konto
+Betale til en konto
 1. Fylle ut betalingsinfo
 2. Oppsumering av betalingsinfo
 3. Fortsett/Avbryt
@@ -46,17 +39,10 @@ Betale til en annen konto
 **Autentisering**
 - Bekreftelse på betaling -->
 
-
 ## Sikkerhet bruker:
 
 - All bruker relatert info lagres kryptert i database
-- Nøkkelen for dekryptering/kryptering er brukerens passord + epost + salt
-
-
-## Sikkerhet transaksjoner:
-
-- Enkel blockchain
-
+- Nøkkelen for dekryptering/kryptering er brukerens passord
 
 ## Domene
 
