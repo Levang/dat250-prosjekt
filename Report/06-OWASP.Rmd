@@ -191,7 +191,7 @@ we can rest assured that randomly bruteforcing these passwords would take longer
 #TODO Vidar kan du skrive litt her? En linje eller to idk...
 
 ```python
-# ─── SALT AND HASH PASSWORD ──────────────────────────────────────
+# ---- SALT AND HASH PASSWORD -------------------------------------------------
 salt = flask_scrypt.generate_random_salt()
 
 # add hashed password to user dictionairy
