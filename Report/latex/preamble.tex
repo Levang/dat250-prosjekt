@@ -1,0 +1,10 @@
+\usepackage{float}
+\usepackage{fancyhdr}
+
+\floatplacement{figure}{H}
+\floatplacement{table}{H}
+
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+\fancyhf{}
+\lhead{\chaptername\ \thechapter\ --\ \leftmark}
