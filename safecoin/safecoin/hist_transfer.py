@@ -1,5 +1,5 @@
 from flask import render_template
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, fresh_login_required
 
 from safecoin import app, redis, json, disable_caching
 from safecoin.forms import TransHistory
@@ -11,6 +11,7 @@ from safecoin.encryption import illegalChar
 
 @app.route("/transactions/", methods=["GET", "POST"])
 @login_required
+@fresh_login_required
 def transactions():
 
     transForm = TransHistory()
