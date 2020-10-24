@@ -62,11 +62,13 @@ def illegalChar(text, maxlength,alphabet="abcdefghijklmnopqrstuvwxyzæøå012345
 ```
 
 ## Broken Authentication
-Levang
+
 
 ### Where possible, implement multi-factor authentication to prevent automated, credential stuffing, brute force, and stolen credential re-use attacks.
 
-we h
+We implement multi-factor authentication and Google's reCAPTHCA on the login page to prevent automated attacks. Whereever autheticaton is required after the user is logged in, two factor authentication is also required.
+
+![This is a screenshot of the login page demonstrating 2FA and reCAPTHCA at Safecoin.tech](report_assets/loginPageScreenshot.png){width=50%}
 
 
 ### Implement weak-password checks, such as testing new or changed passwords against a list of the top 10000 worst passwords.
@@ -177,14 +179,17 @@ def logout():
 To limit the risk of data exposure, we attempt to handle as little personal information as possible. 
 
 
-### Classify data processed, stored, or transmitted by an application. Identify which data is sensitive according to privacy laws, regulatory requirements, or business needs
+<!-- ### Classify data processed, stored, or transmitted by an application. Identify which data is sensitive according to privacy laws, regulatory requirements, or business needs -->
 
-We separate the data we store into different database tables. The user table has the highest security requirement, while the transaction, account and logging tables demand lower security. The encryption and hashing of the tables are adjusted accordingly.
+<!-- We separate the data we store into different database tables. The user table has the highest security requirement, while the transaction, account and logging tables demand lower security. The encryption and hashing of the tables are adjusted accordingly. -->
 
-### Apply controls as per the classification.
+<!-- ### Apply controls as per the classification. -->
 
+### Make sure to encrypt all sensitive data at rest.
 
-### Don’t store sensitive data unnecessarily. Discard it as soon as possible or use PCI DSS compliant tokenization or even truncation. Data that is not retained cannot be sto len.
+### Don’t store sensitive data unnecessarily. Discard it as soon as possible or use PCI DSS compliant tokenization or even truncation. Data that is not retained cannot be stolen.
+**These measures solve both 6.3.3 and 6.3.4**
+
 All sensitive data is only temporarily stored in redis with an expiry date, otherwise it is at rest and stored in an encrypted form which is inaccessible without user input. This way ensure that we do not store or have access to decrypted data longer than necessary.
 
 
@@ -228,8 +233,7 @@ def redis_sync(deKey, hashed_mail):
 
 ### Store passwords using strong adaptive and salted hashing functions with a work factor (delay factor), such as Argon2, scrypt, bcrypt, or PBKDF2
 
-The password stored in the database is generated with scrypt. We use the default settings as seen in the code snippet below. These settings in combination with our password length requirement of 12
-we can rest assured that randomly bruteforcing these passwords would take longer than the years we have left to live with todays computers. 
+The password stored in the database is generated with `scrypt`. We use the default settings here, as can be seen in the code-snippet below. These settings make sure that memory and CPU-usage is very high, and therefore very expensive in a brute-force attack.
 
 
 ```python
@@ -254,7 +258,7 @@ def generate_password_hash(password, salt, N=2**14, r=8, p=1, buflen=64):
 ```
 
 
-### Make sure to encrypt all sensitive data at rest.
+
 
 
 ### Disable caching for responses that contain sensitive data
@@ -270,57 +274,151 @@ disable_caching = {'Cache-Control': 'no-cache, no-store, must-revalidate',
 
 
 
-The data we have to store that is sensitive is all cryptographically hashed, using a variety of Fernet and scrypt. In other words, our entire user table in our database is encrypted to some degree. Other information is not as sensitive as it is not personal information, and cannot be edited. A malicious actor knowing account-numbers and associated balances wouldn't make a difference as they wouldn't be able to do anything with it, as they wouldn't find out who owns the account. Passwords are stored as a scrypt hash with a random salt, with the possibility of having a work factor (delay variable) to it, so that it takes longer to brute-force passwords. Our random encryption key for various things is also encrypted using fernet and the users hashed password, meaning we can only decrypt data when given the users password, adding an extra layer of security.
+<!-- The data we have to store that is sensitive is all cryptographically hashed, using a variety of Fernet and scrypt. In other words, our entire user table in our database is encrypted to some degree. Other information is not as sensitive as it is not personal information, and cannot be edited. A malicious actor knowing account-numbers and associated balances wouldn't make a difference as they wouldn't be able to do anything with it, as they wouldn't find out who owns the account. Passwords are stored as a scrypt hash with a random salt, with the possibility of having a work factor (delay variable) to it, so that it takes longer to brute-force passwords. Our random encryption key for various things is also encrypted using fernet and the users hashed password, meaning we can only decrypt data when given the users password, adding an extra layer of security. -->
 
-To secure data in transit, we use HTTPS instead of the older HTTP.
+<!-- To secure data in transit, we use HTTPS instead of the older HTTP. -->
 
-Caching on all our sites is disabled. This prevents users form clicking "back" and finding sensitive data.
+<!-- Caching on all our sites is disabled. This prevents users form clicking "back" and finding sensitive data. -->
 
 
 ## Broken Access Control
 
 ### With the exception of public resources, deny by default.
 
+For all of the pages except for the login and register page, the user is required to be logged in. This is accomplished with the built in login-manager, see example below:
+
+```python
+@app.route('/profile/', methods=["GET", "POST"])
+@login_required
+def profilePage():
+    form = DeleteUserForm()
+ 
+```
+
+
 ### Implement access control mechanisms once and re-use them throughout the application, including minimizing CORS usage.
 
-### Model access controls should enforce record ownership, rather than accepting that the user can create, read, update, or delete any record.
+From the start of the project we deliberately implemented a single function to verify users and adapted this function to suit our needs. The function is the only verification function used throughout the entire backend.
 
-### Rate limit API and controller access to minimize the harm from automated attack tooling  --- ARDIJAN
+```python
+def verifyUser(email, password, addToActive=False):
+   # hash the email
+   if email is None:
+       hashed_email = current_user.email
+   else:
+       hashed_email = flask_scrypt.generate_password_hash(email, "")
 
-  Levang
+   # create user class with information from database
+   userDB = User.query.filter_by(email=hashed_email).first()
 
-## Security Misconfiguration
+   # if the user doesnt exist in database
+   if userDB is None:
+       return False, None, None
+
+   # format password from database
+   DBpw = userDB.password.encode('utf-8')
+
+   # check if the hashed email is the same ass the one in the database,
+   #just a double check.
+   # Strictly not nececairy, but just seems logical to do.
+   emailOK = hashed_email.decode('utf-8') == userDB.email.decode('utf-8')  
+   # boolean to compare with
+
+   # Verify that the password is correct
+   pwOK = flask_scrypt.check_password_hash(password.encode('utf-8'),
+       DBpw[:88], DBpw[88:176])
+
+   # Check if the password is correct and email exists in the database
+   if emailOK and pwOK:
+
+       # decrypte the users encryption key
+       decryptKey = decrypt(password, userDB.enKey.encode('utf-8'), True)
+
+       # Decrypt the secret key
+       secret_key = decrypt(decryptKey, userDB.secret.encode('utf-8'))
+
+       if addToActive:
+           # sync with redis!
+           redis_sync(decryptKey, hashed_email)
+
+       return True, userDB, secret_key
+
+   return False, userDB, None
+```
 
 
+<!-- ### Rate limit API and controller access to minimize the harm from automated attack tooling  --- ARDIJAN -->
 
 
-
-  Ardijan
+<!-- ## Security Misconfiguration -->
 
 ## Cross-Site Scripting
-  Ardijan
 
-## Insecure Deserialization
+### Preventing XSS requires separation of untrusted data from active browser content
 
-### Isolating and running code that deserializes in low privilege environments when possible.
+We implement a very strict policy on user input, XSS would apply for the transaction message. This message will show up on both the sender and receiver's side. We prevent XSS by enforcing strict input sanitization. The only allowed characters can be seen in the code below:
 
+```python
 
-  Ardijan
+illegalChar(text, maxlength,alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "):
+```
+
 
 ## Using Components with known vulnerabilities
-  Ardijan
   
 ### Remove unused dependencies, unnecessary features, components, files, and documentation.
 
-### Monitor for libraries and components that are unmaintained or do not create security patches for older versions. If patching is not possible, consider deploying a virtual patchto monitor, detect, or protect against the discovered issue.
+We went through the entire source code of the project and checked for unused dependencies. While developing the website we also ensured that code and documentation are kept completely separate. Upon completion we went through the entire directory and removed unused or unnecessary files and folders.
+
+### Monitor for libraries and components that are unmaintained or do not create security patches for older versions
+
+To combat this issue we use github's built in dependabot. Dependabot automatically scans and creates pull-requests for outdated dependencies. Dependabot will also alert us if any libraries get deprecated. From there we would have to take action accordingly. [-@dependabot] 
 
 
 
 ## Insufficient Logging & Monitoring
-Levang
 
 ### Ensure that logs are generated in a format that can be easily consumed by a centralized log management solutions.
 
-### Ensure high-value transactions have an audit trail with integrity controls to prevent tampering or deletion, such as append-only database tables or similar.
+For logging we've made functions for each `eventType`, which log the related information for each of them. Some of these types are login, failed login, register, transaction and many others. These functions look like this:
+
+```python
+def log_register(is_validated: bool, hashedEmail: str):
+    msg = "Created:"
+    if is_validated:
+        msg += "YES"
+    else:
+        msg += "NO"
+    log(msg, "register", hashedEmail)
+```
+We pass the `message`, `eventType` and `hashedEmail` into a log functions which takes the information, builds the database request and commits it to the database:
+
+```python
+def log(message: str = "NA", eventType: str = "NA", hashedEmail: str = "NA"):
+    req = requestLogs(message=message, eventType=eventType, email=hashedEmail)
+    db.session.add(req)
+    db.session.commit()
+```
+
+Everything on our website that is user-interactable is logged. Every log contains the following info:
+
+- eventID
+    
+    Incremental ID for easy storing and sorting.
+- email
+    
+    Hashedemail of the user.
+- eventType
+    
+    What kind of event. E.g. transaction, login, failed login, register, delete user etc.
+- message
+    
+    Event message. Eventually KID message for transfers.
+- time
+    
+    Timestamp of the event.
+
+
+With this we could even backtrack if we needed. It is stored in a database that would be easy for admins to access and is in a format that could easily be consumed later by some centralized log management solution.
 
 
