@@ -30,7 +30,6 @@ if (str(transForm.accountSelect.data) in str(accountList)) and illegal==False:
     TransList=QueryToList(query, accountList, transForm.accountSelect.data)
 else:
     pass
-    #TODO LOG THIS!
 ```
 Here we get input from the user about which account history the user wants to view. The method "query.filter" is not considered safe. Since the account number can be converted to an integer and back, any dangerous value would prevent this conversion, thus raise and exception and skip the query.
 The account number is also looked up in the user's account list. These safety measures make this query safe.
