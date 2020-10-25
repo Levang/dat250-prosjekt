@@ -29,12 +29,14 @@ def verifyUser(email, password, addToActive=False):
   # format password from database
   DBpw = userDB.password.encode('utf-8')
 
-  # check if the hashed email is the same as the one in the database, just a double check.
+  # check if the hashed email is the same as the one in the database,
+  #just a double check.
   # Strictly not necessary, but just seems logical to do.
   emailOK = hashed_email.decode('utf-8') == userDB.email.decode('utf-8')
 
   # Verify that the password is correct
-  pwOK = flask_scrypt.check_password_hash(password.encode('utf-8'), DBpw[:88], DBpw[88:176])
+  pwOK = flask_scrypt.check_password_hash(password.encode('utf-8'), DBpw[:88],
+         DBpw[88:176])
 
   # If the password is correct and email exists in the database
   if emailOK and pwOK:

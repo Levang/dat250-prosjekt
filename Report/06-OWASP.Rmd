@@ -242,8 +242,9 @@ salt = flask_scrypt.generate_random_salt()
 
 # add hashed password to user dictionairy
 # This can be directly saved to database later
-userDict['password'] = flask_scrypt.generate_password_hash(form.password.data, salt) + salt
-```python
+userDict['password'] = flask_scrypt.generate_password_hash(form.password.data,
+                          salt) + salt
+```
 
 This function is the flask_scrypt default settings which we use to generate the password hash.
 ```python

@@ -38,7 +38,8 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
         accountDBFrom = Account.query.filter_by(number=accountFrom).first()
         accountDBTo = Account.query.filter_by(number=accountTo).first()
 
-        if TransactionChecks(accountDBFrom, amount, accountDBTo, accountsDict,message)==False:
+        if TransactionChecks(accountDBFrom, amount, accountDBTo,
+            accountsDict,message)==False:
             return False
 
         accountDBFrom.balance -= amount

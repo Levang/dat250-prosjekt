@@ -69,7 +69,8 @@ Accounts is a table containing all banking accounts and their balance. Accounts 
 ```python
 class Account(db.Model):
     number = db.Column(db.String(11), unique=True, nullable=False, primary_key=True)
-    balanceField = db.Column(db.String(256))  # tallet viser til maks lengde av et siffer
+    balanceField = db.Column(db.String(256))  
+    # tallet viser til maks lengde av et siffer
 
     # Henter verdien fra databasen og konverterer til streng
     @property
