@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Overview</title>
+{% endblock%}
+
+{% block body %}
+<body>
+    <div class="welcome">
+        <h1>WELCOME {{ email }}!</h1>
+    </div>
+    <div class='userAccounts'>
+        <table>
+            <tbody>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Account number
+                    </th>
+                    <th style>
+                        Balance
+                    </th>
+                </tr>
+                {% for account in account_list %}
+                    <tr class="account">
+                        <td #accountName>
+                            {{ account[0] }}
+                        </td>
+                        <td #accountNumber>
+                            {{ account[1] }}
+                        </td>
+                        <td #accountBalance>
+                            {{ account[2] }} kr
+                        </td>
+                    </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+{% endblock %}
+

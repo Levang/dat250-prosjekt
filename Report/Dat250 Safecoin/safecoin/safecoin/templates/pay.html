@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Transfer</title>
+{% endblock%}
+
+{% block body %}
+<body>
+    <div class="paydiv">
+        <form method="post" autocomplete="off">
+        {{ form.hidden_tag() }}
+            <table>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                    <tr class=flashes>
+                      <td class="{{ category }}">{{ message }}</td>
+                    </tr>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+                <tr>
+                    <td colspan="2">
+                    <div class="selectdiv">
+                        {{ form.tfrom() }}
+                    </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {{ form.to() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {{ form.msg() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1">
+                        {{ form.kr() }}
+                    </td>
+                    <td colspan="1">
+                        {{ form.ore() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {{ form.pay() }}
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+
+{% endblock %}

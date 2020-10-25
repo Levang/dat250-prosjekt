@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Create</title>
+{% endblock %}
+
+{% block body %}
+
+<body>
+    <div class="valNewDel">
+        <form method="post" autocomplete="off">
+            {{ form.hidden_tag() }}
+            <table>
+                <tr>
+                    <th>
+                        <h2>Validate</h2>
+                    </th>
+                </tr>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                    <tr class=flashes>
+                      <td class="{{ category }}">{{ message }}</td>
+                    </tr>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+                <tr>
+                    <td>
+                        {{ form.account_name() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.password_create() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.otp_create() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.proceed_create() }}
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+
+{% endblock %}

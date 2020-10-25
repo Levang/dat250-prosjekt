@@ -1,0 +1,65 @@
+{% extends 'index.html' %}
+
+{% block reglog %}
+    <body class="importedContent">
+        <form method="post" autocomplete="off">
+            <!-- Jinja code hidden tag? -->
+            {{ form.hidden_tag() }}
+            <table>
+                <tbody>
+                    <tr>
+                        <th>
+                            <p class="title"><strong>Login</strong></p>
+                        </th>
+                    </tr>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                        <tr class=flashes>
+                          <td class="{{ category }}">{{ message }}</td>
+                        </tr>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <tr>
+                                <td>{{ error }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    <tr>
+                        <td>
+                            {{ form.email() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.password() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.recaptcha() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.otp() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.submit() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a id="submit" href="/register">Register</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </body>
+{% endblock %}

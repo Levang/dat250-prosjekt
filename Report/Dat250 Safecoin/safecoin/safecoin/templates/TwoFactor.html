@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="{{ url_for('static', filename='/css/index.css') }}">
+        <link rel="icon" href="{{ url_for('static', filename='/assets/favicon.png') }}" >
+        <title>Two Factor Authentication</title>
+    </head>
+    <body>
+        <div class="twofa">
+            <form method="post" autocomplete="off">
+                {{ form2.hidden_tag() }}
+                <table>
+                    <tr >
+                        <th><h2>Confirm Two-factor Authentication</h2></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="{{ qrcode(qr_link) }}" alt="qr-kode">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <!--
+                        This is safe because of the fact that
+                        changing the email field
+                        changes your email hash
+                        wich just means you need a matching password to be able to create
+                        this account and this can never conflict with
+                        normal registered users in the redis database
+                        -->
+                            {{ form2.email() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form2.password_2fa() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form2.otp() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form2.submit() }}
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>
