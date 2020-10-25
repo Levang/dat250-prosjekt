@@ -1,5 +1,5 @@
 from flask import render_template, flash
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, fresh_login_required
 
 from safecoin import app, redis, json, disable_caching
 from safecoin.forms import AccountsForm, CreateAccountForm, CreateDeleteForm
@@ -26,6 +26,7 @@ def format_account_list(acc_list: list):
 
 @app.route("/accounts/", methods=["GET", "POST"])
 @login_required
+@fresh_login_required
 def accounts():
     # Retrive the accounts list
     account_list = getAccountsList()

@@ -1,5 +1,5 @@
 from flask import render_template
-from flask_login import login_required
+from flask_login import login_required, fresh_login_required
 
 from safecoin import app, disable_caching
 from safecoin.forms import AccountsForm
@@ -9,6 +9,7 @@ from safecoin.accounts import format_account_list
 
 @app.route("/overview/", methods=["GET", "POST"])
 @login_required
+@fresh_login_required
 def overviewPage():
     account_list = getAccountsList()
     form = AccountsForm()
