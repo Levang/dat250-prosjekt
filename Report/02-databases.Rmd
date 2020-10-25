@@ -33,8 +33,8 @@ class User(db.Model, UserMixin):
     def is_authenticated(self):
         # Check if the current_user is logged in
         if redis.get(self.email):
-            # If so set data to expire 10 minutes from now
-            redis.expire(self.email, 3600)
+            # If so set data to expire 15 minutes from now
+            redis.expire(self.email, 900)
             # return true to the flask login manager
             return True
         return False
@@ -43,7 +43,7 @@ class User(db.Model, UserMixin):
     @property
     def is_active(self):
         if redis.get(self.email):
-            redis.expire(self.email, 3600)
+            redis.expire(self.email, 900)
             return True
         return False
 ```

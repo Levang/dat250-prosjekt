@@ -30,4 +30,4 @@ bibliography: bibliography.bib
 
 
 
-# Refrences
+# References
