@@ -77,7 +77,7 @@ Password requirements:
 
 - Not an integer
 
-- Cannot match top 10000 most common passwords that are 12 characters or longer
+- Cannot match top 44000 most common passwords that are 12 characters or longer
 
 - Cannot contain the users email address
 
@@ -187,7 +187,7 @@ To limit the risk of data exposure, we attempt to handle as little personal info
 ### Make sure to encrypt all sensitive data at rest.
 
 ### Don’t store sensitive data unnecessarily. Discard it as soon as possible or use PCI DSS compliant tokenization or even truncation. Data that is not retained cannot be stolen.
-**These measures solve both 6.3.3 and 6.3.4**
+**These measures solve both 6.3.1 and 6.3.2**
 
 All sensitive data is only temporarily stored in redis with an expiry date, otherwise it is at rest and stored in an encrypted form which is inaccessible without user input. This way ensure that we do not store or have access to decrypted data longer than necessary.
 
