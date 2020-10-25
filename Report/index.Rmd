@@ -1,14 +1,14 @@
 ---
-title:  "DAT250 - Information security - Project report"
+title: "DAT250 - Information security - Project report"
 author: |
   | Joachim Andreassen
   | Lars Sverre Levang
   | Ardijan Rexhaj
   | Vidar Andre Bø
   | Elias Nodland
-date:   "`r Sys.Date()`"
+date: "`r Sys.Date()`"
 documentclass: report
-description: "Project report"
+description: Project report
 lang: en
 bibliography: bibliography.bib
 ---
@@ -26,6 +26,8 @@ bibliography: bibliography.bib
 ```
 ```{r child = '06-OWASP.Rmd'}
 ```
+![This is an illutstration of the site layout of Safecoin.tech](report_assets/ThreatModelReport.pdf) 
+knitr::include_graphics(path = "report_assets/ThreatModelReport.pdf")
 
 
 
