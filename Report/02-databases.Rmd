@@ -52,7 +52,7 @@ class User(db.Model, UserMixin):
 
 - `enEmail` is the users clear text email encrypted with the users Fernet key.
 
-- `password` is the users hashed password concatenated with the salt used to hash it. The `salt` is the only thing stored in plaintext. The resulting hash and salt is always the same length and thereby we can split this information into its respective parts.
+- `password` is the users hashed password concatenated with the salt used to hash it. The `salt` is the only thing stored in plain text. The resulting hash and salt is always the same length and thereby we can split this information into its respective parts.
 
 - `enKey` is the users encryption-key that has been encrypted by the users hashed password without salt. This creates a new unique hash that is different from the salted password hash above. This hash is not done for security reasons, its purpose is to create a fixed length 32 byte key to encrypt the encryption key.
 

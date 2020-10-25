@@ -19,7 +19,7 @@ def getAccount(account_number):
 The above "query.filter_by" sanitizes input by default and is the only method used to query the database. The only exception being:
 
 ```python
-#Sanetize input illegalChar(text,maxlength,"string Allowed chars")
+#Sanitize input illegalChar(text,maxlength,"string Allowed chars")
 illegal=illegalChar(transForm.accountSelect.data,11,"0123456789")
 
 if (str(transForm.accountSelect.data) in str(accountList)) and illegal==False:
@@ -40,7 +40,7 @@ The account number is also looked up in the user's account list. These safety me
 As seen in the example above, input validation is used to ensure database queries are safe from sql-injection. We specifically require there to be no special characters and for general input fields, we use an illegal character checking function:
 
 It checks the input text character by character and only allows the characters that exists it the alphabet to be used.
-In the above code you can see how its implemented and that it allowes nothing but numbers, not even spaces.
+In the above code you can see how its implemented and that it allows nothing but numbers, not even spaces.
 ```python
 def illegalChar(text, maxlength,alphabet="abcdefghijklmnopqrstuvwxyzæøå0123456789 "):
     if text==None:
@@ -66,7 +66,7 @@ def illegalChar(text, maxlength,alphabet="abcdefghijklmnopqrstuvwxyzæøå012345
 
 ### Where possible, implement multi-factor authentication to prevent automated, credential stuffing, brute force, and stolen credential re-use attacks.
 
-We implement multi-factor authentication and Google's reCAPTHCA on the login page to prevent automated attacks. Whereever autheticaton is required after the user is logged in, two factor authentication is also required.
+We implement multi-factor authentication and Google's reCAPTHCA on the login page to prevent automated attacks. Wherever authentication is required after the user is logged in, two factor authentication is also required.
 
 ![This is a screenshot of the login page demonstrating 2FA and reCAPTHCA at Safecoin.tech](report_assets/loginPageScreenshot.png){width=50%}
 
@@ -83,7 +83,7 @@ Password requirements:
 - Cannot contain the users email address
 
 The users password is cryptographically hashed with scrypt and a random salt. 
-The password and its salt are then concatinated and stored together.
+The password and its salt are then concatenated and stored together.
 
 Scrypt allows the password to be of an arbitrary length.
 
@@ -157,7 +157,7 @@ app.config['REMEMBER_COOKIE_DURATION'] = timedelta(minutes=0)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/login'
-#Ensuers a new session ID is created for every browser instance
+#Ensures a new session ID is created for every browser instance
 login_manager.session_protection = "strong" 
 
 
@@ -312,7 +312,7 @@ def verifyUser(email, password, addToActive=False):
    # create user class with information from database
    userDB = User.query.filter_by(email=hashed_email).first()
 
-   # if the user doesnt exist in database
+   # if the user does not exist in database
    if userDB is None:
        return False, None, None
 
@@ -321,7 +321,7 @@ def verifyUser(email, password, addToActive=False):
 
    # check if the hashed email is the same ass the one in the database,
    #just a double check.
-   # Strictly not nececairy, but just seems logical to do.
+   # Strictly not necessary, but just seems logical to do.
    emailOK = hashed_email.decode('utf-8') == userDB.email.decode('utf-8')  
    # boolean to compare with
 
@@ -332,7 +332,7 @@ def verifyUser(email, password, addToActive=False):
    # Check if the password is correct and email exists in the database
    if emailOK and pwOK:
 
-       # decrypte the users encryption key
+       # decrypt the users encryption key
        decryptKey = decrypt(password, userDB.enKey.encode('utf-8'), True)
 
        # Decrypt the secret key

@@ -26,8 +26,7 @@ bibliography: bibliography.bib
 ```
 ```{r child = '06-OWASP.Rmd'}
 ```
-![This is an illutstration of the site layout of Safecoin.tech](report_assets/ThreatModelReport.pdf) 
-knitr::include_graphics(path = "report_assets/ThreatModelReport.pdf")
+
 
 
 

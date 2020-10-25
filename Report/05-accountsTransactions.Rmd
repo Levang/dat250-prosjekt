@@ -2,7 +2,7 @@
 
 The ownership of an account is determined by which user holds the account number in their accounts list. In order for a user to release ownership if an account the account balance must be 0. An account can loose its owner but it can never be deleted from the accounts database, this ensures that we cant generate the same account-number twice.
 
-Transactions was written with security in mind, it was written as if redis was compromised and not trustable. Therefore for every transaction the user must provide their respective password and only then be able to trasfer the given amount. 
+Transactions was written with security in mind, it was written as if redis was compromised and not trustworthy. Therefore for every transaction the user must provide their respective password and only then be able to transfer the given amount. 
 
 It is quite extensive but summarized these are the steps.
 
@@ -38,8 +38,7 @@ def submitTransaction(password, accountFrom, accountTo, amount, message):
         accountDBFrom = Account.query.filter_by(number=accountFrom).first()
         accountDBTo = Account.query.filter_by(number=accountTo).first()
 
-        if TransactionChecks(accountDBFrom, amount, accountDBTo,
-            accountsDict,message)==False:
+        if TransactionChecks(accountDBFrom, amount, accountDBTo, accountsDict,message)==False:
             return False
 
         accountDBFrom.balance -= amount

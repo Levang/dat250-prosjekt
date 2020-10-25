@@ -28,7 +28,7 @@ The tools and packages that are used to make Safecoin.tech:
 For 2FA we use TOTP codes generated for the user in their authentication app of choice. To generate these codes we make use of the packages `pyotp` and `flask-qrcode`. The QR-code is there as a user-friendly way to add the 2FA code to their app.
 
 #### flask-qrcode
-The main reason why we elected to use `flask-qrcode` over any other qr-code making packages is that by using `flask-qrcode` we can generate the QR-link without saving it as an image on our server. We want to manage unencrypted sensitive data as rarely as possible. By generating the QR-code when its needed we reduce the window of opportunity an attacker has to a minimum. Access to this information by anyone other than the user would be a breach of security. This is because it contains information about the email, issuer, and ecret key, thus they would only need your password and defeat the purpose of two factor authentication.
+The main reason why we elected to use `flask-qrcode` over any other qr-code making packages is that by using `flask-qrcode` we can generate the QR-link without saving it as an image on our server. We want to manage unencrypted sensitive data as rarely as possible. By generating the QR-code when its needed we reduce the window of opportunity an attacker has to a minimum. Access to this information by anyone other than the user would be a breach of security. This is because it contains information about the email, issuer, and secret key, thus they would only need your password and defeat the purpose of two factor authentication.
 
 Implementation:
 
