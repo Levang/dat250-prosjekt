@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user, logout_user, fresh_login_required
 from safecoin import app, db, redis, disable_caching
-from safecoin.accounts_db import accStr_to_accList
+from safecoin.accounts_db import accStr_to_accList, getAccount
 from safecoin.encryption import decrypt, getCurUsersEmail, verify_pwd_2FA
 from safecoin.forms import DeleteUserForm
 from safecoin.logging import log_deleteuser
@@ -46,9 +46,14 @@ def deleteCurUser(password, otp):
 
         # Loops through accounts and verifies that all accounts are empty
         for acc in accList:
-            if acc[2] != 0.0:
-                log_deleteuser(False, user.email, "HasAccounts")
-                return "All bank accounts must be empty before you delete your user."
+            try:
+                db_account = getAccount(acc[1])
+                if db_account.balance != 0.0:
+                    log_deleteuser(False, user.email, "HasAccounts")
+                    return "All bank accounts must be empty before you delete your user."
+            except:
+                log_deleteuser(False, user.email, "UnknownError")
+                return "An unknown error occured."
 
     # Delete user from db
     redis.delete(current_user.email)
