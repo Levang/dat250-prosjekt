@@ -140,7 +140,7 @@ def register():
         # ─── DERSOM FEIL VED REGISTEREING ───────────────────────────────────────────────
         for err in errList:
             flash(err, "error")
-    elif form.submit() and not form2.is_submitted():
+    elif form.submit.data and not form2.is_submitted():
         flash("Couldn't continue, due to an error", "error")
 
     if form2.validate_on_submit():
