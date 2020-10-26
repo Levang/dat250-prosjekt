@@ -1,9 +1,55 @@
 # Authentication
 
-Ardijan Ardijan
-Ardijan
-Ardijan
-Ardijan
-Ardijan
-Ardijan
-Ardijan
+Authentication of the registered user is required for the following actions:
+  - login
+  - transfer of money
+  - creation of bank account
+  - deletion of bank account
+  - deletion of user
+  
+In order to make verification easy to maintain we use the same verification function across the site.
+The only exception is during registration, where the information is being generated.
+This function takes user input and verifies it. It also syncs the users information stored in redis with the database.
+
+```python
+def verifyUser(email, password, addToActive=False):
+  # hash the email
+  if email is None:
+      hashed_email = current_user.email
+  else:
+      hashed_email = flask_scrypt.generate_password_hash(email, "")
+
+  # create user class with information from database
+  userDB = User.query.filter_by(email=hashed_email).first()
+
+  # if the user doesnt exist in database
+  if userDB is None:
+      return False, None, None
+
+  # format password from database
+  DBpw = userDB.password.encode('utf-8')
+
+  # check if the hashed email is the same as the one in the database, just a double check.
+  # Strictly not necessary, but just seems logical to do.
+  emailOK = hashed_email.decode('utf-8') == userDB.email.decode('utf-8')
+
+  # Verify that the password is correct
+  pwOK = flask_scrypt.check_password_hash(password.encode('utf-8'), DBpw[:88], DBpw[88:176])
+
+  # If the password is correct and email exists in the database
+  if emailOK and pwOK:
+
+      # Decrypt the users encryption key
+      decryptKey = decrypt(password, userDB.enKey.encode('utf-8'), True)
+
+      # Decrypt the secret key
+      secret_key = decrypt(decryptKey, userDB.secret.encode('utf-8'))
+
+      if addToActive:
+          # sync redis with database! This is a function.
+          redis_sync(decryptKey, hashed_email)
+
+      return True, userDB, secret_key
+
+  return False, None, None
+```

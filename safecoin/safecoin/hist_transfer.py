@@ -1,15 +1,17 @@
 from flask import render_template
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, fresh_login_required
 
 from safecoin import app, redis, json, disable_caching
 from safecoin.forms import TransHistory
 from safecoin.models import Transactions
 from safecoin.accounts_db import format_account_number, format_account_balance
 from safecoin.accounts import getAccountsList
+from safecoin.encryption import illegalChar
 
 
 @app.route("/transactions/", methods=["GET", "POST"])
 @login_required
+@fresh_login_required
 def transactions():
 
     transForm = TransHistory()
@@ -18,11 +20,19 @@ def transactions():
     transForm.get_select_field(accountList)
 
     TransList=[]
+
     if transForm.view_hist.data and transForm.accountSelect.data!="x":
-        if transForm.accountSelect.data in str(accountList):
+
+        #Sanetize input illegalChar(text,maxlength,"string Allowed chars")
+        illegal=illegalChar(transForm.accountSelect.data,11,"0123456789")
+
+        if (str(transForm.accountSelect.data) in str(accountList)) and illegal==False:
             query=Transactions.query.filter((Transactions.accountFrom == transForm.accountSelect.data) | (Transactions.accountTo == transForm.accountSelect.data))
 
             TransList=QueryToList(query, accountList, transForm.accountSelect.data)
+        else:
+            pass
+            #TODO LOG THIS!
 
     return render_template('hist_transfer.html', transHistory=TransList, form=transForm), disable_caching
 

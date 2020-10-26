@@ -10,14 +10,13 @@ Requirements and notes coming soon!>
 
 ## Site Map
 
-![Image](assets/Pagemap.png)
+![Image](Report/report_assets/pagemap_safecoin.png)
 
-<!-- 
-Frontpage
+### Frontpage
+
 - Innlogging
 - Div info
-
-- Autentisering
+- Registrering
 
 ### Oversikt
 
@@ -25,38 +24,24 @@ Frontpage
 - Saldo
 - Lenker til underliggende sider
 
-
 ### Transaksjonshistorikk
 
-- Velg konto og se hele transaksjonshistorikk for den kontoen (read only, sorterbart)
-
+- Velg konto og se hele transaksjonshistorikk for den kontoen
 
 ### Overføre
 
-- Overføre mellom egne kontoer
-
-
-### Betale
-
-Betale til en annen konto
+Betale til en konto
 1. Fylle ut betalingsinfo
 2. Oppsumering av betalingsinfo
 3. Fortsett/Avbryt
 
 **Autentisering**
-- Bekreftelse på betaling -->
-
+- Bekreftelse på betaling
 
 ## Sikkerhet bruker:
 
 - All bruker relatert info lagres kryptert i database
-- Nøkkelen for dekryptering/kryptering er brukerens passord + epost + salt
-
-
-## Sikkerhet transaksjoner:
-
-- Enkel blockchain
-
+- Nøkkelen for dekryptering/kryptering er brukerens passord
 
 ## Domene
 

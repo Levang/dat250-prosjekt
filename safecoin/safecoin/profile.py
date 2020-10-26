@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for
-from flask_login import login_required, current_user, logout_user
+from flask_login import login_required, current_user, logout_user, fresh_login_required
 from safecoin import app, db, redis, disable_caching
 from safecoin.accounts_db import accStr_to_accList, getAccount
 from safecoin.encryption import decrypt, getCurUsersEmail, verify_pwd_2FA
@@ -9,6 +9,7 @@ from safecoin.logging import log_deleteuser
 
 @app.route('/profile/', methods=["GET", "POST"])
 @login_required
+@fresh_login_required
 def profilePage():
     form = DeleteUserForm()
 
