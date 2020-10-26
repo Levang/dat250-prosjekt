@@ -6,23 +6,25 @@ from safecoin import app, redis, disable_caching
 from safecoin.encryption import verifyUser
 from safecoin.forms import LoginForm
 from safecoin.logging import log_loginattempt, log_logout
+from safecoin.models import User
 
 
 # --- Main page --- #
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
 def home():
+
     form = LoginForm()
     if form.validate_on_submit():
-
         try:
             login, userDB, secret = verifyUser(form.email.data, form.password.data, addToActive=True)
         except:
             login = False
-            userDB = {"email": "NA"}
+            userDB=None
 
-        if not userDB:
-            userDB = {"email": "NA"}
+        if userDB==None:
+            userDB=User()
+            userDB.email="NA"
 
         # Convert otp from int to str and add 0 at the start. Keys starting with 0 now works.
         form.otp.data = str(form.otp.data)

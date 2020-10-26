@@ -13,13 +13,13 @@ cfg = ConfigParser()
 cfg.read("safecoin/config.ini")
 
 app = Flask(__name__)
-app.secret_key = urandom(16)
+app.secret_key = "ThisCantBeRandom"
 app.config['SQLALCHEMY_DATABASE_URI'] = cfg["sqlDb"]["path"]  # Path for database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['RECAPTCHA_USE_SSL'] = True
 app.config['RECAPTCHA_PUBLIC_KEY'] = cfg["reCaptcha"]["site_key"]
 app.config['RECAPTCHA_PRIVATE_KEY'] = cfg["reCaptcha"]["secret_key"]
-app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SECURE'] = False
 app.config['SECURITY_TOKEN_MAX_AGE'] = 3600
 app.config['PERMANENT_SESSION_LIFETIME'] = 3600
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(minutes=0)
