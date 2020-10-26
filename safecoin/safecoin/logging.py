@@ -3,9 +3,14 @@ from safecoin import db
 
 
 def log(message: str = "NA", eventType: str = "NA", hashedEmail: str = "NA"):
-    req = requestLogs(message=message, eventType=eventType, email=hashedEmail)
-    db.session.add(req)
-    db.session.commit()
+    try:
+        req = requestLogs(message=message, eventType=eventType, email=hashedEmail)
+        db.session.add(req)
+        db.session.commit()
+    except:
+        req = requestLogs(message="NA", eventType="loggingerror", email="NA")
+        db.session.add(req)
+        db.session.commit()
 
 
 def log_loginattempt(is_validated: bool, hashedEmail: str):
