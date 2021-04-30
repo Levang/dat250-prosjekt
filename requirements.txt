@@ -96,7 +96,7 @@ ranger-fm==1.9.3
 reportlab==3.5.34
 requests==2.22.0
 requests-unixsocket==0.2.0
-rsa==4.6
+rsa==4.7
 ruamel.yaml==0.16.10
 ruamel.yaml.clib==0.2.0
 SecretStorage==2.3.1
